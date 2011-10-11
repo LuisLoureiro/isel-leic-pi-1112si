@@ -1,12 +1,12 @@
-# LI51N-G08
+ï»¿# LI51N-G08
 
-## Informação dos Alunos
+## InformaÃ§Ã£o dos Alunos
 
 ### Nome
  
 1. Ricardo Andrade
 
-### Número
+### NÃºmero
 
 1. 27226
 
