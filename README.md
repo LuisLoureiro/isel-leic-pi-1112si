@@ -5,7 +5,7 @@
 ### Nome
  
 1. Ricardo Andrade
-2. Luis Loureiro
+2. Luís Loureiro
 
 ### Número
 
