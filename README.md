@@ -2,18 +2,23 @@
 # LI51N-G08
 ## Informação dos Alunos
 
-### Nome
- 
-1. Ricardo Andrade
-2. Luís Loureiro
+<table>
+	<tr>
+		<th>Número</th>
+		<th>Nome</th>
+		<th>Github User</th>
+	</tr>
+	<tr>
+		<td>27226</td>
+		<td>Ricardo Andrade</td>
+		<td>isel-27226</td>
+	</tr>
+	<tr>
+		<td>32186</td>
+		<td>Luís Loureiro</td>
+		<td>isel-32186</td>
+	</tr>
+<table>
 
-### Número
 
-1. 27226
-2. 32186
-
-### Utilizador github
-
-1. isel-27226
-2. isel-32186
 
