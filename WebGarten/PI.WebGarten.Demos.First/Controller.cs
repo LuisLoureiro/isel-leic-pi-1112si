@@ -38,7 +38,7 @@ namespace PI.WebGarten.Demos.First
 
         public int? GetFromContent(string name, IEnumerable<KeyValuePair<string, string>> content)
         {
-            string s = content.Where(p => p.Key == name).FirstOrDefault().Value;
+            var s = content.Where(p => p.Key == name).FirstOrDefault().Value;
             int i;
             if(s == null || !Int32.TryParse(s,out i))
             {
