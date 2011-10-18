@@ -14,9 +14,9 @@ namespace PI.WebGarten
         private readonly IHttpContent _content;
         private IDictionary<string, string> _headers;
 
-        private static readonly ISet<string> _HackedHeaders = new  HashSet<string> { "WWW-Authenticate"};
+        private static readonly ISet<string> _HackedHeaders = new HashSet<string> { "WWW-Authenticate" };
 
-        private static MethodInfo _AddInternalMethodInfo;
+        private static readonly MethodInfo _AddInternalMethodInfo;
 
         static HttpResponse()
         {
@@ -44,7 +44,7 @@ namespace PI.WebGarten
             _status = status;
         }
 
-        public HttpResponse(HttpStatusCode status) : this((int)status){}
+        public HttpResponse(HttpStatusCode status) : this((int)status) { }
 
         public HttpResponse(int status, IHttpContent content)
         {
@@ -52,7 +52,7 @@ namespace PI.WebGarten
             _content = content;
         }
 
-        public HttpResponse(HttpStatusCode status, IHttpContent content):this((int)status, content){}
+        public HttpResponse(HttpStatusCode status, IHttpContent content) : this((int)status, content) { }
 
         public void Send(HttpListenerContext c)
         {
@@ -72,7 +72,7 @@ namespace PI.WebGarten
             }
         }
 
-        private void AddHeaderInternal(string key, string value, WebHeaderCollection headers)
+        private static void AddHeaderInternal(string key, string value, WebHeaderCollection headers)
         {
             if (_HackedHeaders.Contains(key))
             {
@@ -87,7 +87,7 @@ namespace PI.WebGarten
 
         private void SendContent(HttpListenerResponse resp)
         {
-            if(_content == null) return;
+            if (_content == null) return;
             var ms = new MemoryStream();
             var w = new StreamWriter(ms, Encoding.UTF8);
             resp.ContentType = _content.ContentType + "; charset=utf-8";
@@ -97,7 +97,7 @@ namespace PI.WebGarten
             ms.Seek(0, SeekOrigin.Begin);
             using (var cs = resp.OutputStream)
             {
-                ms.CopyTo(cs);    
+                ms.CopyTo(cs);
             }
         }
     }
