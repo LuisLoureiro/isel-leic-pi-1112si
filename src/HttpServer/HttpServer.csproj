@@ -49,9 +49,7 @@
     <Compile Include="Model\Entities\Proposal.cs" />
     <Compile Include="Model\Repository\RepositoryLocator.cs" />
     <Compile Include="Views\FucsView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <Compile Include="Views\RootView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

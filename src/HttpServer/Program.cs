@@ -36,7 +36,7 @@ namespace HttpServer
             repo.Add(typeof (CurricularUnit), new CurricularUnitMapper());
             //repo.Add<UInt32, Proposal>(typeof (Proposal), new ProposalMapper());
 
-            repo.Insert(new CurricularUnit("UC TESTE", "UCT", false, 0x01, 6));
+            //repo.Insert(new CurricularUnit("UC TESTE", "UCT", false, 0x01, 6));
         }
     }
 }
