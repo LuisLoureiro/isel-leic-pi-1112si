@@ -1,6 +1,4 @@
-﻿using System;
-using HttpServer.Controller;
-using HttpServer.Model;
+﻿using HttpServer.Controller;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Mappers;
 using HttpServer.Model.Repository;
