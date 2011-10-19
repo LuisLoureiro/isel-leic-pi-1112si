@@ -11,7 +11,8 @@
     <RootNamespace>HttpServer</RootNamespace>
     <AssemblyName>HttpServer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -34,7 +35,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Model\CurricularUnit.cs" />
+    <Compile Include="Controller\FUCController.cs" />
+    <Compile Include="Controller\ResolveUri.cs" />
+    <Compile Include="Controller\RootController.cs" />
+    <Compile Include="Model\Entities\AbstractEntity.cs" />
+    <Compile Include="Model\Mappers\CurricularUnitMapper.cs" />
+    <Compile Include="Model\Mappers\IMapper.cs" />
+    <Compile Include="Model\Mappers\ProposalMapper.cs" />
+    <Compile Include="Model\Repository\Repository.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Model\Entities\CurricularUnit.cs" />
+    <Compile Include="Model\Repository\IRepository.cs" />
+    <Compile Include="Model\Entities\Proposal.cs" />
+    <Compile Include="Model\Repository\RepositoryLocator.cs" />
+    <Compile Include="Views\FucsView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\WebGarten\PI.WebGarten\PI.WebGarten.csproj">
+      <Project>{6FF2A3D3-D0BD-47A7-97C5-67C4DBB2A6F5}</Project>
+      <Name>PI.WebGarten</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
