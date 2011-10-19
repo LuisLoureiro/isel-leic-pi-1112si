@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using HttpServer.Model.Entities;
+﻿using HttpServer.Model.Entities;
 
 namespace HttpServer.Model.Repository
 {
     public class RepositoryLocator
     {
-        private static readonly IRepository _repo = new Repository<object, AbstractEntity<object>>();
+        private static readonly CurricularUnitRepository UcRepo = new CurricularUnitRepository();
+        private static readonly ProposalRepository PropRepo = new ProposalRepository();
 
         public static IRepository<K, V> Get<K, V>() where V : AbstractEntity<K>
         {
-            return _repo as IRepository<K, V>;
+            if (typeof(V) == typeof(CurricularUnit))
+                return UcRepo as IRepository<K, V>;
+            if (typeof(V) == typeof(Proposal))
+                return PropRepo as IRepository<K, V>;
         }
     }
 }

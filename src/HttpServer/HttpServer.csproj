@@ -42,7 +42,8 @@
     <Compile Include="Model\Mappers\CurricularUnitMapper.cs" />
     <Compile Include="Model\Mappers\IMapper.cs" />
     <Compile Include="Model\Mappers\ProposalMapper.cs" />
-    <Compile Include="Model\Repository\Repository.cs" />
+    <Compile Include="Model\Repository\ProposalRepository.cs" />
+    <Compile Include="Model\Repository\CurricularUnitRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Model\Entities\CurricularUnit.cs" />
     <Compile Include="Model\Repository\IRepository.cs" />

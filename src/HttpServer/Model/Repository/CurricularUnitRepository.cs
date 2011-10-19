@@ -5,59 +5,54 @@ using HttpServer.Model.Mappers;
 
 namespace HttpServer.Model.Repository
 {
-    public class Repository<K, V> : IRepository<K, V> where V : AbstractEntity<K>
+    public class CurricularUnitRepository : IRepository<string, CurricularUnit>
     {
-        private readonly IDictionary<Type, IMapper<K, V>> _mappers = new Dictionary<Type, IMapper<K, V>>();
-        
-        public IEnumerable<V> GetAll(Type type)
+        private readonly IDictionary<Type, IMapper<string, CurricularUnit>> _mappers = new Dictionary<Type, IMapper<string, CurricularUnit>>();
+
+        public IEnumerable<CurricularUnit> GetAll(Type type)
         {
             return _mappers[type].GetAll();
         }
 
-        public V GetById(Type type, K key)
+        public CurricularUnit GetById(Type type, string key)
         {
             return _mappers[type].GetById(key);
         }
 
-        public void Insert(IEnumerable<V> values)
+        public void Insert(IEnumerable<CurricularUnit> values)
         {
             // Verificar se existe mapper para o tipo de dados do enumerável.
-            IMapper<K, V> mapper;
-            if (!_mappers.TryGetValue(typeof (V), out mapper))
+            IMapper<string, CurricularUnit> mapper;
+            if (!_mappers.TryGetValue(typeof(CurricularUnit), out mapper))
                 throw new InvalidOperationException(string.Format(
-                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof (V)));
+                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof(CurricularUnit)));
 
-            foreach (V value in values)
+            foreach (CurricularUnit value in values)
             {
                 mapper.Insert(value);
             }
         }
 
-        public void Insert(V value)
+        public void Insert(CurricularUnit value)
         {
             // Verificar se existe mapper para o tipo de dados do enumerável.
-            IMapper<K, V> mapper;
-            if (!_mappers.TryGetValue(typeof(V), out mapper))
+            IMapper<string, CurricularUnit> mapper;
+            if (!_mappers.TryGetValue(typeof(CurricularUnit), out mapper))
                 throw new InvalidOperationException(string.Format(
-                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof(V)));
+                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof(CurricularUnit)));
 
             mapper.Insert(value);
         }
 
-        public void Add(Type type, IMapper<K, V> mapper)
+        public void Add(Type type, IMapper<string, CurricularUnit> mapper)
         {
             // Se já existir um Mapper para este tipo retorna excepção;
-            IMapper<K, V> exists;
+            IMapper<string, CurricularUnit> exists;
             if (_mappers.TryGetValue(type, out exists))
                 throw new InvalidOperationException(string.Format(
                     "Não é possível substituir o mapper existente para o tipo indicado({0}).", type));
 
             _mappers[type] = mapper;
-        }
-
-        public void Add<K1, V1>(Type type, IMapper<K1, V1> mapper) where V1 : AbstractEntity<K1>
-        {
-            throw new NotImplementedException();
         }
     }
 }
