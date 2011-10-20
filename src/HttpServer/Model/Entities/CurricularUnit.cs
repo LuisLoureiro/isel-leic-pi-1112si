@@ -49,9 +49,24 @@ namespace HttpServer.Model.Entities
             AddPrecedences(precedence);
         }
 
-        public CurricularUnit(string name, string acronym, bool mandatory, ushort semester, float ects)
+        public CurricularUnit(string name, string acronym, bool mandatory, UInt16 semester, float ects)
             : this(name, acronym, mandatory, semester, ects, null)
         {
+        }
+
+        public string SemesterToText()
+        {
+            int aux = 0x01;
+            string ret = "";
+            for (int i = 0; i <= 10; ++i)
+            {
+                if ((Semester & aux) == aux)
+                    ret += (ret.Length != 0 ? " | " : "") + i + "º";
+
+                aux = aux << 1;
+            }
+
+            return ret;
         }
 
         public void AddPrecedence(CurricularUnit cUnit)

@@ -14,5 +14,10 @@ namespace HttpServer.Controller
         {
             return "/fucs";
         }
+
+        public static string ForRoot()
+        {
+            return "/";
+        }
     }
 }
