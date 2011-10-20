@@ -12,7 +12,7 @@ namespace PI.WebGarten
         {
             public NotFound()
                 :base("NotFound",
-                      Img("https://a248.e.akamai.net/assets.github.com/images/modules/404/parallax_errortext.png","404"))
+                      Img("http://lava360.com/wp-content/uploads/2010/01/csstricks.jpg", "404"))
             {}
         }
 

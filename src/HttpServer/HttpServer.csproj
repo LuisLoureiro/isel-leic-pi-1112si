@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controller\FUCController.cs" />
+    <Compile Include="Controller\ProposalView.cs" />
     <Compile Include="Controller\ResolveUri.cs" />
     <Compile Include="Controller\RootController.cs" />
     <Compile Include="Model\Entities\AbstractEntity.cs" />

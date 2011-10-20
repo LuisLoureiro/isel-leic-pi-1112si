@@ -48,7 +48,9 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}/edit")]
         public HttpResponse GetEditFucForm(string acr)
         {
-            return null;
+            CurricularUnit fuc = _repo.GetById(typeof (CurricularUnit), acr);
+
+            return new HttpResponse(HttpStatusCode.OK, new ProposalView(fuc));
         }
 
         [HttpCmd(HttpMethod.Post, "/fucs/{acr}/edit")]

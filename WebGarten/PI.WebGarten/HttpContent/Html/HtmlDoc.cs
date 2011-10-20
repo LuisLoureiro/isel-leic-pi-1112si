@@ -18,7 +18,11 @@
         public void WriteTo(TextWriter tw)
         {
             new HtmlElem("html",
-                    new HtmlElem("head", new HtmlElem("title", new HtmlText(_t))),
+                    new HtmlElem("head", 
+                        new HtmlElem("title", new HtmlText(_t)), 
+                        new HtmlElem("link", new HtmlText(""))
+                            .WithAttr("rel", "stylesheet")
+                            .WithAttr("href", "http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css")),
                     new HtmlElem("body", _c)
                 ).WriteTo(tw);
         }
