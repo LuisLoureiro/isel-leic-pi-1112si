@@ -1,4 +1,5 @@
-﻿using HttpServer.Model.Entities;
+﻿using System;
+using HttpServer.Model.Entities;
 
 namespace HttpServer.Model.Repository
 {
@@ -13,6 +14,8 @@ namespace HttpServer.Model.Repository
                 return UcRepo as IRepository<K, V>;
             if (typeof(V) == typeof(Proposal))
                 return PropRepo as IRepository<K, V>;
+
+            throw new InvalidOperationException("Os parâmetros de tipo indicados não foram reconhecidos.");
         }
     }
 }
