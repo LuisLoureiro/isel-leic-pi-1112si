@@ -6,7 +6,7 @@ namespace PI.WebGarten.HttpContent.Html
 
     public class HtmlElem : IWritable
     {
-        private readonly string _name;
+        internal readonly string _name;
 
         public HtmlElem(String name, params IWritable[] cs)
         {
@@ -17,7 +17,7 @@ namespace PI.WebGarten.HttpContent.Html
             }
         }
 
-        private readonly IDictionary<string, string> _attrs = new Dictionary<string, string>();
+        internal readonly IDictionary<string, string> _attrs = new Dictionary<string, string>();
         public HtmlElem WithAttr(string name, string value)
         {
             _attrs.Add(name, value);
@@ -31,7 +31,8 @@ namespace PI.WebGarten.HttpContent.Html
             return this;
         }
 
-        public void WriteTo(TextWriter w)
+        //Colocado como virtual para poder fazer override na class derivada HtmlSingleElem
+        public virtual void WriteTo(TextWriter w)
         {
             w.Write(string.Format("<{0}", _name));
             foreach (var entry in _attrs)
