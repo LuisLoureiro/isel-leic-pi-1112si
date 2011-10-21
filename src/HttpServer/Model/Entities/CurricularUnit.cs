@@ -7,6 +7,8 @@ namespace HttpServer.Model.Entities
     {
         private List<CurricularUnit> _precedence;
 
+        public static readonly byte Maxsemesters = 10;
+
         public string Name { get; private set; }
         //public string Acronym { get; private set; }
         public bool Mandatory { get; private set; }
@@ -58,10 +60,10 @@ namespace HttpServer.Model.Entities
         {
             int aux = 0x01;
             string ret = "";
-            for (int i = 0; i <= 10; ++i)
+            for (int i = 0; i < 10; i++)
             {
                 if ((Semester & aux) == aux)
-                    ret += (ret.Length != 0 ? " | " : "") + i + "º";
+                    ret += (ret.Length != 0 ? " | " : "") + i+1 + "º";
 
                 aux = aux << 1;
             }
