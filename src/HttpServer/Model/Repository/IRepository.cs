@@ -7,10 +7,10 @@ namespace HttpServer.Model.Repository
 {
     public interface IRepository<K, V> where V : AbstractEntity<K> 
     {
-        IEnumerable<V> GetAll(Type type);
-        V GetById(Type type, K key);
+        IEnumerable<V> GetAll();
+        V GetById(K key);
         void Insert(IEnumerable<V> values);
         void Insert(V value);
-        void Add(Type type, IMapper<K, V> mapper);
+        void Add(IMapper<K, V> mapper);
     }
 }
