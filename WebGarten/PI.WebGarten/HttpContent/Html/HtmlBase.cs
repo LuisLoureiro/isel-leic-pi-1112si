@@ -16,11 +16,13 @@ namespace PI.WebGarten.HttpContent.Html
                 .WithAttr("method", method)
                 .WithAttr("action", url);
         }
+        
         public static IWritable Label(String to, String text)
         {
             return new HtmlElem("label", new HtmlText(text))
                 .WithAttr("for", to);
         }
+        
         public static IWritable InputText(String name)
         {
             return new HtmlElem("input")
@@ -51,11 +53,64 @@ namespace PI.WebGarten.HttpContent.Html
             return new HtmlElem("a", Text(t))
                 .WithAttr("href", href);
         }
-        public static IWritable Img(string src, string alt)
+        public static IWritable Img(String src, String alt)
         {
             return new HtmlElem("img")
                 .WithAttr("src", src)
                 .WithAttr("alt", alt);
         }
+
+        #region Métodos Adicionados
+
+        //Adicionado
+        public static IWritable InputText(String name, String value)
+        {
+            return new HtmlElem("input")
+                .WithAttr("type", "text")
+                .WithAttr("name", name)
+                .WithAttr("value", value);
+        }
+
+        //Adcionado
+        public static IWritable InputCheckBox(String name, String value)
+        {
+            return new HtmlElem("input")
+                .WithAttr("type", "checkbox")
+                .WithAttr("name", name)
+                .WithAttr("value", value);
+        }
+
+        //Adicionado
+        public static IWritable Br()
+        {
+            return new HtmlSingleElem("br");
+        }
+
+        //Adicionado
+        public static IWritable Label(String text)
+        {
+            return new HtmlElem("label", Text(text));
+        }
+
+        //Adicionado
+        public static IWritable Div(String cls, params IWritable[] c)
+        {
+            return new HtmlElem("div", c)
+                .WithAttr("class", cls);
+        }
+
+        //Adicionado
+        public static IWritable Legend(String text)
+        {
+            return new HtmlElem("legend", Text(text));
+        }
+
+        //Adicionado
+        public static IWritable Fieldset(params IWritable[] c)
+        {
+            return new HtmlElem("fieldset", c);
+        }
+
+        #endregion
     }
 }
