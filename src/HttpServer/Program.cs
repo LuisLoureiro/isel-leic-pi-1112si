@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HttpServer.Controller;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Mappers;
@@ -20,7 +21,8 @@ namespace HttpServer
 
             host.Add(DefaultMethodBasedCommandFactory.GetCommandsFor(
                 typeof (RootController),
-                typeof (FucController)));
+                typeof (FucController),
+                typeof (ProposalController)));
 
             host.OpenAndWaitForever();
         }
@@ -29,6 +31,9 @@ namespace HttpServer
         {
             var ucRepo = RepositoryLocator.Get<string, CurricularUnit>();
             ucRepo.Add(new CurricularUnitMapper());
+
+            var propRepo = RepositoryLocator.Get<UInt32, Proposal>();
+            propRepo.Add(new ProposalMapper());
 
             IEnumerable<CurricularUnit> ucs = GetUCs();
             ucRepo.Insert(ucs);

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using System.Linq;
 using HttpServer.Controller;
 using HttpServer.Model.Entities;
 using PI.WebGarten;
@@ -8,6 +9,16 @@ namespace HttpServer.Views
 {
     public class ProposalView : HtmlDoc
     {
+        public ProposalView(IEnumerable<Proposal> props)
+            : base("Lista de propostas", 
+                    H1(Text("Lista de Propostas a Unidades Curriculares")),
+                    Ul(
+                       props.Select(prop => Li(A(ResolveUri.For(prop), string.Format("Id: {0}; UC: {1}",prop.Key.ToString(), prop.Info.Name)))).ToArray()
+                       ),
+                    A(ResolveUri.ForRoot(), "Página Inicial")
+                )
+        { 
+        }
         public ProposalView(CurricularUnit fuc)
             : base("Edição - " + fuc.Name,
                     Form(HttpMethod.Post, ResolveUri.For(fuc) + "/edit", 

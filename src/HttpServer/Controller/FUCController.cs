@@ -20,7 +20,7 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/fucs")]
         public HttpResponse GetFucs()
         {
-            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetAll(typeof(CurricularUnit))));
+            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetAll()));
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}")]
@@ -30,7 +30,7 @@ namespace HttpServer.Controller
 
             try
             {
-                fuc = _repo.GetById(typeof(CurricularUnit), acr);
+                fuc = _repo.GetById(acr);
             }catch(Exception)
             {
                 return new HttpResponse(HttpStatusCode.NotFound);
@@ -48,7 +48,7 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}/edit")]
         public HttpResponse GetEditFucForm(string acr)
         {
-            CurricularUnit fuc = _repo.GetById(typeof (CurricularUnit), acr);
+            CurricularUnit fuc = _repo.GetById(acr);
 
             return new HttpResponse(HttpStatusCode.OK, new ProposalView(fuc));
         }

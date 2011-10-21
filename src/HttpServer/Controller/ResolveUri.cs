@@ -10,6 +10,11 @@ namespace HttpServer.Controller
             return String.Format("/fucs/{0}", uc.Key);
         }
 
+        public static string For(Proposal prop)
+        {
+            return String.Format("/fucs/{0}/prop/{1}", prop.Info.Key, prop.Key);
+        }
+
         public static string ForFucs()
         {
             return "/fucs";
