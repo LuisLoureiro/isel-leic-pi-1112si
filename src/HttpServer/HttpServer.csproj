@@ -36,13 +36,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controller\FUCController.cs" />
-    <Compile Include="Controller\ProposalController.cs" />
+    <Compile Include="Controller\ProposalView.cs" />
     <Compile Include="Controller\ResolveUri.cs" />
     <Compile Include="Controller\RootController.cs" />
     <Compile Include="Model\Entities\AbstractEntity.cs" />
+    <Compile Include="Model\Mappers\AbstractMapper.cs" />
     <Compile Include="Model\Mappers\CurricularUnitMapper.cs" />
     <Compile Include="Model\Mappers\IMapper.cs" />
     <Compile Include="Model\Mappers\ProposalMapper.cs" />
+    <Compile Include="Model\Repository\AbstractRepository.cs" />
     <Compile Include="Model\Repository\ProposalRepository.cs" />
     <Compile Include="Model\Repository\CurricularUnitRepository.cs" />
     <Compile Include="Program.cs" />
@@ -51,7 +53,6 @@
     <Compile Include="Model\Entities\Proposal.cs" />
     <Compile Include="Model\Repository\RepositoryLocator.cs" />
     <Compile Include="Views\FucsView.cs" />
-    <Compile Include="Views\ProposalView.cs" />
     <Compile Include="Views\RootView.cs" />
   </ItemGroup>
   <ItemGroup>
