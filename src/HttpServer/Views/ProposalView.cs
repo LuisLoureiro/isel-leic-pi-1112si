@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using HttpServer.Controller;
 using HttpServer.Model.Entities;
 using PI.WebGarten;
 using PI.WebGarten.HttpContent.Html;
 
-namespace HttpServer.Controller
+namespace HttpServer.Views
 {
     public class ProposalView : HtmlDoc
     {
