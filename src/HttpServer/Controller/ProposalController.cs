@@ -5,6 +5,12 @@ namespace HttpServer.Controller
 {
     class ProposalController
     {
+        [HttpCmd(HttpMethod.Get, "/props")]
+        public HttpResponse GetFucProposal()
+        {
+            return null;
+        }
+
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}/props/{id}")]
         public HttpResponse GetFucProposal(string acr, int id)
         {
