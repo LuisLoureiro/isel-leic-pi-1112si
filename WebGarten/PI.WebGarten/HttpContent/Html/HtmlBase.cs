@@ -72,12 +72,31 @@ namespace PI.WebGarten.HttpContent.Html
         }
 
         //Adcionado
-        public static IWritable InputCheckBox(String name, String value)
+        public static IWritable InputCheckBox(String name, String value, Boolean isChecked)
         {
-            return new HtmlElem("input")
+            var input = new HtmlElem("input")
                 .WithAttr("type", "checkbox")
                 .WithAttr("name", name)
                 .WithAttr("value", value);
+
+            if(isChecked)
+                input.WithAttr("checked", "checked");
+
+            return input;
+        }
+
+        //Adcionado
+        public static IWritable InputRadioButton(String name, String value, Boolean isChecked)
+        {
+            var input = new HtmlElem("input")
+                .WithAttr("type", "radio")
+                .WithAttr("name", name)
+                .WithAttr("value", value);
+
+            if (isChecked)
+                input.WithAttr("checked", "checked");
+
+            return input;
         }
 
         //Adicionado
@@ -109,6 +128,12 @@ namespace PI.WebGarten.HttpContent.Html
         public static IWritable Fieldset(params IWritable[] c)
         {
             return new HtmlElem("fieldset", c);
+        }
+
+        public static IWritable Ul(String cls, params IWritable[] c)
+        {
+            return new HtmlElem("ul", c)
+                .WithAttr("class", cls);
         }
 
         #endregion

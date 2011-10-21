@@ -30,7 +30,7 @@ namespace HttpServer.Views
                         Li(Text("Pré Requisitos: ")),
                             Ul(fuc.Precedence.Select(f => Li(A(ResolveUri.For(f), f.Key))).ToArray())
                     ),
-                    H2(Text("Objectvios")),
+                    H2(Text("Objectivos")),
                     P(Text(fuc.Objectives)),
                     H2(Text("Resultados da Aprendizagem")),
                     P(Text(fuc.Results)),
