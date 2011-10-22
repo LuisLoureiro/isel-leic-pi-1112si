@@ -2,6 +2,13 @@
 {
     public abstract class AbstractEntity<K>
     {
+        public enum Status
+        {
+            Accepted = 1,
+            Pending,
+            Canceled
+        } ;
+
         private readonly K _key;
 
         protected AbstractEntity(K key)
