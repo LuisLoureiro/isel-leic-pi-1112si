@@ -3,7 +3,7 @@ using HttpServer.Model.Entities;
 
 namespace HttpServer.Model.Repository
 {
-    public class ProposalRepository : AbstractRepository<UInt32, Proposal>
+    public class ProposalRepository : AbstractRepository<long, Proposal>
     {
     }
 }

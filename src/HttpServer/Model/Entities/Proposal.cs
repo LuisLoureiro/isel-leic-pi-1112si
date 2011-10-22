@@ -1,13 +1,15 @@
 ﻿using System;
 namespace HttpServer.Model.Entities
 {
-    public class Proposal : AbstractEntity<UInt32>
+    public class Proposal : AbstractEntity<long>
     {
         private readonly CurricularUnit _info;
         public User Owner { get; private set; }
         private Status _status;
 
-        public Proposal(UInt32 id, CurricularUnit info, User owner) : base(id)
+        private static long _id = 0; //Começará no 1
+
+        public Proposal(CurricularUnit info, User owner) : base(++_id)
         {
             _info = info;
             Owner = owner;

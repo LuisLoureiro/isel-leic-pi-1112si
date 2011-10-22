@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Linq;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Repository;
 using HttpServer.Views;
@@ -42,13 +44,13 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/fucs/new")]
         public HttpResponse GetCreateFuc()
         {
-            return null;
+            return new HttpResponse(HttpStatusCode.OK, new ProposalView());
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}/edit")]
         public HttpResponse GetEditFucForm(string acr)
         {
-            CurricularUnit fuc = _repo.GetById(acr);
+            var fuc = _repo.GetById(acr);
 
             return new HttpResponse(HttpStatusCode.OK, new ProposalView(fuc));
         }

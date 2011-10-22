@@ -32,7 +32,7 @@ namespace HttpServer
             var ucRepo = RepositoryLocator.Get<string, CurricularUnit>();
             ucRepo.Add(new CurricularUnitMapper());
 
-            var propRepo = RepositoryLocator.Get<UInt32, Proposal>();
+            var propRepo = RepositoryLocator.Get<long, Proposal>();
             propRepo.Add(new ProposalMapper());
 
             IEnumerable<CurricularUnit> ucs = GetUCs();

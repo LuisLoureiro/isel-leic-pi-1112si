@@ -5,14 +5,9 @@ namespace HttpServer.Controller
 {
     public class ResolveUri
     {
-        public static string For(CurricularUnit uc)
+        public static string ForRoot()
         {
-            return String.Format("/fucs/{0}", uc.Key);
-        }
-
-        public static string For(Proposal prop)
-        {
-            return String.Format("/fucs/{0}/prop/{1}", prop.Info.Key, prop.Key);
+            return "/";
         }
 
         public static string ForFucs()
@@ -20,9 +15,19 @@ namespace HttpServer.Controller
             return "/fucs";
         }
 
-        public static string ForRoot()
+        public static string For(CurricularUnit uc)
         {
-            return "/";
+            return String.Format("/fucs/{0}", uc.Key);
+        }
+
+        public static string ForProposals()
+        {
+            return "/props";
+        }
+
+        public static string For(Proposal prop)
+        {
+            return String.Format("/props/{1}", prop.Key);
         }
     }
 }
