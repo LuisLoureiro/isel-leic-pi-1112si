@@ -24,11 +24,16 @@ namespace HttpServer
                 typeof (FucController),
                 typeof (ProposalController)));
 
+            host.Pipeline.AddFilterFirst("Authentication", typeof(AuthenticationFilter));
+            host.Pipeline.AddFilterAfter("Authorization", typeof(AuthorizationFilter), "Authentication");
+
             host.OpenAndWaitForever();
         }
 
         private static void Init()
         {
+            // 
+            // Adicionar UCs em memória e criar os repositórios com os respectivos Mappers
             var ucRepo = RepositoryLocator.Get<string, CurricularUnit>();
             ucRepo.Add(new CurricularUnitMapper());
 
@@ -37,6 +42,12 @@ namespace HttpServer
 
             IEnumerable<CurricularUnit> ucs = GetUCs();
             ucRepo.Insert(ucs);
+
+            //
+            // Adicionar utilizadores pré-definidos
+            User.AddUser("coordenador", "123456", Roles.Coordenador);
+            User.AddUser("utilizador", "123456", Roles.Utilizador);
+
         }
 
         private static IEnumerable<CurricularUnit> GetUCs()

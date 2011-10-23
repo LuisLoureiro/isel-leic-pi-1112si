@@ -4,12 +4,12 @@ namespace HttpServer.Model.Entities
     public class Proposal : AbstractEntity<long>
     {
         private readonly CurricularUnit _info;
-        public User Owner { get; private set; }
+        public string Owner { get; private set; }
         private Status _status;
 
         private static long _id = 0; //Começará no 1
 
-        public Proposal(CurricularUnit info, User owner) : base(++_id)
+        public Proposal(CurricularUnit info, string owner) : base(++_id)
         {
             _info = info;
             Owner = owner;

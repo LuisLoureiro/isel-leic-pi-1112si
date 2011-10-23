@@ -12,7 +12,7 @@ namespace HttpServer
     /// Verifica se tem header "Authentication": 
 	///		se sim verifica se as credenciais estão correctas;
 	///			se não 401;
-	///			se sim cria GenericPrincipal e adiciona as respectivas Roles;
+	///			se sim cria GenericPrincipal, adiciona as respectivas Roles e passa ao próximo filtro;
 	///		se não passa ao próximo filtro;
     /// </summary>
     public class AuthenticationFilter : IHttpFilter
@@ -36,15 +36,11 @@ namespace HttpServer
 
         public HttpResponse Process(RequestInfo requestInfo)
         {
-            var request = requestInfo.Context.Request;
-            if (request.Url.AbsolutePath.Contains("prop") || request.Url.AbsolutePath.Contains("edit"))
+            var auth = requestInfo.Context.Request.Headers["Authorization"];
+            if (auth != null)
             {
-                string auth = request.Headers["Authorization"];
-                if (auth == null)
-                    return NotAuthorized();
-
                 auth = auth.Replace("Basic ", "");
-                string []userPasswd = Encoding.UTF8.GetString(Convert.FromBase64String(auth)).Split(':');
+                string[] userPasswd = Encoding.UTF8.GetString(Convert.FromBase64String(auth)).Split(':');
                 string user = userPasswd[0];
                 string password = userPasswd[1];
 
