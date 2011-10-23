@@ -38,6 +38,7 @@ namespace HttpServer.Views
                     P(Text(fuc.Assessment)),
                     H2(Text("Programa Resumido")),
                     P(Text(fuc.Program)),
+                    A(ResolveUri.ForEdit(fuc), "Criar proposta"),
                     A(ResolveUri.ForFucs(), "Voltar à Listagem")
                 )
         {

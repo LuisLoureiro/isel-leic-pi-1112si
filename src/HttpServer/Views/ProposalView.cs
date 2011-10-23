@@ -9,8 +9,6 @@ namespace HttpServer.Views
 {
     public class ProposalView : HtmlDoc
     {
-        private Proposal proposal;
-
         public ProposalView(IEnumerable<Proposal> props)
             : base("Lista de propostas", 
                     H1(Text("Lista de Propostas a Unidades Curriculares")),
