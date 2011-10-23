@@ -24,11 +24,7 @@ namespace HttpServer.Model.Repository
 
         public void Insert(IEnumerable<V> values)
         {
-            // Verificar se existe mapper para o tipo de dados do enumerável.
-            IMapper<K, V> mapper;
-            if (!_mappers.TryGetValue(typeof(V), out mapper))
-                throw new InvalidOperationException(string.Format(
-                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof(V)));
+            IMapper<K, V> mapper = CheckMapper();
 
             foreach (V value in values)
             {
@@ -38,13 +34,16 @@ namespace HttpServer.Model.Repository
 
         public void Insert(V value)
         {
-            // Verificar se existe mapper para o tipo de dados do enumerável.
-            IMapper<K, V> mapper;
-            if (!_mappers.TryGetValue(typeof(V), out mapper))
-                throw new InvalidOperationException(string.Format(
-                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof(V)));
+            IMapper<K, V> mapper = CheckMapper();
 
             mapper.Insert(value);
+        }
+
+        public void Update(V value)
+        {
+            IMapper<K, V> mapper = CheckMapper();
+
+            mapper.Update(value);
         }
 
         public void Add(IMapper<K, V> mapper)
@@ -56,6 +55,17 @@ namespace HttpServer.Model.Repository
                     "Não é possível substituir o mapper existente para o tipo indicado({0}).", _type));
 
             _mappers[_type] = mapper;
+        }
+
+        private IMapper<K, V> CheckMapper()
+        {
+            // Verificar se existe mapper para o tipo de dados do enumerável.
+            IMapper<K, V> mapper;
+            if (!_mappers.TryGetValue(typeof(V), out mapper))
+                throw new InvalidOperationException(string.Format(
+                    "Não existe nenhum mapper para o tipo indicado({0}).", typeof(V)));
+
+            return mapper;
         }
     }
 }

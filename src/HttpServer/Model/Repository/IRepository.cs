@@ -11,6 +11,7 @@ namespace HttpServer.Model.Repository
         V GetById(K key);
         void Insert(IEnumerable<V> values);
         void Insert(V value);
+        void Update(V value);
         void Add(IMapper<K, V> mapper);
     }
 }

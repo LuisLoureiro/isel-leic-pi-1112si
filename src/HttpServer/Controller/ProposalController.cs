@@ -33,7 +33,8 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/props")]
         public HttpResponse GetFucProposal()
         {
-            return new HttpResponse(HttpStatusCode.OK, new ProposalView(_repo.GetAll()));
+            return new HttpResponse(HttpStatusCode.OK, 
+                new ProposalView(_repo.GetAll().Where(p => p.State == AbstractEntity<long>.Status.Pending )));
         }
 
         [HttpCmd(HttpMethod.Get, "/props/{id}")]
@@ -46,8 +47,19 @@ namespace HttpServer.Controller
         public HttpResponse PostAcceptFucProposal(long id)
         {
             var prop = _repo.GetById(id);
+            // Actualiza o estado da proposta
+            prop.UpdateStatus(AbstractEntity<long>.Status.Accepted);
 
-            RepositoryLocator.Get<string, CurricularUnit>().Insert(prop.Info);
+            // Verificar se esta proposta corresponde a uma nova FUC ou a uma actualização de uma FUC existente.
+            IRepository<string, CurricularUnit> ucRepo = RepositoryLocator.Get<string, CurricularUnit>();
+            
+            if (ucRepo.GetById(prop.Info.Key) == null) // Nova FUC
+                ucRepo.Insert(prop.Info);
+            else
+                ucRepo.Update(prop.Info);
+
+            // Actualiza a FUC respectiva
+            ucRepo.Insert(prop.Info);
 
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop.Info));
         }
@@ -55,7 +67,8 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Post, "/props/{id}/cancel")]
         public HttpResponse PostCancelFucProposal(long id)
         {
-            //TODO 
+            // Actualiza o estado da proposta
+            _repo.GetById(id).UpdateStatus(AbstractEntity<long>.Status.Canceled);
 
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.ForProposals());
         }
@@ -63,7 +76,7 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/props/{id}/edit")]
         public HttpResponse GetEditFucProposal(long id)
         {
-            return null;
+            return new HttpResponse(HttpStatusCode.OK, new ProposalView(_repo.GetById(id).Info));
         }
 
         private static CurricularUnit BuildCurricularUnitFromContent(IEnumerable<KeyValuePair<string, string>> content)

@@ -9,5 +9,6 @@ namespace HttpServer.Model.Mappers
         V GetById(K key);
 
         void Insert(V value);
+        void Update(V value);
     }
 }

@@ -15,7 +15,8 @@ namespace HttpServer.Model.Mappers
 
         public V GetById(K key)
         {
-            return _entities[key];
+            V value;
+            return !_entities.TryGetValue(key, out value) ? null : value;
         }
 
         public void Insert(V value)
