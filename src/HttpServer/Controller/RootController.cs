@@ -17,7 +17,7 @@ namespace HttpServer.Controller
         public HttpResponse Login()
         {
             return new HttpResponse(HttpStatusCode.Unauthorized)
-                        .WithHeader("WWW-Authentication", "basic Realm=\"LI51N-G08\"");
+                        .WithHeader("WWW-Authenticate", "Basic realm=\"LI51N-G08\"");
         }
     }
 }

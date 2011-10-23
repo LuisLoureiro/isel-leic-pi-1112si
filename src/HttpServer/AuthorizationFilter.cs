@@ -7,11 +7,7 @@ using PI.WebGarten.Pipeline;
 namespace HttpServer
 {
     /// <summary>
-    /// Verifica se o recurso pedido precisa de Roles:
-	///		se sim executa IsInRole do User de RequestInfo passando a Role;
-	///			se não 403 Forbidden;
-	///			se sim passa ao próximo filtro;
-	///		se não passa ao próximo filtro;
+    /// Verifica se, para o recurso pedido, o utilizador tem as permissões necessárias.
     /// </summary>
     public class AuthorizationFilter : IHttpFilter
     {
@@ -36,21 +32,21 @@ namespace HttpServer
         public HttpResponse Process(RequestInfo requestInfo)
         {
             var principal = requestInfo.User;
+            string path = requestInfo.Context.Request.RawUrl;
 
-            if (principal != null)
-            {
-                string path = requestInfo.Context.Request.Url.AbsolutePath;
+            // Verificar os recursos exclusivos de utilizadores autenticados.
+            if ((path.Contains("props") || path.Contains("edit") || path.Contains("new")) && principal.IsInRole(Roles.Anonimo))
+                return Forbidden();
 
-                // Verificar os recursos exclusivos de utilizador coordenador.
-                if (path.EndsWith("accept") && !principal.IsInRole(Roles.Coordenador))
-                    return Forbidden();
+            // Verificar os recursos exclusivos de utilizadores coordenadores.
+            if ((path.Contains("props") && path.Contains("edit")) && principal.IsInRole(Roles.Coordenador))
+                return Forbidden();
 
-                // Verificar os recursos exclusivos de utilizador não coordenador.
-                if (path.Contains("prop") && path.EndsWith("edit") && !principal.IsInRole(Roles.Utilizador))
-                    return Forbidden();
+            // Verificar os recursos exclusivos de utilizadores não coordenadores.
+            if (path.Contains("accept") && principal.IsInRole(Roles.Utilizador))
+                return Forbidden();
 
-                // Se passou nas verificações anteriores significa que pode aceder a qualquer recurso.
-            }
+            // Se passou nas verificações anteriores significa que pode aceder ao recurso.
 
             return _nextFilter.Process(requestInfo);
         }
