@@ -37,13 +37,13 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Get, "/props/{id}")]
-        public HttpResponse GetFucProposal(string acr, long id, IPrincipal principal)
+        public HttpResponse GetFucProposal(long id, IPrincipal principal)
         {
             return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetById(id).Info, principal));
         }
 
         [HttpCmd(HttpMethod.Post, "/props/{id}/accept")]
-        public HttpResponse PostAcceptFucProposal(string acr, long id)
+        public HttpResponse PostAcceptFucProposal(long id)
         {
             var prop = _repo.GetById(id);
 
@@ -53,7 +53,7 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Post, "/props/{id}/cancel")]
-        public HttpResponse PostCancelFucProposal(string acr, long id)
+        public HttpResponse PostCancelFucProposal(long id)
         {
             //TODO 
 
@@ -61,7 +61,7 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Get, "/props/{id}/edit")]
-        public HttpResponse GetEditFucProposal(string acr, long id)
+        public HttpResponse GetEditFucProposal(long id)
         {
             return null;
         }
