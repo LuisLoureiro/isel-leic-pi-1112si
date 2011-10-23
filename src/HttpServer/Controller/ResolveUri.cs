@@ -27,7 +27,12 @@ namespace HttpServer.Controller
 
         public static string For(Proposal prop)
         {
-            return String.Format("/props/{1}", prop.Key);
+            return String.Format("/props/{0}", prop.Key);
+        }
+
+        internal static string ForEdit(CurricularUnit fuc)
+        {
+            return String.Format("/fucs/{0}/edit", fuc.Key);
         }
     }
 }

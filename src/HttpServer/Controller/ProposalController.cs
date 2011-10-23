@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Repository;
 using HttpServer.Views;
@@ -20,13 +21,13 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Post, "/fucs/new")]
-        public HttpResponse PostCreateFuc(IEnumerable<KeyValuePair<string, string>> content)
+        public HttpResponse PostCreateFuc(IEnumerable<KeyValuePair<string, string>> content, IPrincipal principal)
         {
             var uc = BuildCurricularUnitFromContent(content);
-            var prop = new Proposal(uc);
+            var prop = new Proposal(uc, principal.Identity.Name);
             _repo.Insert(prop);
 
-            return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.ForProposal(prop));
+            return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop));
         }
 
         [HttpCmd(HttpMethod.Get, "/props")]
@@ -35,20 +36,13 @@ namespace HttpServer.Controller
             return new HttpResponse(HttpStatusCode.OK, new ProposalView(_repo.GetAll()));
         }
 
-        [HttpCmd(HttpMethod.Get, "/fucs/{acr}/props/{id}")]
-        public HttpResponse GetFucProposal(string acr, long id)
+        [HttpCmd(HttpMethod.Get, "/props/{id}")]
+        public HttpResponse GetFucProposal(string acr, long id, IPrincipal principal)
         {
-            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetById(id).Info));
+            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetById(id).Info, principal));
         }
 
-        [HttpCmd(HttpMethod.Get, "/fucs/{acr}/props")]
-        public HttpResponse GetFucProposals(string acr)
-        {
-            return new HttpResponse(HttpStatusCode.OK, 
-                                    new ProposalView(_repo.GetAll().Where(p => p.Info.Key.Equals(acr))));
-        }
-
-        [HttpCmd(HttpMethod.Post, "/fucs/{acr}/props/{id}/accept")]
+        [HttpCmd(HttpMethod.Post, "/props/{id}/accept")]
         public HttpResponse PostAcceptFucProposal(string acr, long id)
         {
             var prop = _repo.GetById(id);
@@ -58,7 +52,7 @@ namespace HttpServer.Controller
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop.Info));
         }
 
-        [HttpCmd(HttpMethod.Post, "/fucs/{acr}/props/{id}/cancel")]
+        [HttpCmd(HttpMethod.Post, "/props/{id}/cancel")]
         public HttpResponse PostCancelFucProposal(string acr, long id)
         {
             //TODO 
@@ -66,7 +60,7 @@ namespace HttpServer.Controller
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.ForProposals());
         }
 
-        [HttpCmd(HttpMethod.Get, "/fucs/{acr}/props/{id}/edit")]
+        [HttpCmd(HttpMethod.Get, "/props/{id}/edit")]
         public HttpResponse GetEditFucProposal(string acr, long id)
         {
             return null;

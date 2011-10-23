@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Linq;
+﻿using System.Net;
+using System.Security.Principal;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Repository;
 using HttpServer.Views;
@@ -26,10 +25,10 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}")]
-        public HttpResponse GetFuc(string acr)
+        public HttpResponse GetFuc(string acr, IPrincipal principal)
         {
             CurricularUnit fuc;
-
+            
             try
             {
                 fuc = _repo.GetById(acr);
@@ -38,7 +37,7 @@ namespace HttpServer.Controller
                 return new HttpResponse(HttpStatusCode.NotFound);
             }
             
-            return new HttpResponse(HttpStatusCode.OK, new FucsView(fuc));
+            return new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal));
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/new")]
@@ -58,6 +57,8 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Post, "/fucs/{acr}/edit")]
         public HttpResponse PostEditFucForm(string acr)
         {
+            //TODO
+
             return null;
         }
     }
