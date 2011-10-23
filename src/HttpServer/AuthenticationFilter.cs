@@ -37,7 +37,11 @@ namespace HttpServer
         public HttpResponse Process(RequestInfo requestInfo)
         {
             var auth = requestInfo.Context.Request.Headers["Authorization"];
-            if (auth != null)
+            if (auth == null)
+            {
+                requestInfo.User = new GenericPrincipal(new GenericIdentity("", "Basic"), new[]{Roles.Anonimo});
+            }
+            else
             {
                 auth = auth.Replace("Basic ", "");
                 string[] userPasswd = Encoding.UTF8.GetString(Convert.FromBase64String(auth)).Split(':');
@@ -45,10 +49,21 @@ namespace HttpServer
                 string password = userPasswd[1];
 
                 // Verificar se as credenciais fornecidas estão correctas
-                if (!User.IsCorrect(user, password))
-                    return NotAuthorized();
+                try 
+                {
+                    if (!User.IsCorrect(user, password))
+                        return NotAuthorized();
+                }
+                catch (InvalidOperationException e)
+                {
+                    return new HttpResponse(HttpStatusCode.Unauthorized, new TextContent(e.Message));
+                }
 
                 requestInfo.User = new GenericPrincipal(new GenericIdentity(user, "Basic"), User.GetRoles(user));
+                if (requestInfo.Context.Request.RawUrl.Equals("/login"))
+                {
+                    return new HttpResponse(HttpStatusCode.Redirect).WithHeader("Location", "/");
+                }
             }
 
             return _nextFilter.Process(requestInfo);
@@ -58,7 +73,7 @@ namespace HttpServer
         {
             var resp = new HttpResponse(HttpStatusCode.Unauthorized, new TextContent("Not Authorized"));
 
-            resp.WithHeader("WWW-Authenticate", "Basic realm=\"Private Area\"");
+            resp.WithHeader("WWW-Authenticate", "Basic realm=\"LI51N-G08\"");
             return resp;
         }
     }
