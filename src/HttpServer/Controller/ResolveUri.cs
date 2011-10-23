@@ -30,9 +30,14 @@ namespace HttpServer.Controller
             return String.Format("/props/{0}", prop.Key);
         }
 
-        internal static string ForEdit(CurricularUnit fuc)
+        public static string ForEdit(CurricularUnit fuc)
         {
             return String.Format("/fucs/{0}/edit", fuc.Key);
+        }
+
+        public static string ForLogin()
+        {
+            return String.Format("/login");
         }
     }
 }

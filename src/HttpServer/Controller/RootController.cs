@@ -12,5 +12,12 @@ namespace HttpServer.Controller
         {
             return new HttpResponse(HttpStatusCode.OK, new RootView());
         }
+
+        [HttpCmd(HttpMethod.Get, "/login")]
+        public HttpResponse Login()
+        {
+            return new HttpResponse(HttpStatusCode.Unauthorized)
+                        .WithHeader("WWW-Authentication", "basic Realm=\"LI51N-G08\"");
+        }
     }
 }

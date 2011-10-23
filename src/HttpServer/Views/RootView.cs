@@ -14,7 +14,8 @@ namespace HttpServer.Views
             : base("LI51N-G08", 
                     H1(Text("Bem vindo!")),
                     Ul(
-                        Li(A(ResolveUri.ForFucs(), "Fichas das Unidades Curriculares"))
+                        Li(A(ResolveUri.ForFucs(), "Fichas das Unidades Curriculares")),
+                        Li(A(ResolveUri.ForLogin(), "Login"))
                     )
             )
         {
