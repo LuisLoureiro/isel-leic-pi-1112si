@@ -42,11 +42,11 @@ namespace HttpServer
                 string path = requestInfo.Context.Request.Url.AbsolutePath;
 
                 // Verificar os recursos exclusivos de utilizador coordenador.
-                if (path.EndsWith("accept") && !principal.IsInRole("coordenador"))
+                if (path.EndsWith("accept") && !principal.IsInRole(Roles.Coordenador))
                     return Forbidden();
 
                 // Verificar os recursos exclusivos de utilizador não coordenador.
-                if (path.Contains("prop") && path.EndsWith("edit") && !principal.IsInRole("utilizador"))
+                if (path.Contains("prop") && path.EndsWith("edit") && !principal.IsInRole(Roles.Utilizador))
                     return Forbidden();
 
                 // Se passou nas verificações anteriores significa que pode aceder a qualquer recurso.

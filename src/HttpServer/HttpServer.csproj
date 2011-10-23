@@ -54,6 +54,7 @@
     <Compile Include="Model\Repository\IRepository.cs" />
     <Compile Include="Model\Entities\Proposal.cs" />
     <Compile Include="Model\Repository\RepositoryLocator.cs" />
+    <Compile Include="Roles.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Views\FucsView.cs" />
     <Compile Include="Views\ProposalView.cs" />
