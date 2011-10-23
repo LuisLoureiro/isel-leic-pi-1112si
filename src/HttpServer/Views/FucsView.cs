@@ -42,14 +42,14 @@ namespace HttpServer.Views
                    P(Text(fuc.Assessment)),
                    H2(Text("Programa Resumido")),
                    P(Text(fuc.Program)),
-                   GetLinks(fuc, principal),
+                   GetLinks(fuc, principal), Br(),
                    A(ResolveUri.ForFucs(), "Voltar à Listagem")
                 )
         {}
 
         private static IWritable GetLinks(CurricularUnit fuc, IPrincipal principal)
         {
-            if (principal.IsInRole(Roles.Anonimo))
+            if (principal == null || principal.IsInRole(Roles.Anonimo))
                 return null;
 
             var prop = RepositoryLocator.Get<long, Proposal>().GetAll()
