@@ -44,5 +44,20 @@ namespace HttpServer.Controller
         {
             return String.Format("/login");
         }
+
+        public static string ForNewFuc()
+        {
+            return string.Format("/fucs/new");
+        }
+
+        public static string ForProposalAccept(long id)
+        {
+            return string.Format("/props/{0}/accept", id);
+        }
+
+        public static string ForProposalCancel(long id)
+        {
+            return string.Format("/props/{0}/cancel", id);
+        }
     }
 }

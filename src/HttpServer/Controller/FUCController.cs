@@ -22,9 +22,9 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs")]
-        public HttpResponse GetFucs()
+        public HttpResponse GetFucs(IPrincipal principal)
         {
-            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetAll()));
+            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetAll(), principal));
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}")]
@@ -62,7 +62,7 @@ namespace HttpServer.Controller
             var uc = new CurricularUnit(content.Where(p => p.Key.Equals("name")).FirstOrDefault().Value,
                                         content.Where(p => p.Key.Equals("acr")).FirstOrDefault().Value,
                                         content.Where(p => p.Key.Equals("tipoObrig")).FirstOrDefault().Value.Equals("obrigatoria"),
-                                        TranslateSemester(content),
+                                        Utils.TranslateSemester(content),
                                         ects)
                          {
                              Results = content.Where(p => p.Key.Equals("results")).FirstOrDefault().Value,
@@ -70,27 +70,15 @@ namespace HttpServer.Controller
                              Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value,
                              Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value
                          };
-            // Actualizar os campos: Objectivos; Resultados; Avaliação; Programa.
 
             // Actualizar as precedências
-            //uc.UpdatePrecedences(content); 
+            uc.UpdatePrecedences(Utils.RetrievePrecedencesFromPayload(content)); 
 
             // Criar a proposta de alteração de unidade curricular.
             var prop = new Proposal(uc, principal.Identity.Name);
             RepositoryLocator.Get<long, Proposal>().Insert(prop);
 
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop));
-        }
-
-        private static ushort TranslateSemester(IEnumerable<KeyValuePair<string, string>> content)
-        {
-            ushort val = 0x00;
-
-            for(int i = 0; i<10; i++)
-                if (content.Where(k => k.Key.Equals(i.ToString())).FirstOrDefault().Value == i.ToString())
-                    val = (ushort)(val | (0x01 << i));
-
-            return val;
         }
     }
 }

@@ -55,8 +55,6 @@ namespace HttpServer.Controller
         public HttpResponse PostAcceptFucProposal(long id)
         {
             var prop = _repo.GetById(id);
-            // Actualiza o estado da proposta
-            prop.UpdateStatus(AbstractEntity<long>.Status.Accepted);
 
             // Verificar se esta proposta corresponde a uma nova FUC ou a uma actualização de uma FUC existente.
             IRepository<string, CurricularUnit> ucRepo = RepositoryLocator.Get<string, CurricularUnit>();
@@ -66,8 +64,8 @@ namespace HttpServer.Controller
             else
                 ucRepo.Update(prop.Info);
 
-            // Actualiza a FUC respectiva
-            ucRepo.Insert(prop.Info);
+            // Actualiza o estado da proposta
+            prop.UpdateStatus(AbstractEntity<long>.Status.Accepted);
 
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop.Info));
         }
@@ -89,6 +87,32 @@ namespace HttpServer.Controller
             return prop == null ? 
                 new HttpResponse(HttpStatusCode.NotFound, new Handler.NotFound()) :
                 new HttpResponse(HttpStatusCode.OK, new ProposalView(prop.Info, ResolveUri.ForEdit(prop)));
+        }
+
+        [HttpCmd(HttpMethod.Post, "/props/{id}/edit")]
+        public HttpResponse PostEditFucProposal(long id, IEnumerable<KeyValuePair<string, string>> content, IPrincipal principal)
+        {
+            float ects;
+            if (!float.TryParse(content.Where(p => p.Key.Equals("ects")).FirstOrDefault().Value, out ects))
+                throw new ArgumentException("Valor de ECTS inválido");
+
+            Proposal prop = _repo.GetById(id);
+            CurricularUnit uc = prop.Info;
+
+            // Alterar a unidade curricular associada à proposta
+            uc.Name = content.Where(p => p.Key.Equals("name")).FirstOrDefault().Value;
+            uc.Mandatory = content.Where(p => p.Key.Equals("tipoObrig")).FirstOrDefault().Value.Equals("obrigatoria");
+            uc.Semester = Utils.TranslateSemester(content);
+            uc.Ects = ects;
+            uc.Results = content.Where(p => p.Key.Equals("results")).FirstOrDefault().Value;
+            uc.Objectives = content.Where(p => p.Key.Equals("objectives")).FirstOrDefault().Value;
+            uc.Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value;
+            uc.Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value;
+
+            // Actualizar as precedências
+            uc.UpdatePrecedences(Utils.RetrievePrecedencesFromPayload(content)); 
+
+            return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop));
         }
 
         private static CurricularUnit BuildCurricularUnitFromContent(IEnumerable<KeyValuePair<string, string>> content)

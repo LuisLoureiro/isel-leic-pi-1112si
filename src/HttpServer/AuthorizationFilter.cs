@@ -48,7 +48,7 @@ namespace HttpServer
             if ((path.Contains("props") && path.Contains("edit")))
             {
                 long id;
-                if (long.TryParse(path.Split('/')[1], out id))
+                if (long.TryParse(path.Split('/')[2], out id))
                 {
                     Proposal prop = RepositoryLocator.Get<long, Proposal>().GetById(id);
                     if (!prop.Owner.Equals(principal.Identity.Name))

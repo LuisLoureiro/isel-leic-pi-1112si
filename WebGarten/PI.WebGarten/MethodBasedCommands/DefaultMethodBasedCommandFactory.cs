@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PI.WebGarten.MethodBasedCommands
 {
     public class DefaultMethodBasedCommandFactory
     {
-        private static IParameterBinder _binder = new CompositeParameterBinder(
+        private static readonly IParameterBinder Binder = new CompositeParameterBinder(
                 new UriTemplateParameterBinder(),
                 new RequestParameterBinder(),
                 new FormUrlEncodingParameterBinder(),
-                new UserParameterBinder() // Para permitir receber 
+                new UserParameterBinder() // Para permitir receber o IPrincipal nos CommandMethods
         );
 
         public static ICommand[] GetCommandsFor(params Type[] types)
         {
-            return new MethodBasedCommandFactory(_binder, types).Create().ToArray();
+            return new MethodBasedCommandFactory(Binder, types).Create().ToArray();
         }
     }
 }

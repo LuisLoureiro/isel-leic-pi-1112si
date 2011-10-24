@@ -11,12 +11,15 @@ namespace HttpServer.Views
 {
     public class FucsView : HtmlDoc
     {
-        public FucsView(IEnumerable<CurricularUnit> fucs)
+        public FucsView(IEnumerable<CurricularUnit> fucs, IPrincipal principal)
             : base("Lista de Fucs",
                    H1(Text("Lista de Fichas de Unidades Curriculares")),
                    Ul(
                        fucs.Select(fuc => Li(A(ResolveUri.For(fuc), fuc.Name))).ToArray()
                        ),
+                    (principal.Identity.IsAuthenticated ? 
+                        A(ResolveUri.ForNewFuc(), "Criar nova FUC") : 
+                        Br()),
                     A(ResolveUri.ForRoot(), "Página Inicial")
                 )
         {}
@@ -29,7 +32,7 @@ namespace HttpServer.Views
                        Li(Text(string.Format("Nome: {0}", fuc.Name))),
                        Li(
                            Text(string.Format("Enquadramento: {0}, Semestres: {1}",
-                                              fuc.Mandatory ? "Obrigatória" : "Opcional", fuc.SemesterToText()))),
+                                              fuc.Mandatory ? "Obrigatória" : "Opcional", Utils.SemesterToText(fuc.Semester)))),
                        Li(Text(string.Format("Créditos: {0}", fuc.Ects))),
                        Li(Text("Pré Requisitos: ")),
                        Ul(fuc.Precedence.Select(f => Li(A(ResolveUri.For(f), f.Key))).ToArray())
