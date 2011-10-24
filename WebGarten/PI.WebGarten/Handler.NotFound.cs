@@ -8,7 +8,7 @@ namespace PI.WebGarten
 
     public partial class Handler
     {
-        class NotFound : HtmlDoc
+        public class NotFound : HtmlDoc
         {
             public NotFound()
                 :base("NotFound",

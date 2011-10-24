@@ -55,7 +55,7 @@
                 var resp = this.Pipeline.Execute(new RequestInfo(ctx));
                 resp.Send(ctx);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 new HttpResponse(HttpStatusCode.InternalServerError, new InternalServerError()).Send(ctx);
             }
