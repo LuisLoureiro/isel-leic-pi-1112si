@@ -34,7 +34,7 @@ namespace HttpServer.Controller
 
             return fuc == null ? 
                 new HttpResponse(HttpStatusCode.NotFound, new TextContent(string.Format("Unidade Curricular {0} inexistente.", acr))) : 
-                new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal));
+                new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal, false));
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/new")]

@@ -17,14 +17,14 @@ namespace HttpServer.Views
                    Ul(
                        fucs.Select(fuc => Li(A(ResolveUri.For(fuc), fuc.Name))).ToArray()
                        ),
-                    (principal.Identity.IsAuthenticated ? 
-                        A(ResolveUri.ForNewFuc(), "Criar nova FUC") : 
+                    (principal.Identity.IsAuthenticated ?
+                        A(ResolveUri.ForNewFuc(), "Criar nova FUC") :
                         Br()),
                     A(ResolveUri.ForRoot(), "Página Inicial")
                 )
-        {}
+        { }
 
-        public FucsView(CurricularUnit fuc, IPrincipal principal)
+        public FucsView(CurricularUnit fuc, IPrincipal principal, bool forApproval)
             : base(fuc.Name,
                    H1(Text(fuc.Name + " (" + fuc.Key + ")")),
                    H2(Text("Caracterização da Unidade Curricular")),
@@ -45,12 +45,12 @@ namespace HttpServer.Views
                    P(Text(fuc.Assessment)),
                    H2(Text("Programa Resumido")),
                    P(Text(fuc.Program)),
-                   GetLinks(fuc, principal), Br(),
+                   GetLinks(fuc, principal, forApproval), Br(),
                    A(ResolveUri.ForFucs(), "Voltar à Listagem")
                 )
-        {}
+        { }
 
-        private static IWritable GetLinks(CurricularUnit fuc, IPrincipal principal)
+        private static IWritable GetLinks(CurricularUnit fuc, IPrincipal principal, bool forApproval)
         {
             if (principal == null || principal.IsInRole(Roles.Anonimo))
                 return Br();
@@ -59,7 +59,19 @@ namespace HttpServer.Views
                         .Where(p => p.Owner.Equals(principal.Identity.Name))
                         .FirstOrDefault(p => p.Info.Key.Equals(fuc.Key));
 
-            return (prop == null ? A(ResolveUri.ForEdit(fuc), "Criar proposta") : A(ResolveUri.ForEdit(prop), "Editar Proposta"));
+            return Ul(prop == null ? 
+                A(ResolveUri.ForEdit(fuc), "Criar proposta") :
+                    (forApproval ? LinksForApproval(prop.Key) : Br()),
+                A(ResolveUri.ForEdit(prop), "Editar Proposta"));
+        }
+
+        private static IWritable LinksForApproval(long id)
+        {
+            IWritable[] links = new IWritable[2];
+            links[0] = A(ResolveUri.ForProposalAccept(id), "Aceitar Proposta");
+            links[1] = A(ResolveUri.ForProposalAccept(id), "Cancelar Proposta");
+
+            return Ul(links);
         }
     }
 }

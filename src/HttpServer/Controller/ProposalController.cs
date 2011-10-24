@@ -48,7 +48,7 @@ namespace HttpServer.Controller
 
             return prop == null ?
                 new HttpResponse(HttpStatusCode.NotFound, new Handler.NotFound()) : 
-                new HttpResponse(HttpStatusCode.OK, new FucsView(prop.Info, principal));
+                new HttpResponse(HttpStatusCode.OK, new FucsView(prop.Info, principal, true));
         }
 
         [HttpCmd(HttpMethod.Post, "/props/{id}/accept")]
