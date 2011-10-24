@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using HttpServer.Model.Entities;
+using HttpServer.Model.Repository;
 
 namespace HttpServer
 {
@@ -34,7 +36,11 @@ namespace HttpServer
 
         public static IEnumerable<CurricularUnit> RetrievePrecedencesFromPayload(IEnumerable<KeyValuePair<string, string>> content)
         {
-            
+            var keys = new ArrayList();
+            foreach (var pair in content)
+                keys.Add(pair.Key);
+
+            return RepositoryLocator.Get<string, CurricularUnit>().GetAll().Where( keys.Contains );
         }
     }
 }
