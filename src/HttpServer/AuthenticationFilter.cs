@@ -37,8 +37,12 @@ namespace HttpServer
         public HttpResponse Process(RequestInfo requestInfo)
         {
             var auth = requestInfo.Context.Request.Headers["Authorization"];
+
             if (auth == null)
             {
+                if (requestInfo.Context.Request.RawUrl.Equals("/login"))
+                    return NotAuthorized();
+
                 requestInfo.User = new GenericPrincipal(new GenericIdentity("", "Basic"), new[]{Roles.Anonimo});
             }
             else
@@ -60,10 +64,9 @@ namespace HttpServer
                 }
 
                 requestInfo.User = new GenericPrincipal(new GenericIdentity(user, "Basic"), User.GetRoles(user));
+                
                 if (requestInfo.Context.Request.RawUrl.Equals("/login"))
-                {
                     return new HttpResponse(HttpStatusCode.Redirect).WithHeader("Location", "/");
-                }
             }
 
             return _nextFilter.Process(requestInfo);
@@ -71,7 +74,7 @@ namespace HttpServer
 
         private static HttpResponse NotAuthorized()
         {
-            var resp = new HttpResponse(HttpStatusCode.Unauthorized, new TextContent("Not Authorized"));
+            var resp = new HttpResponse(HttpStatusCode.Unauthorized, new Handler.NotAuthorized());
 
             resp.WithHeader("WWW-Authenticate", "Basic realm=\"LI51N-G08\"");
             return resp;

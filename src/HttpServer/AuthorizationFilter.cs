@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using HttpServer.Model.Entities;
+using HttpServer.Model.Repository;
 using PI.WebGarten;
 using PI.WebGarten.HttpContent.Html;
 using PI.WebGarten.Pipeline;
@@ -39,21 +41,30 @@ namespace HttpServer
                 return Forbidden();
 
             // Verificar os recursos exclusivos de utilizadores coordenadores.
-            if ((path.Contains("props") && path.Contains("edit")) && principal.IsInRole(Roles.Coordenador))
-                return Forbidden();
-
-            // Verificar os recursos exclusivos de utilizadores não coordenadores.
             if (path.Contains("accept") && principal.IsInRole(Roles.Utilizador))
                 return Forbidden();
 
-            // Se passou nas verificações anteriores significa que pode aceder ao recurso.
+            // Permitir só ao criador da proposta a possibilidade de a alterar.
+            if ((path.Contains("props") && path.Contains("edit")))
+            {
+                long id;
+                if (long.TryParse(path.Split('/')[1], out id))
+                {
+                    Proposal prop = RepositoryLocator.Get<long, Proposal>().GetById(id);
+                    if (!prop.Owner.Equals(principal.Identity.Name))
+                        return Forbidden();
+                }
+                else
+                    throw new ArgumentException("Não foi possível receber o identificador da proposta, indicado no URI.");
+            }
 
+            // Se passou nas verificações anteriores significa que pode aceder ao recurso.
             return _nextFilter.Process(requestInfo);
         }
 
         private static HttpResponse Forbidden()
         {
-            return new HttpResponse(HttpStatusCode.Forbidden, new TextContent("Access Forbidden"));
+            return new HttpResponse(HttpStatusCode.Forbidden, new Handler.Forbidden());
         }
     }
 }
