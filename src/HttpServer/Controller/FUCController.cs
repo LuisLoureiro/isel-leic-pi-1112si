@@ -70,8 +70,7 @@ namespace HttpServer.Controller
                              Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value,
                              Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value
                          };
-            // Actualizar os campos: Objectivos; Resultados; Avaliação; Programa.
-
+            
             // Actualizar as precedências
             //uc.UpdatePrecedences(content); 
 
