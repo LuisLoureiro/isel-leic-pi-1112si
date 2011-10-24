@@ -63,7 +63,7 @@ namespace HttpServer.Model.Entities
             for (int i = 0; i < 10; i++)
             {
                 if ((Semester & aux) == aux)
-                    ret += (ret.Length != 0 ? " | " : "") + i+1 + "º";
+                    ret += (ret.Length != 0 ? " | " : "") + (i+1) + "º";
 
                 aux = aux << 1;
             }
@@ -77,11 +77,23 @@ namespace HttpServer.Model.Entities
             _precedence.Add(cUnit);
         }
 
-        public void AddPrecedences(IEnumerable<CurricularUnit> precedence)
+        public void AddPrecedences(IEnumerable<CurricularUnit> precedences)
         {
-            EnsureListInitialization();
-            if (precedence != null)
-                _precedence.AddRange(precedence);
+            if (precedences != null)
+            {
+                EnsureListInitialization();
+                _precedence.AddRange(precedences);
+            }
+        }
+
+        public void UpdatePrecedences(IEnumerable<CurricularUnit> precedences)
+        {
+            if (precedences != null)
+            {
+                EnsureListInitialization();
+                _precedence.Clear();
+                _precedence.AddRange(precedences);
+            }
         }
 
         private void EnsureListInitialization()

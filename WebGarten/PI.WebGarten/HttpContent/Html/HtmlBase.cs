@@ -130,6 +130,21 @@ namespace PI.WebGarten.HttpContent.Html
             return new HtmlElem("fieldset", c);
         }
 
+        //Adicionado
+        public static IWritable MultiSelect(int size, params IWritable[] options)
+        {
+            return new HtmlElem("select", options)
+                .WithAttr("multiple", "multiple")
+                .WithAttr("size", size.ToString());
+        }
+
+        //Adicionado
+        public static IWritable Option(string value, string text)
+        {
+            return new HtmlElem("option", Text(text))
+                .WithAttr("value", value);
+        }
+
         public static IWritable Ul(String cls, params IWritable[] c)
         {
             return new HtmlElem("ul", c)

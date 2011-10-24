@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using HttpServer.Controller;
 using HttpServer.Model.Entities;
+using HttpServer.Model.Repository;
 using PI.WebGarten;
 using PI.WebGarten.HttpContent.Html;
 
@@ -26,12 +28,14 @@ namespace HttpServer.Views
                             Div("clearfix",Label("Nome: "), Div("input", InputText("name", fuc.Name))),
                             Div("clearfix",Label("Acrónimo: "), Div("input", InputText("acr", fuc.Key))),
                             Div("clearfix",Label("ECTS: "), Div("input", InputText("ects", fuc.Ects.ToString()))),
-                            Div("clearfix", Label("Aprendizagem: "), Div("input", InputText("assessment", fuc.Assessment))),
+                            Div("clearfix",Label("Aprendizagem: "), Div("input", InputText("assessment", fuc.Assessment))),
                             Div("clearfix",Label("Resultados: "),Div("input",InputText("results", fuc.Results))),
                             Div("clearfix",Label("Objectivo: "),Div("input",InputText("objectives", fuc.Objectives))),
                             Div("clearfix",Label("Programa: "),Div("input",InputText("program", fuc.Program))),
                             Div("clearfix",Label("Obrigatoriedade: "),Div("input",Ul("inputs-list", GenerateMandatoryRadioButtons(fuc)))),
                             Div("clearfix",Label("Semestre(s): "),Div("input",Ul("inputs-list", GenerateSemesterCheckBoxes(fuc)))),
+                            // TODO quando é feito o submit esta informação não está a ir.
+                            Div("clearfix",Label("Pré Requisito(s): "), Div("input", MultiSelect(4, GeneratePrecedencesListBox(fuc)))),
                             Div("clearfix",Div("input", InputSubmit("Submeter")))
                         )
                     )
@@ -47,11 +51,12 @@ namespace HttpServer.Views
                         Div("clearfix",Label("Acrónimo: "), Div("input", InputText("acr"))),
                         Div("clearfix",Label("ECTS: "), Div("input", InputText("ects"))),
                         Div("clearfix",Label("Aprendizagem: "),Div("input",InputText("assessment"))),
-                        Div("clearfix", Label("Resultados: "), Div("input", InputText("results"))),
-                        Div("clearfix", Label("Objectivo: "), Div("input", InputText("objectives"))),
-                        Div("clearfix", Label("Programa: "), Div("input", InputText("program"))),
+                        Div("clearfix",Label("Resultados: "), Div("input", InputText("results"))),
+                        Div("clearfix",Label("Objectivo: "), Div("input", InputText("objectives"))),
+                        Div("clearfix",Label("Programa: "), Div("input", InputText("program"))),
                         Div("clearfix",Label("Obrigatoriedade: "),Div("input",Ul("inputs-list", GenerateMandatoryRadioButtons(null)))),
-                        Div("clearfix",Label("Semestre(s): "),Div("input",Ul("inputs-list"))),
+                        Div("clearfix", Label("Semestre(s): "), Div("input", Ul("inputs-list"))),
+                        Div("clearfix", Label("Pré Requisito(s): "), Div("input", MultiSelect(4, GeneratePrecedencesListBox(null)))),
                         Div("clearfix",Div("input", InputSubmit("Submeter")))
                     )
                 )
@@ -78,6 +83,33 @@ namespace HttpServer.Views
             ret[1] = Li(InputRadioButton("tipoObrig", "opcional", (fuc == null ? false : !fuc.Mandatory)), Text("Opcional"));
 
             return ret;
+        }
+
+        private static IWritable[] GeneratePrecedencesListBox(CurricularUnit uc)
+        {
+            List<IWritable> options = new List<IWritable>();
+            IEnumerable<CurricularUnit> ucs = RepositoryLocator.Get<string, CurricularUnit>().GetAll();
+
+            if (uc != null)
+            {
+                ucs = ucs.Where(c => !c.Key.Equals(uc.Key));
+            }
+
+            foreach(var cUnit in ucs)
+            {
+                var opt = Option(cUnit.Key, cUnit.Key) as HtmlElem;
+                if (opt == null) 
+                    throw new ServerException("Excepção gerada ao efectuar um cast de IWritable para HtmlElem sobre o elemento Option.");
+
+                if (uc != null && uc.Precedence.Contains(cUnit))
+                {
+                    opt.WithAttr("selected", "selected");
+                }
+
+                options.Add(opt);
+            }
+
+            return options.ToArray();
         }
     }
 }

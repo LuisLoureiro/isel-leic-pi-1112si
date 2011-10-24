@@ -50,7 +50,7 @@ namespace HttpServer.Views
         private static IWritable GetLinks(CurricularUnit fuc, IPrincipal principal)
         {
             if (principal == null || principal.IsInRole(Roles.Anonimo))
-                return null;
+                return Br();
 
             var prop = RepositoryLocator.Get<long, Proposal>().GetAll()
                         .Where(p => p.Owner.Equals(principal.Identity.Name))

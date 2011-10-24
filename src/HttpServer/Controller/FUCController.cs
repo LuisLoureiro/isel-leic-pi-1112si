@@ -6,6 +6,7 @@ using HttpServer.Model.Entities;
 using HttpServer.Model.Repository;
 using HttpServer.Views;
 using PI.WebGarten;
+using PI.WebGarten.HttpContent.Html;
 using PI.WebGarten.MethodBasedCommands;
 using System.Linq;
 
@@ -29,18 +30,11 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}")]
         public HttpResponse GetFuc(string acr, IPrincipal principal)
         {
-            CurricularUnit fuc;
+            CurricularUnit fuc = _repo.GetById(acr);
 
-            try
-            {
-                fuc = _repo.GetById(acr);
-            }
-            catch (Exception)
-            {
-                return new HttpResponse(HttpStatusCode.NotFound);
-            }
-
-            return new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal));
+            return fuc == null ? 
+                new HttpResponse(HttpStatusCode.NotFound, new TextContent(string.Format("Unidade Curricular {0} inexistente.", acr))) : 
+                new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal));
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/new")]
@@ -64,11 +58,22 @@ namespace HttpServer.Controller
             if (!float.TryParse(content.Where(p => p.Key.Equals("ects")).FirstOrDefault().Value, out ects))
                 throw new ArgumentException("Valor de ECTS inválido");
 
+            // Criar uma unidade curricular, associada à proposta, com os valores recolhidos do formulário de edição.
             var uc = new CurricularUnit(content.Where(p => p.Key.Equals("name")).FirstOrDefault().Value,
                                         content.Where(p => p.Key.Equals("acr")).FirstOrDefault().Value,
                                         content.Where(p => p.Key.Equals("tipoObrig")).FirstOrDefault().Value.Equals("obrigatoria"),
                                         TranslateSemester(content),
                                         ects);
+            // Actualizar os campos: Objectivos; Resultados; Avaliação; Programa.
+            uc.Results = content.Where(p => p.Key.Equals("results")).FirstOrDefault().Value;
+            uc.Objectives = content.Where(p => p.Key.Equals("objectives")).FirstOrDefault().Value;
+            uc.Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value;
+            uc.Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value;
+
+            // Actualizar as precedências
+            //uc.UpdatePrecedences(content); 
+
+            // Criar a proposta de alteração de unidade curricular.
             var prop = new Proposal(uc, principal.Identity.Name);
             RepositoryLocator.Get<long, Proposal>().Insert(prop);
 
@@ -79,9 +84,9 @@ namespace HttpServer.Controller
         {
             ushort val = 0x00;
 
-            for(int i = 1; i<=10; i++)
-                if (content.Select(k => k.Key.Equals("" + i)) != null)
-                    val = (ushort)(val | (0x01 << (i - 1)));
+            for(int i = 0; i<10; i++)
+                if (content.Where(k => k.Key.Equals(i.ToString())).FirstOrDefault().Value == i.ToString())
+                    val = (ushort)(val | (0x01 << i));
 
             return val;
         }

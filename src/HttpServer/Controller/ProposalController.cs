@@ -31,10 +31,14 @@ namespace HttpServer.Controller
         }
 
         [HttpCmd(HttpMethod.Get, "/props")]
-        public HttpResponse GetFucProposal()
+        public HttpResponse GetFucProposal(IPrincipal principal)
         {
+            var props = _repo.GetAll().Where(p => p.State == AbstractEntity<long>.Status.Pending);
+
             return new HttpResponse(HttpStatusCode.OK, 
-                new ProposalView(_repo.GetAll().Where(p => p.State == AbstractEntity<long>.Status.Pending )));
+                new ProposalView(principal.IsInRole(Roles.Utilizador) ? 
+                                    props.Where(p => p.Owner.Equals(principal.Identity.Name)) : 
+                                    props));
         }
 
         [HttpCmd(HttpMethod.Get, "/props/{id}")]
