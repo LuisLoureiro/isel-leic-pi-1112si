@@ -20,9 +20,9 @@ namespace HttpServer.Views
                     A(ResolveUri.ForRoot(), "Página Inicial")
                 )
         {}
-        public ProposalView(CurricularUnit fuc)
+        public ProposalView(CurricularUnit fuc, string action)
             : base("Edição - " + fuc.Name,
-                    Form(HttpMethod.Post, ResolveUri.For(fuc) + "/edit", 
+                    Form(HttpMethod.Post, action, 
                         Fieldset(
                             Legend(string.Format("Editar {0}", fuc.Name)),
                             Div("clearfix",Label("Nome: "), Div("input", InputText("name", fuc.Name))),
@@ -87,13 +87,11 @@ namespace HttpServer.Views
 
         private static IWritable[] GeneratePrecedencesListBox(CurricularUnit uc)
         {
-            List<IWritable> options = new List<IWritable>();
-            IEnumerable<CurricularUnit> ucs = RepositoryLocator.Get<string, CurricularUnit>().GetAll();
+            var options = new List<IWritable>();
+            var ucs = RepositoryLocator.Get<string, CurricularUnit>().GetAll();
 
             if (uc != null)
-            {
                 ucs = ucs.Where(c => !c.Key.Equals(uc.Key));
-            }
 
             foreach(var cUnit in ucs)
             {
@@ -102,9 +100,7 @@ namespace HttpServer.Views
                     throw new ServerException("Excepção gerada ao efectuar um cast de IWritable para HtmlElem sobre o elemento Option.");
 
                 if (uc != null && uc.Precedence.Contains(cUnit))
-                {
                     opt.WithAttr("selected", "selected");
-                }
 
                 options.Add(opt);
             }

@@ -56,7 +56,7 @@ namespace HttpServer.Views
                         .Where(p => p.Owner.Equals(principal.Identity.Name))
                         .FirstOrDefault(p => p.Info.Key.Equals(fuc.Key));
 
-            return (prop == null ? A(ResolveUri.ForEdit(fuc), "Criar proposta") : A(ResolveUri.For(prop), "Editar Proposta"));
+            return (prop == null ? A(ResolveUri.ForEdit(fuc), "Criar proposta") : A(ResolveUri.ForEdit(prop), "Editar Proposta"));
         }
     }
 }

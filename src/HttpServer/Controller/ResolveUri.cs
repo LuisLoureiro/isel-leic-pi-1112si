@@ -35,6 +35,11 @@ namespace HttpServer.Controller
             return String.Format("/fucs/{0}/edit", fuc.Key);
         }
 
+        public static string ForEdit(Proposal prop)
+        {
+            return String.Format("/props/{0}/edit", prop.Key);
+        }
+
         public static string ForLogin()
         {
             return String.Format("/login");

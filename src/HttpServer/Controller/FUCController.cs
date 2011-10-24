@@ -48,7 +48,7 @@ namespace HttpServer.Controller
         {
             var fuc = _repo.GetById(acr);
 
-            return new HttpResponse(HttpStatusCode.OK, new ProposalView(fuc));
+            return new HttpResponse(HttpStatusCode.OK, new ProposalView(fuc, ResolveUri.ForEdit(fuc)));
         }
 
         [HttpCmd(HttpMethod.Post, "/fucs/{acr}/edit")]
@@ -63,12 +63,14 @@ namespace HttpServer.Controller
                                         content.Where(p => p.Key.Equals("acr")).FirstOrDefault().Value,
                                         content.Where(p => p.Key.Equals("tipoObrig")).FirstOrDefault().Value.Equals("obrigatoria"),
                                         TranslateSemester(content),
-                                        ects);
+                                        ects)
+                         {
+                             Results = content.Where(p => p.Key.Equals("results")).FirstOrDefault().Value,
+                             Objectives = content.Where(p => p.Key.Equals("objectives")).FirstOrDefault().Value,
+                             Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value,
+                             Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value
+                         };
             // Actualizar os campos: Objectivos; Resultados; Avaliação; Programa.
-            uc.Results = content.Where(p => p.Key.Equals("results")).FirstOrDefault().Value;
-            uc.Objectives = content.Where(p => p.Key.Equals("objectives")).FirstOrDefault().Value;
-            uc.Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value;
-            uc.Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value;
 
             // Actualizar as precedências
             //uc.UpdatePrecedences(content); 

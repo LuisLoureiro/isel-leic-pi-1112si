@@ -5,7 +5,7 @@ namespace HttpServer.Model.Entities
 {
     public class CurricularUnit : AbstractEntity<string>
     {
-        private List<CurricularUnit> _precedence;
+        private readonly List<CurricularUnit> _precedence = new List<CurricularUnit>();
 
         public static readonly byte Maxsemesters = 10;
 
@@ -44,11 +44,10 @@ namespace HttpServer.Model.Entities
                                                       "Invalid semester formatting: The 6 greater weight bits should be 0");
 
             Name = name;
-            //Acronym = acronym;
             Mandatory = mandatory;
             Semester = semester;
             Ects = ects;
-            AddPrecedences(precedence);
+            if(precedence != null) AddPrecedences(precedence);
         }
 
         public CurricularUnit(string name, string acronym, bool mandatory, UInt16 semester, float ects)
@@ -73,33 +72,18 @@ namespace HttpServer.Model.Entities
 
         public void AddPrecedence(CurricularUnit cUnit)
         {
-            EnsureListInitialization();
-            _precedence.Add(cUnit);
+                _precedence.Add(cUnit);
         }
 
         public void AddPrecedences(IEnumerable<CurricularUnit> precedences)
         {
-            if (precedences != null)
-            {
-                EnsureListInitialization();
                 _precedence.AddRange(precedences);
-            }
         }
 
         public void UpdatePrecedences(IEnumerable<CurricularUnit> precedences)
         {
-            if (precedences != null)
-            {
-                EnsureListInitialization();
                 _precedence.Clear();
                 _precedence.AddRange(precedences);
-            }
-        }
-
-        private void EnsureListInitialization()
-        {
-            if (_precedence == null)
-                _precedence = new List<CurricularUnit>();
         }
     }
 }

@@ -44,7 +44,11 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/props/{id}")]
         public HttpResponse GetFucProposal(long id, IPrincipal principal)
         {
-            return new HttpResponse(HttpStatusCode.OK, new FucsView(_repo.GetById(id).Info, principal));
+            var prop = _repo.GetById(id);
+
+            return prop == null ?
+                new HttpResponse(HttpStatusCode.NotFound, new Handler.NotFound()) : 
+                new HttpResponse(HttpStatusCode.OK, new FucsView(prop.Info, principal));
         }
 
         [HttpCmd(HttpMethod.Post, "/props/{id}/accept")]
@@ -80,7 +84,11 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Get, "/props/{id}/edit")]
         public HttpResponse GetEditFucProposal(long id)
         {
-            return new HttpResponse(HttpStatusCode.OK, new ProposalView(_repo.GetById(id).Info));
+            var prop = _repo.GetById(id);
+
+            return prop == null ? 
+                new HttpResponse(HttpStatusCode.NotFound, new Handler.NotFound()) :
+                new HttpResponse(HttpStatusCode.OK, new ProposalView(prop.Info, ResolveUri.ForEdit(prop)));
         }
 
         private static CurricularUnit BuildCurricularUnitFromContent(IEnumerable<KeyValuePair<string, string>> content)
@@ -93,12 +101,13 @@ namespace HttpServer.Controller
                                         content.Where(p => p.Key == "tipoObrig").FirstOrDefault().Value.Equals("obrigatoria"),
                                         0,
                                         ects
-                                        );
-
-            uc.Assessment = content.Where(p => p.Key == "assessment").FirstOrDefault().Value;
-            uc.Objectives = content.Where(p => p.Key == "objective").FirstOrDefault().Value;
-            uc.Results = content.Where(p => p.Key == "results").FirstOrDefault().Value;
-            uc.Program = content.Where(p => p.Key == "program").FirstOrDefault().Value;
+                                        )
+                         {
+                             Assessment = content.Where(p => p.Key == "assessment").FirstOrDefault().Value,
+                             Objectives = content.Where(p => p.Key == "objective").FirstOrDefault().Value,
+                             Results = content.Where(p => p.Key == "results").FirstOrDefault().Value,
+                             Program = content.Where(p => p.Key == "program").FirstOrDefault().Value
+                         };
 
             return uc;
         }
