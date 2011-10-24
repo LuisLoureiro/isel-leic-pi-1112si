@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting;
 using HttpServer.Controller;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Repository;
@@ -32,10 +31,9 @@ namespace HttpServer.Views
                             Div("clearfix",Label("Resultados: "),Div("input",InputText("results", fuc.Results))),
                             Div("clearfix",Label("Objectivo: "),Div("input",InputText("objectives", fuc.Objectives))),
                             Div("clearfix",Label("Programa: "),Div("input",InputText("program", fuc.Program))),
-                            Div("clearfix",Label("Obrigatoriedade: "),Div("input",Ul("inputs-list", GenerateMandatoryRadioButtons(fuc)))),
-                            Div("clearfix",Label("Semestre(s): "),Div("input",Ul("inputs-list", GenerateSemesterCheckBoxes(fuc)))),
-                            // TODO quando é feito o submit esta informação não está a ir.
-                            Div("clearfix",Label("Pré Requisito(s): "), Div("input", MultiSelect(4, GeneratePrecedencesListBox(fuc)))),
+                            Div("clearfix",Label("Obrigatoriedade: "),GenerateMandatoryRadioButtons(fuc)),
+                            Div("clearfix",Label("Semestre(s): "),GenerateSemesterCheckBoxes(fuc)),
+                            Div("clearfix",Label("Pré Requisito(s): "), GeneratePrecedencesCheckBoxes(fuc)),
                             Div("clearfix",Div("input", InputSubmit("Submeter")))
                         )
                     )
@@ -54,58 +52,53 @@ namespace HttpServer.Views
                         Div("clearfix",Label("Resultados: "), Div("input", InputText("results"))),
                         Div("clearfix",Label("Objectivo: "), Div("input", InputText("objectives"))),
                         Div("clearfix",Label("Programa: "), Div("input", InputText("program"))),
-                        Div("clearfix",Label("Obrigatoriedade: "),Div("input",Ul("inputs-list", GenerateMandatoryRadioButtons(null)))),
-                        Div("clearfix", Label("Semestre(s): "), Div("input", Ul("inputs-list"))),
-                        Div("clearfix", Label("Pré Requisito(s): "), Div("input", MultiSelect(4, GeneratePrecedencesListBox(null)))),
+                        Div("clearfix",Label("Obrigatoriedade: "), GenerateMandatoryRadioButtons(null)),
+                        Div("clearfix", Label("Semestre(s): "), GenerateSemesterCheckBoxes(null)),
+                        Div("clearfix",Label("Pré Requisito(s): "), GeneratePrecedencesCheckBoxes(null)),
                         Div("clearfix",Div("input", InputSubmit("Submeter")))
                     )
                 )
             )
         {}
 
-        private static IWritable[] GenerateSemesterCheckBoxes(CurricularUnit fuc)
+        private static IWritable GenerateSemesterCheckBoxes(CurricularUnit fuc)
         {
             var quant = CurricularUnit.Maxsemesters;
 
             var ret = new IWritable[quant];
 
-            for (int i = 0; i < quant; i++)
-                ret[i] = Li(InputCheckBox("" + i, "" + i, ((fuc.Semester) & (0x01 << i)) == (0x01 << i)), Text(string.Format(" {0}º Semestre", i+1)) );
+            var semester = fuc == null ? 0 : fuc.Semester;
 
-            return ret;
+            for (int i = 0; i != quant; i++)
+                ret[i] = Li(InputCheckBox("" + i, "" + i, (semester & (0x01 << i)) == (0x01 << i)), Text(string.Format(" {0}º Semestre", i+1)) );
+
+            return Div("input", Ul("inputs-list", ret));
         }
 
-        private static IWritable[] GenerateMandatoryRadioButtons(CurricularUnit fuc)
+        private static IWritable GenerateMandatoryRadioButtons(CurricularUnit fuc)
         {
             var ret = new IWritable[2];
 
             ret[0] = Li(InputRadioButton("tipoObrig", "obrigatoria", (fuc == null ? true : fuc.Mandatory)), Text("Obrigatória"));
             ret[1] = Li(InputRadioButton("tipoObrig", "opcional", (fuc == null ? false : !fuc.Mandatory)), Text("Opcional"));
 
-            return ret;
+            return Div("input", Ul("inputs-list", ret));
         }
 
-        private static IWritable[] GeneratePrecedencesListBox(CurricularUnit uc)
+        private static IWritable GeneratePrecedencesCheckBoxes(CurricularUnit uc)
         {
-            var options = new List<IWritable>();
             var ucs = RepositoryLocator.Get<string, CurricularUnit>().GetAll();
 
             if (uc != null)
-                ucs = ucs.Where(c => !c.Key.Equals(uc.Key));
+                ucs = ucs.Where(c => !c.Key.Equals(uc.Key)); //Para não considerar a própria UC
 
+            var ret = new IWritable[ucs.Count()];
+
+            int i = 0;
             foreach(var cUnit in ucs)
-            {
-                var opt = Option(cUnit.Key, cUnit.Key) as HtmlElem;
-                if (opt == null) 
-                    throw new ServerException("Excepção gerada ao efectuar um cast de IWritable para HtmlElem sobre o elemento Option.");
-
-                if (uc != null && uc.Precedence.Contains(cUnit))
-                    opt.WithAttr("selected", "selected");
-
-                options.Add(opt);
-            }
-
-            return options.ToArray();
+                ret[i++] = Li(InputCheckBox(cUnit.Key, cUnit.Key, (uc != null && uc.Precedence.Contains(cUnit))), Text(string.Format(" {0}", cUnit.Key)));
+            
+            return Div("input", Ul("inputs-list", ret));
         }
     }
 }
