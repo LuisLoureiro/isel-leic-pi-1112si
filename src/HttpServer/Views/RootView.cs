@@ -11,12 +11,10 @@ namespace HttpServer.Views
                     H1(Text(string.Format("Bem vindo{0}!", principal.Identity.IsAuthenticated ? " "+principal.Identity.Name : ""))),
                     Ul(
                         Li(A(ResolveUri.ForFucs(), "Fichas das Unidades Curriculares")),
-                        Li(A(ResolveUri.ForLogin(), "Login")),
                         principal.Identity.IsAuthenticated ? 
-                            Li(A(ResolveUri.ForProposals(), principal.IsInRole(Roles.Utilizador) ? 
-                                                                "Propostas criadas por si" : 
-                                                                "Todas as propostas")) :
-                            Br()
+                                                (Li(A(ResolveUri.ForProposals(), principal.IsInRole(Roles.Utilizador) ? "Propostas criadas por si" : 
+                                                                                                                        "Todas as propostas"))) : 
+                                                Li(A(ResolveUri.ForLogin(), "Login"))
                     )
             )
         {
