@@ -69,7 +69,7 @@ namespace HttpServer.Views
         {
             IWritable[] links = new IWritable[2];
             links[0] = A(ResolveUri.ForProposalAccept(id), "Aceitar Proposta");
-            links[1] = A(ResolveUri.ForProposalAccept(id), "Cancelar Proposta");
+            links[1] = A(ResolveUri.ForProposalCancel(id), "Cancelar Proposta");
 
             return Ul(links);
         }
