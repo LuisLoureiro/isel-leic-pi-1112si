@@ -1,4 +1,6 @@
-﻿namespace HttpServer.Model.Entities
+﻿using System;
+
+namespace HttpServer.Model.Entities
 {
     public abstract class AbstractEntity<K>
     {
@@ -13,6 +15,9 @@
 
         protected AbstractEntity(K key)
         {
+            if (!(key is ValueType) && key == null)
+                throw new ArgumentException("A chave não pode ter valor nulo.");
+
             _key = key;
         }
 
