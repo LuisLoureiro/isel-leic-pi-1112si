@@ -18,13 +18,13 @@ namespace HttpServer.Views
                        fucs.Select(fuc => Li(A(ResolveUri.For(fuc), fuc.Name))).ToArray()
                        ),
                     (principal.Identity.IsAuthenticated ?
-                        A(ResolveUri.ForNewFuc(), "Criar nova FUC") :
+                        Ul(A(ResolveUri.ForNewFuc(), "Criar nova FUC"), Br()) :
                         Br()),
                     A(ResolveUri.ForRoot(), "Página Inicial")
                 )
         { }
 
-        public FucsView(CurricularUnit fuc, IPrincipal principal, bool forApproval)
+        public FucsView(CurricularUnit fuc, IPrincipal principal)
             : base(fuc.Name,
                    H1(Text(fuc.Name + " (" + fuc.Key + ")")),
                    H2(Text("Caracterização da Unidade Curricular")),
@@ -45,7 +45,7 @@ namespace HttpServer.Views
                    P(Text(fuc.Assessment)),
                    H2(Text("Programa Resumido")),
                    P(Text(fuc.Program)),
-                   GetLinks(fuc, principal, forApproval), Br(),
+                   GetLinks(fuc, principal, principal.IsInRole(Roles.Coordenador)), Br(),
                    A(ResolveUri.ForFucs(), "Voltar à Listagem")
                 )
         { }
@@ -59,19 +59,13 @@ namespace HttpServer.Views
                         .Where(p => p.Owner.Equals(principal.Identity.Name))
                         .FirstOrDefault(p => p.Info.Key.Equals(fuc.Key));
 
-            return Ul(prop == null ? 
-                A(ResolveUri.ForEdit(fuc), "Criar proposta") :
-                    (forApproval ? LinksForApproval(prop.Key) : Br()),
-                A(ResolveUri.ForEdit(prop), "Editar Proposta"));
-        }
-
-        private static IWritable LinksForApproval(long id)
-        {
-            IWritable[] links = new IWritable[2];
-            links[0] = A(ResolveUri.ForProposalAccept(id), "Aceitar Proposta");
-            links[1] = A(ResolveUri.ForProposalCancel(id), "Cancelar Proposta");
-
-            return Ul(links);
+            return prop == null ?
+                Form(HttpMethod.Get, ResolveUri.ForEdit(fuc), InputSubmit("Criar proposta")) :
+                Ul(forApproval ? 
+                        Form(HttpMethod.Post, ResolveUri.ForProposalAccept(prop.Key), InputSubmit("Aceitar Proposta")) : Text(""),
+                    Form(HttpMethod.Post, ResolveUri.ForProposalCancel(prop.Key), InputSubmit("Cancelar Proposta")),
+                    Form(HttpMethod.Get, ResolveUri.ForEdit(prop), InputSubmit("Editar Proposta"))
+                );
         }
     }
 }

@@ -20,16 +20,6 @@ namespace HttpServer.Controller
             _repo = RepositoryLocator.Get<long, Proposal>();
         }
 
-        [HttpCmd(HttpMethod.Post, "/fucs/new")]
-        public HttpResponse PostCreateFuc(IEnumerable<KeyValuePair<string, string>> content, IPrincipal principal)
-        {
-            var uc = BuildCurricularUnitFromContent(content);
-            var prop = new Proposal(uc, principal.Identity.Name);
-            _repo.Insert(prop);
-
-            return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop));
-        }
-
         [HttpCmd(HttpMethod.Get, "/props")]
         public HttpResponse GetFucProposal(IPrincipal principal)
         {
@@ -48,7 +38,7 @@ namespace HttpServer.Controller
 
             return prop == null ?
                 new HttpResponse(HttpStatusCode.NotFound, new Handler.NotFound()) : 
-                new HttpResponse(HttpStatusCode.OK, new FucsView(prop.Info, principal, true));
+                new HttpResponse(HttpStatusCode.OK, new FucsView(prop.Info, principal));
         }
 
         [HttpCmd(HttpMethod.Post, "/props/{id}/accept")]
@@ -113,27 +103,6 @@ namespace HttpServer.Controller
             uc.UpdatePrecedences(Utils.RetrievePrecedencesFromPayload(content)); 
 
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop));
-        }
-
-        private static CurricularUnit BuildCurricularUnitFromContent(IEnumerable<KeyValuePair<string, string>> content)
-        {
-            float ects;
-            float.TryParse(content.Where(p => p.Key == "tipoObrig").FirstOrDefault().Value, out ects);
-
-            var uc = new CurricularUnit(content.Where(p => p.Key == "name").FirstOrDefault().Value,
-                                        content.Where(p => p.Key == "acr").FirstOrDefault().Value,
-                                        content.Where(p => p.Key == "tipoObrig").FirstOrDefault().Value.Equals("obrigatoria"),
-                                        0,
-                                        ects
-                                        )
-                         {
-                             Assessment = content.Where(p => p.Key == "assessment").FirstOrDefault().Value,
-                             Objectives = content.Where(p => p.Key == "objective").FirstOrDefault().Value,
-                             Results = content.Where(p => p.Key == "results").FirstOrDefault().Value,
-                             Program = content.Where(p => p.Key == "program").FirstOrDefault().Value
-                         };
-
-            return uc;
         }
     }
 }

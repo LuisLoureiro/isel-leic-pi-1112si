@@ -34,13 +34,19 @@ namespace HttpServer.Controller
 
             return fuc == null ? 
                 new HttpResponse(HttpStatusCode.NotFound, new TextContent(string.Format("Unidade Curricular {0} inexistente.", acr))) : 
-                new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal, false));
+                new HttpResponse(HttpStatusCode.OK, new FucsView(fuc, principal));
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/new")]
         public HttpResponse GetCreateFuc()
         {
             return new HttpResponse(HttpStatusCode.OK, new ProposalView());
+        }
+
+        [HttpCmd(HttpMethod.Post, "/fucs/new")]
+        public HttpResponse PostCreateFuc(IEnumerable<KeyValuePair<string, string>> content, IPrincipal principal)
+        {
+            return PostEditFucForm(null, content, principal);
         }
 
         [HttpCmd(HttpMethod.Get, "/fucs/{acr}/edit")]
@@ -54,31 +60,39 @@ namespace HttpServer.Controller
         [HttpCmd(HttpMethod.Post, "/fucs/{acr}/edit")]
         public HttpResponse PostEditFucForm(string acr, IEnumerable<KeyValuePair<string, string>> content, IPrincipal principal)
         {
-            float ects;
-            if (!float.TryParse(content.Where(p => p.Key.Equals("ects")).FirstOrDefault().Value, out ects))
-                throw new ArgumentException("Valor de ECTS inválido");
-
             // Criar uma unidade curricular, associada à proposta, com os valores recolhidos do formulário de edição.
-            var uc = new CurricularUnit(content.Where(p => p.Key.Equals("name")).FirstOrDefault().Value,
-                                        content.Where(p => p.Key.Equals("acr")).FirstOrDefault().Value,
-                                        content.Where(p => p.Key.Equals("tipoObrig")).FirstOrDefault().Value.Equals("obrigatoria"),
-                                        Utils.TranslateSemester(content),
-                                        ects)
-                         {
-                             Results = content.Where(p => p.Key.Equals("results")).FirstOrDefault().Value,
-                             Objectives = content.Where(p => p.Key.Equals("objectives")).FirstOrDefault().Value,
-                             Assessment = content.Where(p => p.Key.Equals("assessment")).FirstOrDefault().Value,
-                             Program = content.Where(p => p.Key.Equals("program")).FirstOrDefault().Value
-                         };
-
-            // Actualizar as precedências
-            uc.UpdatePrecedences(Utils.RetrievePrecedencesFromPayload(content)); 
-
+            var uc = BuildCurricularUnitFromContent(content);
+            
             // Criar a proposta de alteração de unidade curricular.
             var prop = new Proposal(uc, principal.Identity.Name);
             RepositoryLocator.Get<long, Proposal>().Insert(prop);
 
             return new HttpResponse(HttpStatusCode.SeeOther).WithHeader("Location", ResolveUri.For(prop));
+        }
+
+        private static CurricularUnit BuildCurricularUnitFromContent(IEnumerable<KeyValuePair<string, string>> content)
+        {
+            float ects;
+            if (!float.TryParse(content.Where(p => p.Key.Equals("ects")).FirstOrDefault().Value, out ects))
+                throw new ArgumentException("Valor de ECTS inválido");
+
+            var uc = new CurricularUnit(content.Where(p => p.Key == "name").FirstOrDefault().Value,
+                                        content.Where(p => p.Key == "acr").FirstOrDefault().Value,
+                                        content.Where(p => p.Key == "tipoObrig").FirstOrDefault().Value.Equals("obrigatoria"),
+                                        Utils.TranslateSemester(content),
+                                        ects
+                                        )
+            {
+                Assessment = content.Where(p => p.Key == "assessment").FirstOrDefault().Value,
+                Objectives = content.Where(p => p.Key == "objectives").FirstOrDefault().Value,
+                Results = content.Where(p => p.Key == "results").FirstOrDefault().Value,
+                Program = content.Where(p => p.Key == "program").FirstOrDefault().Value
+            };
+
+            // Actualizar as precedências
+            uc.UpdatePrecedences(Utils.RetrievePrecedencesFromPayload(content)); 
+
+            return uc;
         }
     }
 }

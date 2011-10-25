@@ -25,7 +25,7 @@ namespace HttpServer.Views
                         Fieldset(
                             Legend(string.Format("Editar {0}", fuc.Name)),
                             Div("clearfix",Label("Nome: "), Div("input", InputText("name", fuc.Name))),
-                            Div("clearfix",Label("Acrónimo: "), Div("input", InputText("acr", fuc.Key))),
+                            Div("clearfix",Label("Acrónimo: "), Div("input", (InputText("acr", fuc.Key) as HtmlElem).WithAttr("disabled","disabled"))),
                             Div("clearfix",Label("ECTS: "), Div("input", InputText("ects", fuc.Ects.ToString()))),
                             Div("clearfix",Label("Aprendizagem: "), Div("input", InputText("assessment", fuc.Assessment))),
                             Div("clearfix",Label("Resultados: "),Div("input",InputText("results", fuc.Results))),
@@ -42,7 +42,7 @@ namespace HttpServer.Views
 
         public ProposalView()
         : base("Criar nova Unidade Curricular", 
-                Form(HttpMethod.Post, ResolveUri.ForFucs() + "/new", 
+                Form(HttpMethod.Post, ResolveUri.ForNewFuc(), 
                     Fieldset(
                         Legend("Editar"),
                         Div("clearfix",Label("Nome: "), Div("input", InputText("name"))),
