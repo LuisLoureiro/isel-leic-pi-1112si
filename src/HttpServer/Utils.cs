@@ -40,7 +40,7 @@ namespace HttpServer
             foreach (var pair in content)
                 keys.Add(pair.Key);
 
-            return RepositoryLocator.Get<string, CurricularUnit>().GetAll().Where( keys.Contains );
+            return RepositoryLocator.Get<string, CurricularUnit>().GetAll().Where( uc => keys.Contains(uc.Key) );
         }
     }
 }
