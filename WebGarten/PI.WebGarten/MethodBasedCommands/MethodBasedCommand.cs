@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using PI.WebGarten.HttpContent.Html;
 
 namespace PI.WebGarten.MethodBasedCommands
 {
@@ -43,6 +45,14 @@ namespace PI.WebGarten.MethodBasedCommands
             catch (TargetInvocationException e)
             {
                 throw e.InnerException;
+            }
+            catch(ArgumentException e)
+            {
+                return new HttpResponse(HttpStatusCode.BadRequest, new TextContent(e.Message));
+            }
+            catch(InvalidOperationException e)
+            {
+                return new HttpResponse(HttpStatusCode.InternalServerError, new TextContent(e.Message));
             }
         }
     }
