@@ -51,7 +51,7 @@ namespace HttpServer
                 if (long.TryParse(path.Split('/')[2], out id))
                 {
                     Proposal prop = RepositoryLocator.Get<long, Proposal>().GetById(id);
-                    if (!prop.Owner.Equals(principal.Identity.Name))
+                    if (!prop.Owner.Equals(principal.Identity.Name) || !prop.State.Equals(AbstractEntity<long>.Status.Pending))
                         return Forbidden();
                 }
                 else
