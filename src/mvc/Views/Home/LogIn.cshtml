@@ -1,0 +1,26 @@
+﻿@model mvc.Models.UserModel
+
+@{
+    ViewBag.Title = "LogIn";
+}
+
+<h2>LogIn</h2>
+
+@Html.ValidationSummary(true, "Por favor verifique os erros para prosseguir.")
+
+@using (Html.BeginForm()){
+    /*
+    <div>
+        @Html.LabelFor(m => m.Name)
+        @Html.EditorFor(m => m.Name)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Password)
+        @Html.EditorFor(m => m.Password)
+    </div>
+    */
+    
+    @Html.EditorForModel()
+    
+    <input type ="submit" value="Login" />
+}
