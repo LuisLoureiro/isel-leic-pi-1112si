@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using HttpServer.Controller;
 using HttpServer.Model.Entities;
 using HttpServer.Model.Repository;
@@ -19,13 +20,26 @@ namespace HttpServer.Views
                     A(ResolveUri.ForRoot(), "Página Inicial")
                 )
         {}
+
+        public ProposalView(Proposal proposal, IPrincipal principal) 
+            : base("Proposta " + proposal.Key, new FucsView(proposal.Info),
+                    Form(HttpMethod.Post, ResolveUri.ForProposalCancel(proposal.Key), InputSubmit("Cancelar Proposta")),
+                    principal.IsInRole(Roles.Coordenador) 
+                        ? Form(HttpMethod.Post, ResolveUri.ForProposalAccept(proposal.Key), InputSubmit("Aceitar Proposta"))
+                        : Text(""),
+                    proposal.Owner.Equals(principal.Identity.Name) ? 
+                        Form(HttpMethod.Get, ResolveUri.ForEdit(proposal), InputSubmit("Editar Proposta"))
+                        : Text("")
+            )
+        {}
+
         public ProposalView(CurricularUnit fuc, string action)
             : base("Edição - " + fuc.Name,
                     Form(HttpMethod.Post, action, 
                         Fieldset(
                             Legend(string.Format("Editar {0}", fuc.Name)),
                             Div("clearfix",Label("Nome: "), Div("input", InputText("name", fuc.Name))),
-                            Div("clearfix",Label("Acrónimo: "), Div("input", (InputText("acr", fuc.Key) as HtmlElem).WithAttr("disabled","disabled"))),
+                            Div("clearfix",Label("Acrónimo: "), Div("input", (InputText("acr", fuc.Key) as HtmlElem).WithAttr("readonly","readonly"))),
                             Div("clearfix",Label("ECTS: "), Div("input", InputText("ects", fuc.Ects.ToString()))),
                             Div("clearfix",Label("Aprendizagem: "), Div("input", InputText("assessment", fuc.Assessment))),
                             Div("clearfix",Label("Resultados: "),Div("input",InputText("results", fuc.Results))),
