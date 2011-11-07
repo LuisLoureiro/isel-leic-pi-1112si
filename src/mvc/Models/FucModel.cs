@@ -6,9 +6,9 @@ using System.Web;
 
 namespace mvc.Models
 {
-    public class UcModel
+    public class FucModel
     {
-        private readonly List<UcModel> _precedence = new List<UcModel>();
+        private readonly List<FucModel> _precedence = new List<FucModel>();
 
         [Required]
         public string Name { get; set; }
@@ -22,7 +22,7 @@ namespace mvc.Models
         [Required]
         public float Ects { get; set; }
 
-        public IEnumerable<UcModel> Precedence
+        public IEnumerable<FucModel> Precedence
         {
             get { return _precedence; }
         }
