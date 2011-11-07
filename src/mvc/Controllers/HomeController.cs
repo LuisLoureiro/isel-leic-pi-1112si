@@ -16,19 +16,5 @@ namespace mvc.Controllers
         {
             return View();
         }
-
-        public ActionResult LogIn()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult LogIn(UserModel model)
-        {
-            if(!ModelState.IsValid)
-                return View(model);
-
-            return RedirectToAction("Index", "Home");
-        }
     }
 }

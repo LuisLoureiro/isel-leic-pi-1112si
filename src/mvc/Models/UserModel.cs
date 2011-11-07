@@ -8,6 +8,9 @@ namespace mvc.Models
 {
     public class UserModel
     {
+        [Required(ErrorMessage = "O número de docente é obrigatório")]
+        public int Number { get; set; }
+
         [Required(ErrorMessage = "Tem que preencher o username")]
         public string Name { get; set; }
 
