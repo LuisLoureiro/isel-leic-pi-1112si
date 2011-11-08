@@ -3,7 +3,12 @@
 }
 
 <h2>Bem vindo!</h2>
-@Html.ActionLink("Lista FUCs", "Index", "Fuc")
-@Html.ActionLink("Lista de Propostas", "Index", "Fuc")
+<div class="ui-button">
+    @Html.ActionLink("Lista FUCs", "Index", "Fuc")
+</div>
+<div class="ui-button">
+    @Html.ActionLink("Lista de Propostas", "Index", "Prop")
+</div>
+
 <hr />
 @Html.ActionLink("Efectuar Login", "LogOn", "Account")

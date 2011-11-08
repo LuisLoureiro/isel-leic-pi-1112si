@@ -70,8 +70,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EfDbContext.cs" />
+    <Compile Include="Models\Entities\AbstractEntity.cs" />
     <Compile Include="Models\Entities\CurricularUnit.cs" />
+    <Compile Include="Models\Entities\Curricular_Unit.cs" />
     <Compile Include="Models\Entities\Proposal.cs" />
+    <Compile Include="Models\Entities\Proposal_.cs" />
     <Compile Include="Models\Entities\User.cs" />
     <Compile Include="Models\Mappers\AbstractMapper.cs" />
     <Compile Include="Models\Mappers\CurricularUnitMapper.cs" />

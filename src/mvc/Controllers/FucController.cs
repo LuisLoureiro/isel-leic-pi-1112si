@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using HttpServer.Model.Entities;
+using HttpServer.Model.Repository;
 using mvc.Models;
 using mvc.Models.Entities;
 
@@ -15,21 +17,19 @@ namespace mvc.Controllers
 
         public ActionResult Index()
         {
-            
             return View();
         }
 
-        public ActionResult Details(string acr)
+        public ActionResult Details(string id)
         {
-            //TODO
-            var fuc = new CurricularUnit();
+            var fuc = RepositoryLocator.Get<string, CurricularUnit>().GetById(id);
             return View(fuc);
         }
 
         public ActionResult New()
         {
-            var emptyFuc = new CurricularUnit();
-            return View(emptyFuc);
+            //var emptyFuc = new CurricularUnit();
+            return View();
         }
 
         [HttpPost]
@@ -38,10 +38,10 @@ namespace mvc.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var prop = new Proposal(model);
+            var prop = new Proposal(model, null);
             //TODO colocar no repositório
             
-            return RedirectToAction("Details", "Prop", prop.Id);
+            return RedirectToAction("Details", "Prop", prop.Key);
         }
 
         public ActionResult Edit(string acr)
@@ -56,9 +56,9 @@ namespace mvc.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var prop = new Proposal(model);
+            var prop = new Proposal(model, null);
 
-            return RedirectToAction("Details", "Prop", prop.Id);
+            return RedirectToAction("Details", "Prop", prop.Key);
         }
     }
 }

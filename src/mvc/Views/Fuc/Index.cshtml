@@ -1,5 +1,27 @@
-﻿@{
+﻿@using HttpServer.Model.Entities
+@using HttpServer.Model.Repository
+@using mvc.Models.Entities
+@{
     ViewBag.Title = "Index";
 }
 
 <h2>Lista das Unidades Curriculares</h2>
+
+<ul>
+@{ 
+    foreach( var uc in RepositoryLocator.Get<string, CurricularUnit>().GetAll() )
+    {
+        <li>
+            @Html.ActionLink(uc.Name, "Details", "Fuc",new { id = uc.Key}, null)
+        </li>
+    }
+ }
+ </ul>
+
+ <hr/>
+ <div class="ui-button-text">
+    @Html.ActionLink("Criar proposta para nova Unidade Curricular", "New", "Fuc")
+ </div>
+ <div class="ui-button-text">
+    @Html.ActionLink("Home", "Index", "Home")
+ </div>
