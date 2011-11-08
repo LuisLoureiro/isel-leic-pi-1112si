@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using mvc.Models;
+using mvc.Models.Entities;
 
 namespace mvc.Controllers
 {
@@ -30,9 +31,10 @@ namespace mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogOn(UserModel model)
+        public ActionResult LogOn(User model)
         {
-            return View();
+            //TODO Verificar validade do utilizador
+            return RedirectToAction("Index", "Account");
         }
 
         public ActionResult Register()
@@ -44,7 +46,7 @@ namespace mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(UserModel model)
+        public ActionResult Register(User model)
         {
             if (Request.IsAuthenticated)
                 return RedirectToAction("Index", "Account");
@@ -58,7 +60,7 @@ namespace mvc.Controllers
         public ActionResult Activate(String hash)
         {
             //TODO verificar activação do user e redireccionar
-            var user = new UserModel();
+            var user = new User();
 
             if (true)
                 return LogOn(user);

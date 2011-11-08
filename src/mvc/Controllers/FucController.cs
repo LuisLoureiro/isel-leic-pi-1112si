@@ -4,36 +4,43 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using mvc.Models;
+using mvc.Models.Entities;
 
 namespace mvc.Controllers
 {
     public class FucController : Controller
     {
         //
-        // GET: /Uc/
+        // GET: /Fuc/
 
         public ActionResult Index()
         {
+            
             return View();
         }
 
         public ActionResult Details(string acr)
         {
             //TODO
-            return View();
+            var fuc = new CurricularUnit();
+            return View(fuc);
         }
 
         public ActionResult New()
         {
-            //TODO
-            return View();
+            var emptyFuc = new CurricularUnit();
+            return View(emptyFuc);
         }
 
         [HttpPost]
-        public ActionResult New(FucModel model)
+        public ActionResult New(CurricularUnit model)
         {
-            //TODO
-            var prop = new PropModel();
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var prop = new Proposal(model);
+            //TODO colocar no repositório
+            
             return RedirectToAction("Details", "Prop", prop.Id);
         }
 
@@ -44,10 +51,13 @@ namespace mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(FucModel model)
+        public ActionResult Edit(CurricularUnit model)
         {
-            //TODO
-            var prop = new PropModel();
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var prop = new Proposal(model);
+
             return RedirectToAction("Details", "Prop", prop.Id);
         }
     }

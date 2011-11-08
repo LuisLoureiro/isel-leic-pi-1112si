@@ -1,5 +1,9 @@
-﻿@{
+﻿@using mvc.Models.Entities
+@model FucModel
+
+@{
     ViewBag.Title = "Criar nova Unidade Curricular";
 }
 
-<h2>New</h2>
+<h2>Criar Nova Unidade Curricular</h2>
+@Html.EditorForModel()

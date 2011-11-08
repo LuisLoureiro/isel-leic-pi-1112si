@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using mvc.Models;
+using mvc.Models.Entities;
 
 namespace mvc.Controllers
 {
@@ -31,10 +32,13 @@ namespace mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(PropModel model)
+        public ActionResult Edit(Proposal model)
         {
-            //TODO
-            var prop = new PropModel();
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var prop = new Proposal(model.Info);
+
             return RedirectToAction("Details", "Prop", prop.Id);
         }
 

@@ -1,14 +1,10 @@
-ï»¿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
-namespace mvc.Models
+namespace mvc.Models.Entities
 {
-    public class UserModel
+    public class User
     {
-        [Required(ErrorMessage = "O nÃºmero de docente Ã© obrigatÃ³rio")]
+        [Required(ErrorMessage = "O número de docente é obrigatório")]
         public int Number { get; set; }
 
         [Required(ErrorMessage = "Tem que preencher o username")]

@@ -1,14 +1,11 @@
-﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
-namespace mvc.Models
+namespace mvc.Models.Entities
 {
-    public class FucModel
+    public class CurricularUnit
     {
-        private readonly List<FucModel> _precedence = new List<FucModel>();
+        private readonly List<CurricularUnit> _precedence = new List<CurricularUnit>();
 
         [Required]
         public string Name { get; set; }
@@ -22,7 +19,7 @@ namespace mvc.Models
         [Required]
         public float Ects { get; set; }
 
-        public IEnumerable<FucModel> Precedence
+        public IEnumerable<CurricularUnit> Precedence
         {
             get { return _precedence; }
         }
