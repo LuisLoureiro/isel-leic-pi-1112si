@@ -73,6 +73,15 @@
     <Compile Include="Models\Entities\CurricularUnit.cs" />
     <Compile Include="Models\Entities\Proposal.cs" />
     <Compile Include="Models\Entities\User.cs" />
+    <Compile Include="Models\Mappers\AbstractMapper.cs" />
+    <Compile Include="Models\Mappers\CurricularUnitMapper.cs" />
+    <Compile Include="Models\Mappers\IMapper.cs" />
+    <Compile Include="Models\Mappers\ProposalMapper.cs" />
+    <Compile Include="Models\Reposiroty\AbstractRepository.cs" />
+    <Compile Include="Models\Reposiroty\CurricularUnitRepository.cs" />
+    <Compile Include="Models\Reposiroty\IRepository.cs" />
+    <Compile Include="Models\Reposiroty\ProposalRepository.cs" />
+    <Compile Include="Models\Reposiroty\RepositoryLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
