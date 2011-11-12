@@ -1,5 +1,4 @@
 ﻿using System;
-using HttpServer.Model.Entities;
 
 namespace mvc.Models.Entities
 {

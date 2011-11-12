@@ -22,7 +22,6 @@ namespace mvc.Controllers
 
         public ActionResult New()
         {
-            //var emptyFuc = new CurricularUnit();
             return View();
         }
 

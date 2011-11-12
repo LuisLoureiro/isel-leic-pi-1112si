@@ -1,6 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace HttpServer.Model.Entities
+namespace mvc.Models.Entities
 {
     public abstract class AbstractEntity<K>
     {
@@ -12,12 +13,9 @@ namespace HttpServer.Model.Entities
         } ;
 
         private readonly K _key;
-
+        
         protected AbstractEntity(K key)
         {
-            if (!(key is ValueType) && key == null)
-                throw new ArgumentException("A chave não pode ter valor nulo.");
-
             _key = key;
         }
 

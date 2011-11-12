@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HttpServer.Model.Entities;
-using HttpServer.Model.Mappers;
+using mvc.Models.Entities;
+using mvc.Models.Mappers;
 
-namespace HttpServer.Model.Repository
+namespace mvc.Models.Reposiroty
 {
     public abstract class AbstractRepository<K, V> : IRepository<K, V> where V : AbstractEntity<K>
     {

@@ -1,6 +1,4 @@
 ﻿using System;
-using HttpServer.Model.Entities;
-using HttpServer.Model.Repository;
 using mvc.Models.Entities;
 
 namespace mvc.Models.Reposiroty

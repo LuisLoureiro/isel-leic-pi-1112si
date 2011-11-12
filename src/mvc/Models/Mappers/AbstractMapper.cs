@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using HttpServer.Model.Entities;
+using mvc.Models.Entities;
 
-namespace HttpServer.Model.Mappers
+namespace mvc.Models.Mappers
 {
     public class AbstractMapper<K, V> : IMapper<K, V> where V : AbstractEntity<K>
     {

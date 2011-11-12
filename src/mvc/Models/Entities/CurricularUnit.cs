@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using HttpServer.Model.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace mvc.Models.Entities
 {
@@ -10,19 +10,37 @@ namespace mvc.Models.Entities
 
         public static readonly byte Maxsemesters = 10;
 
+        [Required(ErrorMessage = "Introduza o nome da Unidade Curricular")]
         public string Name { get; set; }
+        
         public bool Mandatory { get; set; }
+        
+        [Required(ErrorMessage = "Introduza o(s) semestre(s) onde será leccionada")]
         public ushort Semester { get; set; }
+
+        [Required(ErrorMessage = "Introduza os créditos")]
+        [Range(1.0, 20.0, ErrorMessage = "O valor dos créditos deve estar entre 1.0 e 20.0")]
         public float Ects { get; set; }
 
         public IEnumerable<CurricularUnit> Precedence
         {
             get { return _precedence; }
         }
-
+        
+        [Required(ErrorMessage = "Introduza a descrição dos objectivos")]
+        [DataType(DataType.MultilineText)]
         public string Objectives { get; set; }
+        
+        [Required(ErrorMessage = "Introduza a descrição dos resultados")]
+        [DataType(DataType.MultilineText)]
         public string Results { get; set; }
+
+        [Required(ErrorMessage = "Introduza a descrição da avaliação")]
+        [DataType(DataType.MultilineText)]
         public string Assessment { get; set; }
+
+        [Required(ErrorMessage = "Introduza a descrição do programa")]
+        [DataType(DataType.MultilineText)]
         public string Program { get; set; }
 
         public CurricularUnit(string name, string acronym, bool mandatory, ushort semester,
@@ -52,6 +70,10 @@ namespace mvc.Models.Entities
 
         public CurricularUnit(string name, string acronym, bool mandatory, UInt16 semester, float ects)
             : this(name, acronym, mandatory, semester, ects, null)
+        {
+        }
+
+        public CurricularUnit() : base(null)
         {
         }
 

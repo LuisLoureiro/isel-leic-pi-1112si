@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using HttpServer.Model.Mappers;
 using mvc.Models.Entities;
 using mvc.Models.Mappers;
 using mvc.Models.Reposiroty;

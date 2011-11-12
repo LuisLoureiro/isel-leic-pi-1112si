@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using HttpServer.Model.Entities;
-using HttpServer.Model.Mappers;
+﻿using System.Collections.Generic;
+using mvc.Models.Entities;
+using mvc.Models.Mappers;
 
-namespace HttpServer.Model.Repository
+namespace mvc.Models.Reposiroty
 {
     public interface IRepository<K, V> where V : AbstractEntity<K> 
     {
