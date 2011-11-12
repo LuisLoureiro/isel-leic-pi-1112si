@@ -11,16 +11,13 @@
     foreach( var uc in RepositoryLocator.Get<string, CurricularUnit>().GetAll() )
     {
         <li>
-            @Html.ActionLink(uc.Name, "Details", "Fuc",new { id = uc.Key}, null)
+            @Html.ActionLink(uc.Name, "Details", "Fuc", new { id = uc.Key}, null)
         </li>
     }
- }
- </ul>
+}
+</ul>
 
- <hr/>
- <div class="ui-button-text">
-    @Html.ActionLink("Criar proposta para nova Unidade Curricular", "New", "Fuc")
- </div>
- <div class="ui-button-text">
-    @Html.ActionLink("Home", "Index", "Home")
- </div>
+<div class="well">
+    @Html.ActionLink("Criar proposta para nova Unidade Curricular", "New", "Fuc", null, new { @class = "btn" })
+</div>
+ 

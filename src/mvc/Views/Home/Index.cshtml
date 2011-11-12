@@ -1,14 +1,8 @@
 ﻿@{
     ViewBag.Title = "Página Inicial";
 }
-
 <h2>Bem vindo!</h2>
-<div class="ui-button">
-    @Html.ActionLink("Lista FUCs", "Index", "Fuc")
+<div class="well">
+    @Html.ActionLink("Lista FUCs", "Index", "Fuc", null, new { @class = "btn" })
+    @Html.ActionLink("Lista de Propostas", "Index", "Prop", null, new { @class = "btn" })
 </div>
-<div class="ui-button">
-    @Html.ActionLink("Lista de Propostas", "Index", "Prop")
-</div>
-
-<hr />
-@Html.ActionLink("Efectuar Login", "LogOn", "Account")

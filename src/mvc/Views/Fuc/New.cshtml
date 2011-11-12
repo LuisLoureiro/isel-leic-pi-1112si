@@ -6,4 +6,14 @@
 }
 
 <h2>Criar Nova Unidade Curricular</h2>
-@Html.EditorForModel()
+@using (@Html.BeginForm())
+{
+    @Html.EditorForModel()
+    
+    <div class="well">
+        <input type="submit" value="Guardar" class="btn primary"/>
+        @Html.ActionLink("Cancelar", "Index", "Fuc", null, new { @class = "btn danger"})
+    </div>
+    
+}
+
