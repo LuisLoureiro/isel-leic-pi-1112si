@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using HttpServer.Model.Entities;
 
-namespace HttpServer.Model.Entities
+namespace mvc.Models.Entities
 {
     public class CurricularUnit : AbstractEntity<string>
     {

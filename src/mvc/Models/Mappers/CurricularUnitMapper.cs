@@ -1,6 +1,7 @@
-﻿using HttpServer.Model.Entities;
+﻿using HttpServer.Model.Mappers;
+using mvc.Models.Entities;
 
-namespace HttpServer.Model.Mappers
+namespace mvc.Models.Mappers
 {
     public class CurricularUnitMapper : AbstractMapper<string, CurricularUnit>
     {

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Security;
-using HttpServer.Model.Entities;
 using HttpServer.Model.Mappers;
-using HttpServer.Model.Repository;
+using mvc.Models.Entities;
+using mvc.Models.Mappers;
+using mvc.Models.Reposiroty;
 
 namespace mvc
 {

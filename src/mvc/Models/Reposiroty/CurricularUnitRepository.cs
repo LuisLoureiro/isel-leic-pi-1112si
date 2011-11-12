@@ -1,6 +1,7 @@
-﻿using HttpServer.Model.Entities;
+﻿using HttpServer.Model.Repository;
+using mvc.Models.Entities;
 
-namespace HttpServer.Model.Repository
+namespace mvc.Models.Reposiroty
 {
     public class CurricularUnitRepository : AbstractRepository<string, CurricularUnit>
     {

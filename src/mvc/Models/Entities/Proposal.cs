@@ -1,5 +1,7 @@
 ﻿using System;
-namespace HttpServer.Model.Entities
+using HttpServer.Model.Entities;
+
+namespace mvc.Models.Entities
 {
     public class Proposal : AbstractEntity<long>
     {

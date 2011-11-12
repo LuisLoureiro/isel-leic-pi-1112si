@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using HttpServer.Model.Entities;
-using HttpServer.Model.Repository;
-using mvc.Models;
+﻿using System.Web.Mvc;
 using mvc.Models.Entities;
+using mvc.Models.Reposiroty;
 
 namespace mvc.Controllers
 {
