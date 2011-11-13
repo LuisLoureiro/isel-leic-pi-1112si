@@ -1,0 +1,18 @@
+﻿@using mvc.Models
+@model RegisterUser
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Registar novo utilizador</h2>
+
+@using (@Html.BeginForm())
+{
+    @Html.EditorForModel()
+    
+    <div class="well">
+        <input type="submit" value="Guardar" class="btn primary"/>
+        @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger"})
+    </div>
+    
+}

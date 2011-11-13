@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using mvc.Models;
@@ -19,10 +16,8 @@ namespace mvc.Controllers
         {
             if(!Request.IsAuthenticated)
                 FormsAuthentication.RedirectToLoginPage();
-
-            //TODO mostrar perfil do user que se encontra autenticado
-
-            return View();
+            
+            return View(Request.RequestContext.HttpContext.User.Identity.Name);
         }
         
         public ActionResult LogOn()
@@ -31,14 +26,36 @@ namespace mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogOn(User model)
+        public ActionResult LogOn(LogOn model, string returnUrl)
         {
-            //TODO Verificar validade do utilizador
-            return RedirectToAction("Index", "Account");
+            if (ModelState.IsValid) // TODO ver situação dos utilizadores que ainda não estão activados!!
+            {
+                try
+                {
+                    if (MvcNotMembershipProvider.ValidateUser(model.Username, model.Password))
+                    {
+                        FormsAuthentication.SetAuthCookie(model.Username.ToString(), false);
+
+                        return returnUrl == null ? (ActionResult)RedirectToAction("Index", "Account") : Redirect(returnUrl);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                }
+            }
+
+            // Chegar aqui indica que a submissão do formulário não foi aceite, devido à não validação da informação nele presente.
+            // O conteúdo da resposta vai conter o formulário pré-preenchido, através da passagem à vista do parâmetro 'model'
+            //  com a informação submetida.
+            // As propriedades da classe LogOn estão decoradas com atributos por forma a indicar a informação detalhada
+            //  dos erros de validação.
+            return View(model);
         }
 
         public ActionResult Register()
         {
+            // TODO será melhor enviar uma excepção, para nossa precaução??
             if (Request.IsAuthenticated)
                 return RedirectToAction("Index", "Account");
 
@@ -46,26 +63,49 @@ namespace mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(User model)
+        public ActionResult Register(RegisterUser model)
         {
-            if (Request.IsAuthenticated)
-                return RedirectToAction("Index", "Account");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    MvcNotMembershipProvider.CreateUser(model);
 
-            if (!ModelState.IsValid)
-                return View(model);
+                    FormsAuthentication.SetAuthCookie(model.Number.ToString(), false);
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (ArgumentException e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
+            }
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "admin")]
+        public ActionResult Activate(String hash)
+        {
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            var user = new DefaultUser();
+            
+            return View();
+        }
+
+        [Authorize]
+        public ActionResult LogOff()
+        {
+            // TODO será melhor enviar uma excepção, para nossa precaução??
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Activate(String hash)
-        {
-            //TODO verificar activação do user e redireccionar
-            var user = new User();
-
-            if (true)
-                return LogOn(user);
-
-            return View();
-        }
+        // TODO Change password
     }
 }

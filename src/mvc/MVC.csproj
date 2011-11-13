@@ -69,16 +69,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Entities\AbstractEntity.cs" />
     <Compile Include="Models\Entities\CurricularUnit.cs" />
-    <Compile Include="Models\Entities\Curricular_Unit.cs" />
     <Compile Include="Models\Entities\Proposal.cs" />
-    <Compile Include="Models\Entities\Proposal_.cs" />
-    <Compile Include="Models\Entities\User.cs" />
     <Compile Include="Models\Mappers\AbstractMapper.cs" />
     <Compile Include="Models\Mappers\CurricularUnitMapper.cs" />
     <Compile Include="Models\Mappers\IMapper.cs" />
     <Compile Include="Models\Mappers\ProposalMapper.cs" />
+    <Compile Include="Models\MvcNotMembershipProvider.cs" />
+    <Compile Include="Models\MvcRoleProvider.cs" />
     <Compile Include="Models\Reposiroty\AbstractRepository.cs" />
     <Compile Include="Models\Reposiroty\CurricularUnitRepository.cs" />
     <Compile Include="Models\Reposiroty\IRepository.cs" />
@@ -87,7 +87,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -184,6 +183,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Register.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
