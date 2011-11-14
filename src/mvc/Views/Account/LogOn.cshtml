@@ -7,6 +7,10 @@
 <h2>Efectuar Login</h2>
 @using (@Html.BeginForm())
 {
+    if (Html.ValidationSummary().ToString().Length != 0)
+    {
+        <div class="span12 alert-message warning">@Html.ValidationSummary()</div>
+    }
     @Html.EditorForModel()
     
     <div class="well">

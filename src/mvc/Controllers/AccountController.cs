@@ -21,6 +21,26 @@ namespace mvc.Controllers
             return View(MvcNotMembershipProvider.GetUser(
                             Convert.ToInt32(User.Identity.Name)));
         }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Index(AccountUser updatedUser)
+        {
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            try
+            {
+                MvcNotMembershipProvider.UpdateUser(updatedUser);
+                TempData["message"] = "Alteração efectuada com sucesso!";
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", "Alteração não foi concretizada. "+e.Message);
+            }
+
+            return View(updatedUser);
+        }
         
         public ActionResult LogOn()
         {
@@ -72,13 +92,13 @@ namespace mvc.Controllers
                 try
                 {
                     MvcNotMembershipProvider.CreateUser(model);
+                    TempData["message"] = "Registo criado com sucesso!";
 
-                    FormsAuthentication.SetAuthCookie(model.Number.ToString(), false);
                     return RedirectToAction("Index", "Home");
                 }
                 catch (ArgumentException e)
                 {
-                    ModelState.AddModelError("", e.Message);
+                    ModelState.AddModelError("", "Utilizador não foi registado. " + e.Message);
                 }
             }
 

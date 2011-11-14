@@ -6,12 +6,12 @@
 
 <h2>Registar novo utilizador</h2>
 
-@using (@Html.BeginForm())
+@using (@Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-stacked"}))
 {
     @Html.EditorForModel()
     
     <div class="well">
-        <input type="submit" value="Guardar" class="btn primary"/>
+        <input type="submit" value="Registar" class="btn primary"/>
         @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger"})
     </div>
     

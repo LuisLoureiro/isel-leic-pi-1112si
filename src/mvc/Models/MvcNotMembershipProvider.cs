@@ -40,15 +40,12 @@ namespace mvc.Models
             CreateUser(user.Number, user.Name, user.Password, user.Email);
         }
 
-        public static void UpdateUser(int number, string nome = null, string email = null)
+        public static void UpdateUser(AccountUser user)
         {
-            CheckUser(number);
-
-            // Estas verificações serão necessárias tendo em conta os atributos dos respectivos campos??
-            if (!string.IsNullOrWhiteSpace(nome))
-                Users[number].Name = nome;
-            if (!string.IsNullOrWhiteSpace(email))
-                Users[number].Email = email;
+            Users[user.Number].Name = user.Name;
+            Users[user.Number].Email = user.Email;
+            Users[user.Number].Name = user.Name;
+            ChangePassword(user.Number, user.Password);
         }
 
         public static bool DeleteUser(int number)

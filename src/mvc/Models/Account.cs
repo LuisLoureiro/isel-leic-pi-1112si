@@ -6,6 +6,7 @@ namespace mvc.Models
 {
     public class InternalUser : AccountUser
     {
+        [HiddenInput(DisplayValue = false)]
         public bool IsActivated { get; set; }
     }
 
@@ -13,10 +14,13 @@ namespace mvc.Models
     {
         [Display(Name = "Fotografia")]
         public Image Foto { get; set; }
+
+        [HiddenInput(DisplayValue = true)]
+        public override int Number { get; set; }
     }
     
     public class RegisterUser : DefaultUser
-    {
+    {   
         [DataType(DataType.Password)]
         [Display(Name = "Confirmação", Order = int.MaxValue)]
         [Compare("Password", ErrorMessage = "As passwords não são iguais.")]
@@ -32,12 +36,8 @@ namespace mvc.Models
     {
         [Required(ErrorMessage = "O número de docente é obrigatório.")]
         [Display(Name = "Número Docente")]
-        //[StringLength(5, ErrorMessage = "O número de docente tem no máximo cinco algarismos.", MinimumLength = 1)]
-        //[RegularExpression(@"*[0-9]", ErrorMessage = "O número de docente só admite algarismos.")]
         [Range(1, 99999, ErrorMessage = "O número de docente tem no máximo cinco algarismos.")]
-        [Editable(false, AllowInitialValue = true)]
-        //public string Number { get; set; }
-        public int Number { get; set; }
+        public virtual int Number { get; set; }
 
         [Required(ErrorMessage = "O nome é obrigatório.")]
         [Display(Name = "Nome")]
