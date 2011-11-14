@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Security;
 
 namespace mvc.Models
 {
@@ -10,7 +9,18 @@ namespace mvc.Models
 
         static MvcNotMembershipProvider()
         {
-            Users = new Dictionary<int, InternalUser>();
+            Users = new Dictionary<int, InternalUser>
+                        {
+                            {
+                                1, new InternalUser
+                                       {
+                                           Number = 1,
+                                           Name = "Administrador",
+                                           IsActivated = true,
+                                           Password = "2722632186"
+                                       }
+                                }
+                        };
         }
 
         public static void CreateUser(int number, string nome, string password, string email)
@@ -74,6 +84,11 @@ namespace mvc.Models
             CheckUser(number);
 
             return Users[number];
+        }
+
+        public static IEnumerable<InternalUser> GetAllUsers()
+        {
+            return Users.Values;
         }
 
         private static void CheckUser(int number)

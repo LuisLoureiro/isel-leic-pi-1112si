@@ -11,7 +11,15 @@ namespace mvc.Models
 
         static MvcRoleProvider()
         {
-            RolesUsers = new Dictionary<string, List<string>>();
+            RolesUsers = new Dictionary<string, List<string>>
+                             {
+                                 {
+                                     "admin", new List<string>
+                                                  {
+                                                      "1"
+                                                  }
+                                     }
+                             };
         }
 
         public override string ApplicationName { get; set; }
