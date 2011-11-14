@@ -5,4 +5,14 @@
 }
 
 <h2>Efectuar Login</h2>
-@Html.EditorForModel
+@using (@Html.BeginForm())
+{
+    @Html.EditorForModel()
+    
+    <div class="well">
+        <input type="submit" value="Entrar" class="btn primary"/>
+    </div>
+}
+
+<h3>Novo utilizador?</h3>
+@Html.ActionLink("Registar-me", "Register")

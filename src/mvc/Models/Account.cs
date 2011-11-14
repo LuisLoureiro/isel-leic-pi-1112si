@@ -18,7 +18,7 @@ namespace mvc.Models
     public class RegisterUser : DefaultUser
     {
         [DataType(DataType.Password)]
-        [Display(Name = "Confirmação")]
+        [Display(Name = "Confirmação", Order = int.MaxValue)]
         [Compare("Password", ErrorMessage = "As passwords não são iguais.")]
         public string ConfirmPassword { get; set; }
 
