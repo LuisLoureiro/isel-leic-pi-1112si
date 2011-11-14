@@ -16,8 +16,10 @@ namespace mvc.Controllers
         {
             if(!Request.IsAuthenticated)
                 FormsAuthentication.RedirectToLoginPage();
-            
-            return View(Request.RequestContext.HttpContext.User.Identity.Name);
+
+            // Os cookies criados vão com o número do utilizador
+            return View(MvcNotMembershipProvider.GetUser(
+                            Convert.ToInt32(User.Identity.Name)));
         }
         
         public ActionResult LogOn()
@@ -102,6 +104,22 @@ namespace mvc.Controllers
                 FormsAuthentication.RedirectToLoginPage();
 
             FormsAuthentication.SignOut();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Remove()
+        {
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            string user = User.Identity.Name;
+
+            FormsAuthentication.SignOut();
+            MvcNotMembershipProvider.DeleteUser(Convert.ToInt32(user));
+            Roles.RemoveUserFromRoles(user, Roles.GetRolesForUser(user));
 
             return RedirectToAction("Index", "Home");
         }

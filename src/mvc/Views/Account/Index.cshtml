@@ -1,0 +1,51 @@
+﻿@using mvc.Models
+@model AccountUser
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Informações de @Model.Name</h2>
+
+@using (@Html.BeginForm())
+{
+    @Html.EditorForModel()
+    
+    <div class="well">
+        <input type="submit" value="Guardar" class="btn primary"/>
+        @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger"})
+    </div>
+    
+}
+
+@{
+    if (Roles.GetRolesForUser(Model.Number.ToString()).Contains<string>("admin"))
+    {
+        <table title="Utilizadores">
+            <thead>
+                <tr><td>Número</td><td>Ativado</td><td>Roles</td></tr>
+            </thead>
+            <tbody>
+            @{
+                foreach (InternalUser user in MvcNotMembershipProvider.GetAllUsers()) {
+                    var userRoles = Roles.GetRolesForUser(user.Number.ToString());
+                    <tr>
+                        <td>@user.Number</td>
+                        <td>@Html.CheckBox("Activated user", user.IsActivated)</td>
+                        <td>@Html.ListBox("Roles", 
+                                Roles.GetAllRoles().Select<string, SelectListItem>(
+                                     role => {
+                                         var li = new SelectListItem(); li.Value = role; li.Text = role;
+                                         li.Selected = userRoles.Contains<string>(role); 
+                                         return li; }))</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    }
+}
+
+@using(Html.BeginForm("Remove", "Account", FormMethod.Post))
+{
+    <input type="submit" value="Remover Conta" class="btn danger" />
+}

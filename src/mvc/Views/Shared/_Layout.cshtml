@@ -15,7 +15,14 @@
         <div class="container">
           <a class="brand" href="/">PI | S1112I | LI51N-G08</a>
           <ul class="secondary-nav">
-            <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account")</li>
+          @{
+              if (User.Identity.IsAuthenticated) {
+                  <li>@Html.ActionLink("Sair", "LogOff", "Account")</li>
+              }
+              else {
+                  <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account")</li>
+              }
+          }
           </ul>
         </div>
       </div>
