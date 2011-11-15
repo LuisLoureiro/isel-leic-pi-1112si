@@ -1,34 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using mvc.Models;
+﻿using System.Web.Mvc;
 using mvc.Models.Entities;
+using mvc.Models.Reposiroty;
 
 namespace mvc.Controllers
 {
     public class PropController : Controller
     {
-        //
-        // GET: /Prop/
 
         public ActionResult Index()
         {
-            //TODO
-            return View();
+            return View(RepositoryLocator.Get<long, Proposal>().GetAll());
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(long id)
         {
-            //TODO - passar à vista um modelo
-            return View();
+            return View(RepositoryLocator.Get<long, Proposal>().GetById(id));
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(long id)
         {
-            //TODO
-            return View();
+            return View(RepositoryLocator.Get<long, Proposal>().GetById(id));
         }
 
         [HttpPost]
