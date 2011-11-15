@@ -63,7 +63,7 @@ namespace mvc.Controllers
                 }
                 catch (ArgumentException)
                 {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    ModelState.AddModelError("", "O nome de utilizador ou password estão incorrectos");
                 }
             }
 
