@@ -7,7 +7,7 @@
 <h2>Efectuar Login</h2>
 <div class="row">
     <div class="span12">
-    @using (@Html.BeginForm())
+    @using (@Html.BeginForm("LogOn", "Account", FormMethod.Post, new {@class = "form-stacked"}))
     {
         @Html.ValidationSummary(true, "Por favor verifique os erros", new { @class = "span6 alert-message danger"});
     

@@ -57,11 +57,11 @@ namespace mvc.Models
 
     public class LogOn
     {
-        [Required]
+        [Required(ErrorMessage = "Tem que preencher o nome de utilizador")]
         [Display(Name = "Utilizador")]
         public int Username { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tem que introduzir a password")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
