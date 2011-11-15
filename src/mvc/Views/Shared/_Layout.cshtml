@@ -23,7 +23,7 @@
                   <li>@Html.ActionLink("Sair", "LogOff", "Account")</li>
               }
               else {
-                  <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account")</li>
+                  <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account", new { returnUrl = Request.RawUrl }, null)</li>
               }
           }
           </ul>
