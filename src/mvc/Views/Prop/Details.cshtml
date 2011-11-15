@@ -1,8 +1,14 @@
-﻿@using mvc.Models.Entities
-@model PropModel
+﻿@model mvc.Models.Entities.Proposal
 
 @{
-    ViewBag.Title = String.Format( "Detalhes da proposta {0}", Model.Id);
+    ViewBag.Title = String.Format( "Detalhes da proposta {0}", Model.Key);
 }
+<div class="container well">
+    <h2>Proposta @Model.Key</h2>
+    <h4>Criada por: @Model.Owner</h4>
+    <h5>Estado: @Model.State</h5>
+</div>
 
-<h2>ViewPage1</h2>
+<div class="container">
+    @{ Html.RenderPartial("CurricularUnitView", Model.Info); }
+</div>

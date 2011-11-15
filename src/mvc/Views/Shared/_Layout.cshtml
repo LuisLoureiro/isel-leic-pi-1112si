@@ -19,7 +19,7 @@
           <ul class="secondary-nav">
           @{
               if (User.Identity.IsAuthenticated) {
-                  <li>@Html.ActionLink(MvcNotMembershipProvider.GetUser(Convert.ToInt32(User.Identity.Name)).Name, "Index", "Account")</li>
+                  <li>@Html.ActionLink(MvcNotMembershipProvider.GetUser(User.Identity.Name).Name, "Index", "Account")</li>
                   <li>@Html.ActionLink("Sair", "LogOff", "Account")</li>
               }
               else {

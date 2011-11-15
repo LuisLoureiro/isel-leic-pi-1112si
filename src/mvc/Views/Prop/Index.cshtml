@@ -1,5 +1,15 @@
-﻿@{
-    ViewBag.Title = "Lista de Propostas";
+﻿@model IEnumerable<mvc.Models.Entities.Proposal>
+
+@{
+    ViewBag.Title = "Index";
 }
 
-<h2>title</h2>
+<h2>Lista de propostas</h2>
+
+
+<ul>
+@foreach(var p in Model)
+{
+    <li> @Html.ActionLink(string.Format("{0} - {1}", p.Key, p.Info.Key), "Details", new { id = p.Key }) </li>
+}
+</ul>

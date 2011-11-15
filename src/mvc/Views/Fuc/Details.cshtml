@@ -1,70 +1,12 @@
-﻿@using mvc.Models.Entities
+﻿@model mvc.Models.Entities.CurricularUnit
 @using System.ComponentModel.DataAnnotations
-@model CurricularUnit
+
 
 @{
     ViewBag.Title = String.Format("Detalhes da Ficha de {0}", Model.Name);
 }
 
-<h2>Detalhes</h2>
-@{
-    (Model.GetType().GetProperty("Key").GetCustomAttributes(typeof(DisplayAttribute), false)[0] as DisplayAttribute).Name = "Acrónimo";
-}
-
-<div class="display-label">Acrónimo</div>
-<div class="display-field">
-    @Model.Key
-</div>
-
-<div class="display-label">Nome</div>
-<div class="display-field">
-    @Model.Name
-</div>
-
-<div class="display-label">Obrigatoriedade</div>
-<div class="display-field">
-    @Html.RadioButton("Obrigatoriedade", "Obrigatória", Model.Mandatory, new { @disabled = "true" }) <text>Obrigatória</text> <br />
-    @Html.RadioButton("Obrigatoriedade", "Opcional", !Model.Mandatory, new { @disabled = "true" }) <text>Opcional</text>
-</div>
-
-<div class="display-label">Créditos</div>
-<div class="display-field">
-    @Model.Ects
-</div>
-
-<div class="display-label">Semestre(s) Curricular(es)</div>
-<div class="display-field">
-    @Math.Log(Model.Semester<<1, 2)
-</div>
-
-<div class="display-label">Pré-Requisito(s)</div>
-<div class="display-field">
-    <ul>
-    @foreach (var p in Model.Precedence) { 
-        <li>@Html.ActionLink(p.Key, "Details", "Fuc", new { @Id = p.Key }, null)</li>
-    }
-    </ul>
-</div>
-
-<div class="display-label">Objectivos</div>
-<div class="display-field">
-    @Model.Objectives
-</div>
-
-<div class="display-label">Resultados da Aprendizagem</div>
-<div class="display-field">
-    @Model.Assessment
-</div>
-
-<div class="display-label">Avaliação dos Resultados</div>
-<div class="display-field">
-    @Model.Results
-</div>
-
-<div class="display-label">Programa Resumido</div>
-<div class="display-field">
-    @Model.Program
-</div>
+@{ Html.RenderPartial("CurricularUnitView", Model); }
 
 @if (User.Identity.IsAuthenticated) { 
     <div>@Html.ActionLink("Proposta de alteração", "Edit", new { @Id = Model.Key })</div>

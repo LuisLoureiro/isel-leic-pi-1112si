@@ -1,0 +1,27 @@
+﻿@model mvc.Models.Entities.CurricularUnit
+
+<div class="container">
+    <div class="clearfix"> <p><span class="label">Acrónimo:</span>        @Model.Key </p> </div>
+    <div class="clearfix"> <p><span class="label">Nome:</span>         @Model.Name</p></div>
+    <div class="clearfix"> <p><span class="label">Obrigatoriedade:</span> @(Model.Mandatory ? "Obrigatória" : "Opcional")</p></div>
+    <div class="clearfix"> <p><span class="label">Créditos:</span>       @Model.Ects</p></div>
+    <div class="clearfix"> <p><span class="label">Semestre(s) Curricular(es):</span> @Math.Log(Model.Semester<<1, 2) </p></div>
+
+    @if (Model.Precedence.Count() != 0)
+    {
+        <div class="clearfix">
+            <span class="label">Pré-Requisito(s):</span>
+            <ul>
+            @foreach (var p in Model.Precedence)
+            { 
+                <li>@Html.ActionLink(p.Key, "Details", "Fuc", new { id = p.Key }, null)</li>
+            }
+            </ul>
+        </div>
+    }
+
+    <div class="clearfix span12 "> <span class="label">Objectivos:</span> <p> @Model.Objectives </p></div>
+    <div class="clearfix span12"> <span class="label">Resultados da Aprendizagem:</span> <p>@Model.Assessment</p></div>
+    <div class="clearfix span12"> <span class="label">Avaliação dos Resultados:</span> <p>@Model.Results</p></div>
+    <div class="clearfix span12"> <span class="label">Programa Resumido:</span> <p>@Model.Program</p></div>
+</div>
