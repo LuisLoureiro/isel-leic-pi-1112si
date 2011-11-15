@@ -5,16 +5,16 @@ namespace mvc.Models
 {
     public class MvcNotMembershipProvider
     {
-        private readonly static IDictionary<int, InternalUser> Users;
+        private readonly static IDictionary<string, InternalUser> Users;
 
         static MvcNotMembershipProvider()
         {
-            Users = new Dictionary<int, InternalUser>
+            Users = new Dictionary<string, InternalUser>
                         {
                             {
-                                1, new InternalUser
+                                "1", new InternalUser
                                        {
-                                           Number = 1,
+                                           Number = "1",
                                            Name = "Administrador",
                                            IsActivated = true,
                                            Password = "2722632186"
@@ -23,7 +23,7 @@ namespace mvc.Models
                         };
         }
 
-        public static void CreateUser(int number, string nome, string password, string email)
+        public static void CreateUser(string number, string nome, string password, string email)
         {
             if (Users.ContainsKey(number))
                 throw new ArgumentException("User already exists.");
@@ -48,35 +48,35 @@ namespace mvc.Models
             ChangePassword(user.Number, user.Password);
         }
 
-        public static bool DeleteUser(int number)
+        public static bool DeleteUser(string number)
         {
             CheckUser(number);
 
             return Users.Remove(number);
         }
 
-        public static void ChangePassword(int number, string password)
+        public static void ChangePassword(string number, string password)
         {
             CheckUser(number);
 
             Users[number].ChangePassword(password);
         }
 
-        public static void ActivateUser(int number)
+        public static void ActivateUser(string number)
         {
             CheckUser(number);
 
             Users[number].IsActivated = true;
         }
 
-        public static bool ValidateUser(int number, string password)
+        public static bool ValidateUser(string number, string password)
         {
             CheckUser(number);
 
             return Users[number].Password == password;
         }
 
-        public static AccountUser GetUser(int number)
+        public static AccountUser GetUser(string number)
         {
             CheckUser(number);
 
@@ -88,7 +88,7 @@ namespace mvc.Models
             return Users.Values;
         }
 
-        private static void CheckUser(int number)
+        private static void CheckUser(string number)
         {
             if (!Users.ContainsKey(number))
                 throw new ArgumentException(string.Format("The user with number {0} doesn't exist.", number));

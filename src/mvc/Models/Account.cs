@@ -16,7 +16,7 @@ namespace mvc.Models
         public Image Foto { get; set; }
 
         [HiddenInput(DisplayValue = true)]
-        public override int Number { get; set; }
+        public override string Number { get; set; }
     }
     
     public class RegisterUser : DefaultUser
@@ -36,8 +36,9 @@ namespace mvc.Models
     {
         [Required(ErrorMessage = "O número de docente é obrigatório.")]
         [Display(Name = "Número Docente")]
-        [Range(1, 99999, ErrorMessage = "O número de docente tem no máximo cinco algarismos.")]
-        public virtual int Number { get; set; }
+        [StringLength(5, ErrorMessage = "O número de docente tem no máximo cinco algarismos.", MinimumLength = 1)]
+        [RegularExpression("[1-9]*[0-9]", ErrorMessage = "Só pode introduzir algarismos.")]
+        public virtual string Number { get; set; }
 
         [Required(ErrorMessage = "O nome é obrigatório.")]
         [Display(Name = "Nome")]
@@ -59,7 +60,8 @@ namespace mvc.Models
     {
         [Required(ErrorMessage = "Tem que preencher o nome de utilizador")]
         [Display(Name = "Utilizador")]
-        public int Username { get; set; }
+        [RegularExpression("[1-9]*[0-9]", ErrorMessage = "O username corresponde ao número de docente.")]
+        public string Username { get; set; }
 
         [Required(ErrorMessage = "Tem que introduzir a password")]
         [DataType(DataType.Password)]

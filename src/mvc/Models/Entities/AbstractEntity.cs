@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace mvc.Models.Entities
 {
@@ -19,6 +18,7 @@ namespace mvc.Models.Entities
             _key = key;
         }
 
+        [Display(Order = -1)]
         public K Key
         {
             get { return _key; }

@@ -18,8 +18,7 @@ namespace mvc.Controllers
                 FormsAuthentication.RedirectToLoginPage();
 
             // Os cookies criados vão com o número do utilizador
-            return View(MvcNotMembershipProvider.GetUser(
-                            Convert.ToInt32(User.Identity.Name)));
+            return View(MvcNotMembershipProvider.GetUser(User.Identity.Name));
         }
 
         [Authorize]
@@ -138,7 +137,7 @@ namespace mvc.Controllers
             string user = User.Identity.Name;
 
             FormsAuthentication.SignOut();
-            MvcNotMembershipProvider.DeleteUser(Convert.ToInt32(user));
+            MvcNotMembershipProvider.DeleteUser(user);
             Roles.RemoveUserFromRoles(user, Roles.GetRolesForUser(user));
 
             return RedirectToAction("Index", "Home");

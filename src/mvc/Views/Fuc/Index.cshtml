@@ -17,7 +17,9 @@
 }
 </ul>
 
-<div class="well">
-    @Html.ActionLink("Criar proposta para nova Unidade Curricular", "New", "Fuc", null, new { @class = "btn" })
-</div>
+@if (User.Identity.IsAuthenticated) {
+    <div class="well">
+        @Html.ActionLink("Criar proposta para nova Unidade Curricular", "New", "Fuc", null, new { @class = "btn" })
+    </div>    
+}
  
