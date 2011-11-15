@@ -51,6 +51,16 @@ namespace mvc
             IEnumerable<CurricularUnit> ucs = GetUCs();
             ucRepo.Insert(ucs);
 
+            propRepo.Insert(new Proposal(
+                                new CurricularUnit("Matemática I", "M1", true, 1, 6)
+                                                {
+                                                   Assessment = "Avaliação Matemática",
+                                                   Objectives = "Aprender Matemática",
+                                                   Program = "Conceitos de Matemática",
+                                                   Results = "Gostar de Matemática"
+                                                }, 
+                                                "1"));
+
         }
 
         private static IEnumerable<CurricularUnit> GetUCs()
