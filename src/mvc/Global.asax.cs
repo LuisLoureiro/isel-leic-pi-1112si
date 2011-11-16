@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using mvc.Models.Entities;
 using mvc.Models.Mappers;
-using mvc.Models.Reposiroty;
+using mvc.Models.Repository;
 
 namespace mvc
 {

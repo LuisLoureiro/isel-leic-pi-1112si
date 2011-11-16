@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Web.Security;
 using mvc.Models.Entities;
-using mvc.Models.Reposiroty;
+using mvc.Models.Repository;
 
 namespace mvc.Controllers
 {
