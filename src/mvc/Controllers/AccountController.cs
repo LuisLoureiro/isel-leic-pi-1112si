@@ -49,20 +49,25 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult LogOn(LogOn model, string returnUrl)
         {
-            if (ModelState.IsValid) // TODO ver situação dos utilizadores que ainda não estão activados!!
+            if (ModelState.IsValid)
             {
                 try
                 {
                     if (MvcNotMembershipProvider.ValidateUser(model.Username, model.Password))
                     {
-                        FormsAuthentication.SetAuthCookie(model.Username.ToString(), false);
+                        FormsAuthentication.SetAuthCookie(model.Username, false);
 
                         return returnUrl == null ? (ActionResult)RedirectToAction("Index", "Account") : Redirect(returnUrl);
                     }
+                    ModelState.AddModelError("", "Password incorrecta.");
                 }
-                catch (ArgumentException)
+                catch(InvalidOperationException e)
                 {
-                    ModelState.AddModelError("", "O nome de utilizador ou password estão incorrectos");
+                    ModelState.AddModelError("", e.Message + "\r\n Check your email box for activation.");
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
                 }
             }
 
@@ -76,7 +81,6 @@ namespace mvc.Controllers
 
         public ActionResult Register()
         {
-            // TODO será melhor enviar uma excepção, para nossa precaução??
             if (Request.IsAuthenticated)
                 return RedirectToAction("Index", "Account");
 
@@ -91,7 +95,8 @@ namespace mvc.Controllers
                 try
                 {
                     MvcNotMembershipProvider.CreateUser(model);
-                    TempData["message"] = "Registo criado com sucesso!";
+                    // TODO enviar email
+                    TempData["message"] = "Registo criado com sucesso! Verifique a sua caixa de correio electrónico.";
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -104,21 +109,24 @@ namespace mvc.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "admin")]
-        public ActionResult Activate(String hash)
+        public ActionResult Activate(string hash)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
-            var user = new DefaultUser();
-            
-            return View();
+            try
+            {
+                MvcNotMembershipProvider.ActivateUser(hash);
+                TempData["message"] = "Utilizador activado com sucesso!";
+                return RedirectToAction("LogOn");
+            }
+            catch (ArgumentException e)
+            {
+                TempData["exception"] = e.Message;
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [Authorize]
         public ActionResult LogOff()
         {
-            // TODO será melhor enviar uma excepção, para nossa precaução??
             if (!Request.IsAuthenticated)
                 FormsAuthentication.RedirectToLoginPage();
 
@@ -142,7 +150,5 @@ namespace mvc.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-        // TODO Change password
     }
 }

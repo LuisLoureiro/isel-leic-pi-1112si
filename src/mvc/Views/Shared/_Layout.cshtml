@@ -35,6 +35,10 @@
         @if (TempData["message"] != null) { 
             <div class="span12 alert-message success">@TempData["message"]</div>
         }
+        @if (TempData["exception"] != null)
+        { 
+            <div class="span12 alert-message warning">@TempData["exception"]</div>
+        }
         @RenderBody()
     </div>
 
