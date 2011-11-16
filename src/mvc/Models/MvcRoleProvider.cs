@@ -18,6 +18,9 @@ namespace mvc.Models
                                                   {
                                                       "1"
                                                   }
+                                     },
+                                 {
+                                     "default", new List<string>()
                                      }
                              };
         }

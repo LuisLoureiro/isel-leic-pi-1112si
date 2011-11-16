@@ -13,12 +13,21 @@ namespace mvc.Models
                         {
                             {
                                 "1", new InternalUser
-                                       {
-                                           Number = "1",
-                                           Name = "Administrador",
-                                           IsActivated = true,
-                                           Password = "2722632186"
-                                       }
+                                         {
+                                             Number = "1",
+                                             Name = "Administrador",
+                                             IsActivated = true,
+                                             Password = "2722632186"
+                                         }
+                                },
+                            {
+                                "2", new InternalUser
+                                         {
+                                             Number = "2",
+                                             Name = "Utilizador",
+                                             IsActivated = true,
+                                             Password = "123456"
+                                         }
                                 }
                         };
         }
