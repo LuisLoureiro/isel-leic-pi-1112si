@@ -1,0 +1,51 @@
+﻿@using mvc.Models.Repository
+@using mvc.Models.Entities
+@model mvc.Models.Entities.CurricularUnit
+<fieldset>
+    <div class="clearfix"> <p><span class="label">Acrónimo:</span>@Html.EditorFor(m => m.Key)</p> </div>
+    <div class="clearfix"> <p><span class="label">Nome:</span>@Html.EditorFor(m => m.Name)</p></div>
+    <div class="clearfix"> <p>
+        <span class="label">Obrigatoriedade:</span> 
+        @Html.RadioButton("Obrigatoriedade", "Obrigatória", Model.Mandatory) <text>Obrigatória</text>
+        @Html.RadioButton("Obrigatoriedade", "Opcional", !Model.Mandatory) <text>Opcional</text>
+    </p></div>
+    <div class="clearfix"> <p><span class="label">Créditos:</span>@Html.EditorFor(m => m.Ects)</p></div>
+    <div class="clearfix"> <p>
+        <span class="label">Semestre(s) Curricular(es):</span>
+        <select class="medium" size="4" multiple="multiple" name="multiSelectSemesters">
+            @for (int i = 0; i < CurricularUnit.Maxsemesters; i++)
+            {
+                if ((Model.Semester & (0x1 << i)) == (0x1 << i))
+                { 
+                    <option selected="selected">@(i + 1)</option>
+                }
+                else
+                {
+                    <option>@(i + 1)</option>
+                }
+            }
+        </select>
+    </p></div>
+
+    <div class="clearfix">
+        <span class="label">Pré-Requisito(s):</span>
+        <select class="medium" size="4" multiple="multiple" name="multiSelectDependencies">
+        @foreach (var uc in RepositoryLocator.Get<string, CurricularUnit>().GetAll())
+        { 
+            if (Model.Precedence.Contains<CurricularUnit>(uc))
+            { 
+                <option selected="selected">@uc.Key</option>
+            }
+            else
+            {
+                <option>@uc.Key</option>
+            }
+        }
+        </select>
+    </div>
+
+    <div class="clearfix span12"> <span class="label">Objectivos:</span> <p>@Html.EditorFor(m => m.Objectives)</p></div>
+    <div class="clearfix span12"> <span class="label">Resultados da Aprendizagem:</span> <p>@Html.EditorFor(m => m.Assessment)</p></div>
+    <div class="clearfix span12"> <span class="label">Avaliação dos Resultados:</span> <p>@Html.EditorFor(m => m.Results)</p></div>
+    <div class="clearfix span12"> <span class="label">Programa Resumido:</span> <p>@Html.EditorFor(m => m.Program)</p></div>
+</fieldset>

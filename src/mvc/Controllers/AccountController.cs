@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using System.Web.Security;
 using mvc.Models;
-using mvc.Models.Entities;
 
 namespace mvc.Controllers
 {
@@ -109,6 +108,7 @@ namespace mvc.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public ActionResult Activate(string hash)
         {
             try

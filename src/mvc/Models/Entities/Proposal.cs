@@ -17,6 +17,10 @@ namespace mvc.Models.Entities
             State = Status.Pending;
         }
 
+        public Proposal() : base(0)
+        {
+        }
+
         public CurricularUnit Info
         {
             get { return _info; }

@@ -6,4 +6,11 @@
 
 <h2>Editar proposta @Model.Key</h2>
 
-@Html.EditorForModel()
+<div>
+@using (Html.BeginForm("Edit", "Prop", FormMethod.Post))
+{
+    Html.RenderPartial("CurricularUnitEdit", Model.Info);
+    <input type="submit" value="Guardar" class="btn primary" />
+    @Html.ActionLink("Cancelar", "Edit", new { Id = Model.Key }, new { @class = "btn danger" })
+}
+</div>
