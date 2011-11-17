@@ -7,9 +7,16 @@
 <h2>Editar proposta @Model.Key</h2>
 
 <div>
-@using (Html.BeginForm("Edit", "Prop", FormMethod.Post))
+@using (Html.BeginForm("Edit", "Prop", FormMethod.Post, new { @class = "form-stacked" }))
 {
-    Html.RenderPartial("CurricularUnitEdit", Model.Info);
+    <div class="container well">
+        <h2>Proposta <input type="text" name="Key" value="@Model.Key" readonly="readonly" /> </h2>
+        <h4>Criada por: <input type="text" name="Owner" value="@Model.Owner" readonly="readonly" /> </h4>
+        <h5>Estado: <input type="text" name="State" value="@Model.State" readonly="readonly" /> </h5>
+    </div>
+    
+    @Html.EditorFor(m => m.Info)
+    @* Html.RenderPartial("CurricularUnitEdit", Model.Info); *@
     <input type="submit" value="Guardar" class="btn primary" />
     @Html.ActionLink("Cancelar", "Edit", new { Id = Model.Key }, new { @class = "btn danger" })
 }

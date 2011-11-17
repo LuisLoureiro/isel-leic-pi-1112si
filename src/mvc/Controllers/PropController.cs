@@ -30,9 +30,10 @@ namespace mvc.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var prop = new Proposal(model.Info, User.Identity.Name);
+            var prop = RepositoryLocator.Get<long, Proposal>().GetById(model.Key);
+            prop.Info = model.Info;
 
-            return RedirectToAction("Details", "Prop", prop.Key);
+            return RedirectToAction("Details", "Prop", new { Id = prop.Key });
         }
 
         [HttpPost]

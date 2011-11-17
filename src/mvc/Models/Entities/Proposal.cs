@@ -4,7 +4,6 @@ namespace mvc.Models.Entities
 {
     public class Proposal : AbstractEntity<long>
     {
-        private readonly CurricularUnit _info;
         public string Owner { get; private set; }
         public Status State { get; private set; }
 
@@ -12,7 +11,7 @@ namespace mvc.Models.Entities
 
         public Proposal(CurricularUnit info, string owner) : base(++_id)
         {
-            _info = info;
+            Info = info;
             Owner = owner;
             State = Status.Pending;
         }
@@ -21,10 +20,7 @@ namespace mvc.Models.Entities
         {
         }
 
-        public CurricularUnit Info
-        {
-            get { return _info; }
-        }
+        public CurricularUnit Info { get; set; }
 
         public void UpdateStatus(Status newStatus)
         {
