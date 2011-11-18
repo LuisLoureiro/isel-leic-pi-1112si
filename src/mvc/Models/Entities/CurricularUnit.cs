@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,8 +7,6 @@ namespace mvc.Models.Entities
 {
     public class CurricularUnit : AbstractEntity<string>
     {
-        private readonly List<CurricularUnit> _precedence = new List<CurricularUnit>();
-
         public static readonly byte Maxsemesters = 10;
 
         [Required(ErrorMessage = "Introduza o nome da Unidade Curricular")]
@@ -16,21 +15,21 @@ namespace mvc.Models.Entities
         
         [Display(Name = "Obrigatoriedade")]
         public bool Mandatory { get; set; }
-        
+
         [Required(ErrorMessage = "Introduza o(s) semestre(s) onde será leccionada")]
         [Display(Name = "Semestre(s) Curricular(es)")]
-        public ushort Semester { get; set; }
+        //public ushort Semester { get; set; }
+        public int[] Semester { get; set; }
 
         [Required(ErrorMessage = "Introduza o número de créditos")]
         [Range(1.0, 20.0, ErrorMessage = "O valor dos créditos deve estar entre 1.0 e 20.0")]
         [Display(Name = "Créditos")]
         public float Ects { get; set; }
 
-        public IEnumerable<CurricularUnit> Precedence
-        {
-            get { return _precedence; }
-        }
-        
+        [Display(Name = "Pré-Requisito(s)")]
+        //public List<CurricularUnit> Precedence { get; set; }
+        public List<string> Precedence { get; set; }
+
         [Required(ErrorMessage = "Introduza a descrição dos objectivos")]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Objectivos")]
@@ -54,6 +53,8 @@ namespace mvc.Models.Entities
         public CurricularUnit(string name, string acronym, bool mandatory, ushort semester,
                               float ects, IEnumerable<CurricularUnit> precedence) : base(acronym)
         {
+            //Precedence = new List<CurricularUnit>();
+            Precedence = new List<string>();
             /*  ushort semester:
              *
              *   0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1
@@ -71,7 +72,13 @@ namespace mvc.Models.Entities
 
             Name = name;
             Mandatory = mandatory;
-            Semester = semester;
+            //Semester = semester;
+            Semester = new int[Maxsemesters];
+            for (int i = 0; i < Maxsemesters; i++)
+            {
+                if ((semester & (0x1 << i)) == (0x1 << i))
+                    Semester[i] = i + 1;
+            }
             Ects = ects;
             if(precedence != null) AddPrecedences(precedence);
         }
@@ -83,22 +90,25 @@ namespace mvc.Models.Entities
 
         public CurricularUnit() : base(null)
         {
+            //Precedence = new List<CurricularUnit>();
+            Semester = new int[Maxsemesters];
+            Precedence = new List<string>();
         }
 
         public void AddPrecedence(CurricularUnit cUnit)
         {
-                _precedence.Add(cUnit);
+                Precedence.Add(cUnit.Key);
         }
 
         public void AddPrecedences(IEnumerable<CurricularUnit> precedences)
         {
-                _precedence.AddRange(precedences);
+                Precedence.AddRange(precedences.Select(uc => uc.Key));
         }
 
         public void UpdatePrecedences(IEnumerable<CurricularUnit> precedences)
         {
-                _precedence.Clear();
-                _precedence.AddRange(precedences);
+                Precedence.Clear();
+                AddPrecedences(precedences);
         }
     }
 }

@@ -11,17 +11,13 @@ namespace mvc.Models.Entities
             Canceled
         } ;
 
-        private readonly K _key;
-        
         protected AbstractEntity(K key)
         {
-            _key = key;
+            Key = key;
         }
 
         [Display(Order = -1)]
-        public K Key
-        {
-            get { return _key; }
-        }
+        [Required(ErrorMessage = "Este campo é de preenchimento obrigatório")]
+        public K Key { get; set; }
     }
 }

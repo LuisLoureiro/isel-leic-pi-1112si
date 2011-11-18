@@ -4,8 +4,8 @@ namespace mvc.Models.Entities
 {
     public class Proposal : AbstractEntity<long>
     {
-        public string Owner { get; private set; }
-        public Status State { get; private set; }
+        public string Owner { get; set; }
+        public Status State { get; set; }
 
         private static long _id = 0; //Começará no 1
 
