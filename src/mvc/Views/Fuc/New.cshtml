@@ -6,14 +6,16 @@
 }
 
 <h2>Criar Nova Unidade Curricular</h2>
-@using (@Html.BeginForm())
+
+<div>
+@using (@Html.BeginForm(Html.BeginForm("New", "Fuc", FormMethod.Post, new { @class = "form-stacked" })))
 {
     @Html.EditorForModel()
     
     <div class="well">
         <input type="submit" value="Guardar" class="btn primary"/>
-        @Html.ActionLink("Cancelar", "Index", "Fuc", null, new { @class = "btn danger"})
+        @Html.ActionLink("Cancelar", "Index", "Fuc", null, new { @class = "btn danger" })
     </div>
     
 }
-
+</div>

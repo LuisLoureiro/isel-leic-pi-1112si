@@ -1,11 +1,22 @@
-﻿@model mvc.Models.Entities.CurricularUnit
+﻿@using System.Linq
+@model mvc.Models.Entities.CurricularUnit
 
 <div class="container">
     <div class="clearfix"> <p><span class="label">Acrónimo:</span>        @Model.Key </p> </div>
     <div class="clearfix"> <p><span class="label">Nome:</span>         @Model.Name</p></div>
     <div class="clearfix"> <p><span class="label">Obrigatoriedade:</span> @(Model.Mandatory ? "Obrigatória" : "Opcional")</p></div>
     <div class="clearfix"> <p><span class="label">Créditos:</span>       @Model.Ects</p></div>
-    <div class="clearfix"> <p><span class="label">Semestre(s) Curricular(es):</span> @Math.Log(Model.Semester<<1, 2) </p></div>
+    @*<div class="clearfix"> <p><span class="label">Semestre(s) Curricular(es):</span> @Math.Log(Model.Semester<<1, 2) </p></div>*@
+    <div class="clearfix"> <p><span class="label">Semestre(s) Curricular(es):</span> 
+        @{
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            foreach (int sem in Model.Semester) {
+                if (sem != 0) {
+                    sb.Append(sem + "º ");
+                }
+            }
+        } @sb.ToString()
+    </p></div>
 
     @if (Model.Precedence.Count() != 0)
     {
@@ -14,7 +25,8 @@
             <ul>
             @foreach (var p in Model.Precedence)
             { 
-                <li>@Html.ActionLink(p.Key, "Details", "Fuc", new { id = p.Key }, null)</li>
+                @*<li>@Html.ActionLink(p.Key, "Details", "Fuc", new { id = p.Key }, null)</li>*@
+                <li>@Html.ActionLink(p, "Details", "Fuc", new { id = p }, null)</li>
             }
             </ul>
         </div>

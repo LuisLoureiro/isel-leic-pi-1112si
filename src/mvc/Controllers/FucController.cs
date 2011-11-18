@@ -45,7 +45,7 @@ namespace mvc.Controllers
             var prop = new Proposal(model, User.Identity.Name);
             RepositoryLocator.Get<long, Proposal>().Insert(prop);
             
-            return RedirectToAction("Details", "Prop", new { prop.Key });
+            return RedirectToAction("Details", "Prop", new { Id = prop.Key });
         }
 
         [Authorize]

@@ -2,16 +2,18 @@
 @using mvc.Models.Entities
 @model CurricularUnit
 
-    <div class="clearfix"> <span class="label">Acrónimo:</span> <div> @Html.EditorFor(m => m.Key) </div> </div>
-    <div class="clearfix"> <span class="label">Nome:</span> <div> @Html.EditorFor(m => m.Name) </div> </div>
+    <div class="clearfix"> @Html.LabelFor(m => m.Key, "Acrónimo") <div> @Html.EditorFor(m => m.Key) @Html.ValidationMessageFor(m => m.Key) </div> </div>
+    <div class="clearfix"> @Html.LabelFor(m => m.Name) <div> @Html.EditorFor(m => m.Name) @Html.ValidationMessageFor(m => m.Name) </div> </div>
     <div class="clearfix"> 
-        <span class="label">Obrigatoriedade:</span> <div>
-        @Html.RadioButton("Mandatory", true, Model.Mandatory) <text>Obrigatória</text>
-        @Html.RadioButton("Mandatory", false, !Model.Mandatory) <text>Opcional</text> </div>
+        @Html.LabelFor(m => m.Mandatory) <div>
+        @Html.RadioButton("Mandatory", true, Model != null ? Model.Mandatory : false) <text>Obrigatória</text>
+        @Html.RadioButton("Mandatory", false, Model != null ? !Model.Mandatory : false) <text>Opcional</text> 
+        @Html.ValidationMessageFor(m => m.Mandatory)
+        </div>
     </div>
-    <div class="clearfix"> <span class="label">Créditos:</span> <div> @Html.EditorFor(m => m.Ects) </div> </div>
+    <div class="clearfix"> @Html.LabelFor(m => m.Ects) <div> @Html.EditorFor(m => m.Ects) @Html.ValidationMessageFor(m => m.Ects) </div> </div>
     <div class="clearfix">
-        <span class="label">Semestre(s) Curricular(es):</span>
+        @Html.LabelFor(m => m.Semester)
         <div class="input">
             @{
                 var ul = new List<SelectListItem>();
@@ -19,41 +21,41 @@
                 {
                     var li = new SelectListItem(); li.Text = (i + 1).ToString();
                     li.Value = (i + 1).ToString();
-                    li.Selected = ((Model.Semester & (0x1 << i)) == (0x1 << i)) ? true : false;
+                    if (Model != null) 
+                    {
+                        li.Selected = (Model.Semester[i] != 0) ? true : false;
+                    }
                     ul.Add(li);
                 }
               }
             @Html.ListBoxFor(mUc => mUc.Semester, ul)
-        @*<select class="medium" size="4" multiple="multiple" name="Semester">
-            @for (int i = 0; i < CurricularUnit.Maxsemesters; i++)
-            {
-                if ((Model.Semester & (0x1 << i)) == (0x1 << i))
-                { 
-                    <option selected="selected">@(i + 1)</option>
-                }
-                else
-                {
-                    <option>@(i + 1)</option>
-                }
-            }
-        </select>*@
+            @Html.ValidationMessageFor(m => m.Semester)
         </div>
     </div>
 
     <div class="clearfix">
-        <span class="label">Pré-Requisito(s):</span>
+        @Html.LabelFor(m => m.Precedence)
         <div class="input">
-            @Html.ListBoxFor(mUC => mUC.Key, 
+            @Html.ListBoxFor(mUC => mUC.Precedence,
                 RepositoryLocator.Get<string, CurricularUnit>().GetAll().Select(
-                    uc => {
-                        var li = new SelectListItem(); li.Text = uc.Key; li.Value = uc.Key; 
-                        li.Selected = Model.Precedence.Contains<CurricularUnit>(uc);
+                    uc =>
+                    {
+                        var li = new SelectListItem(); li.Text = uc.Key; li.Value = uc.Key;
+                        if (Model != null)
+                        {
+                            li.Selected = Model.Precedence.Contains(uc.Key);
+                        }
                         return li;
                     }))
+            @Html.ValidationMessageFor(m => m.Precedence)
         </div>
     </div>
 
-    <div class="clearfix span12"> <span class="label">Objectivos:</span> <p>@Html.EditorFor(m => m.Objectives)</p></div>
-    <div class="clearfix span12"> <span class="label">Resultados da Aprendizagem:</span> <p>@Html.EditorFor(m => m.Assessment)</p></div>
-    <div class="clearfix span12"> <span class="label">Avaliação dos Resultados:</span> <p>@Html.EditorFor(m => m.Results)</p></div>
-    <div class="clearfix span12"> <span class="label">Programa Resumido:</span> <p>@Html.EditorFor(m => m.Program)</p></div>
+    <div class="clearfix span12"> 
+        @Html.LabelFor(m => m.Objectives) <div> @Html.EditorFor(m => m.Objectives) @Html.ValidationMessageFor(m => m.Objectives) </div> </div>
+    <div class="clearfix span12"> 
+        @Html.LabelFor(m => m.Assessment) <div> @Html.EditorFor(m => m.Assessment) @Html.ValidationMessageFor(m => m.Assessment) </div></div>
+    <div class="clearfix span12"> 
+        @Html.LabelFor(m => m.Results) <div> @Html.EditorFor(m => m.Results) @Html.ValidationMessageFor(m => m.Results) </div> </div>
+    <div class="clearfix span12"> 
+        @Html.LabelFor(m => m.Program) <div> @Html.EditorFor(m => m.Program) @Html.ValidationMessageFor(m => m.Program) </div> </div>
