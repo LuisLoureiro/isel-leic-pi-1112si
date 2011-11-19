@@ -1,5 +1,4 @@
-﻿@using mvc.Models
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -19,11 +18,15 @@
           <ul class="secondary-nav">
           @{
               if (User.Identity.IsAuthenticated) {
-                  <li>@Html.ActionLink(MvcNotMembershipProvider.GetUser(User.Identity.Name).Name, "Index", "Account")</li>
+                  <li>@Html.ActionLink(mvc.Models.MvcNotMembershipProvider.GetUser(User.Identity.Name).Name, "Index", "Account")</li>
                   <li>@Html.ActionLink("Sair", "LogOff", "Account")</li>
               }
-              else {
+              else if (!(Request.Path.Equals("/") || Request.Path.ToLower().Equals("/home/index") || Request.Path.ToLower().Equals("/account/logon")))
+              {
                   <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account", new { returnUrl = Request.RawUrl }, null)</li>
+              } else 
+              {
+                  <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account")</li>
               }
           }
           </ul>
@@ -32,7 +35,8 @@
     </div>
 
     <div>
-        @if (TempData["message"] != null) { 
+        @if (TempData["message"] != null)
+        { 
             <div class="span12 alert-message success">@TempData["message"]</div>
         }
         @if (TempData["exception"] != null)
