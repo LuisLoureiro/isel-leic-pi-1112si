@@ -1,5 +1,4 @@
-﻿@using mvc.Models.Entities
-@model CurricularUnit
+﻿@model mvc.Models.Entities.CurricularUnit
 
 @{
     ViewBag.Title = "Criar nova Unidade Curricular";
@@ -8,9 +7,9 @@
 <h2>Criar Nova Unidade Curricular</h2>
 
 <div>
-@using (@Html.BeginForm(Html.BeginForm("New", "Fuc", FormMethod.Post, new { @class = "form-stacked" })))
+@using (Html.BeginForm("New", "Fuc", FormMethod.Post, new { @class = "form-stacked" }))
 {
-    @Html.EditorForModel()
+    @Html.EditorForModel
     
     <div class="well">
         <input type="submit" value="Guardar" class="btn primary"/>

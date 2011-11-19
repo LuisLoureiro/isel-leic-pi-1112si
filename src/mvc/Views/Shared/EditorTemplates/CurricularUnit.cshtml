@@ -1,6 +1,4 @@
-﻿@using mvc.Models.Repository
-@using mvc.Models.Entities
-@model CurricularUnit
+﻿@model mvc.Models.Entities.CurricularUnit
 
     <div class="clearfix"> @Html.LabelFor(m => m.Key, "Acrónimo") <div> @Html.EditorFor(m => m.Key) @Html.ValidationMessageFor(m => m.Key) </div> </div>
     <div class="clearfix"> @Html.LabelFor(m => m.Name) <div> @Html.EditorFor(m => m.Name) @Html.ValidationMessageFor(m => m.Name) </div> </div>
@@ -17,7 +15,7 @@
         <div class="input">
             @{
                 var ul = new List<SelectListItem>();
-                for (int i = 0; i < CurricularUnit.Maxsemesters; i++)
+                for (int i = 0; i < mvc.Models.Entities.CurricularUnit.Maxsemesters; i++)
                 {
                     var li = new SelectListItem(); li.Text = (i + 1).ToString();
                     li.Value = (i + 1).ToString();
@@ -37,7 +35,7 @@
         @Html.LabelFor(m => m.Precedence)
         <div class="input">
             @Html.ListBoxFor(mUC => mUC.Precedence,
-                RepositoryLocator.Get<string, CurricularUnit>().GetAll().Select(
+                mvc.Models.Repository.RepositoryLocator.Get<string, mvc.Models.Entities.CurricularUnit>().GetAll().Select(
                     uc =>
                     {
                         var li = new SelectListItem(); li.Text = uc.Key; li.Value = uc.Key;

@@ -1,5 +1,19 @@
-﻿@{
+﻿@model mvc.Models.Entities.CurricularUnit
+@{
     ViewBag.Title = "Editar Unidade Curricular";
 }
 
 <h2>Criar proposta de alteração da unidade curricular</h2>
+
+<div>
+@using (Html.BeginForm("New", "Fuc", FormMethod.Post, new { @class = "form-stacked" }))
+{
+    @Html.EditorForModel()
+    
+    <div class="well">
+        <input type="submit" value="Guardar" class="btn primary"/>
+        @Html.ActionLink("Cancelar", "Index", "Fuc", null, new { @class = "btn danger" })
+    </div>
+    
+}
+</div>

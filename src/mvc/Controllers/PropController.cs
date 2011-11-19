@@ -1,53 +1,124 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Security;
 using mvc.Models.Entities;
 using mvc.Models.Repository;
 
 namespace mvc.Controllers
 {
+    [Authorize]
     public class PropController : Controller
     {
-
         public ActionResult Index()
         {
-            return View(RepositoryLocator.Get<long, Proposal>().GetAll());
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            IEnumerable<Proposal> proposals = RepositoryLocator.Get<long, Proposal>().GetAll();
+            return User.IsInRole("admin")
+                       ? View(proposals.Where(prop => prop.State.Equals(AbstractEntity<long>.Status.Pending)))
+                       : View(proposals.Where(prop => prop.Owner.Equals(User.Identity.Name)));
         }
 
         public ActionResult Details(long id)
         {
-            return View(RepositoryLocator.Get<long, Proposal>().GetById(id));
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
+            if (proposal == null)
+            {
+                TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
+                return RedirectToAction("Index", "Prop");
+            }
+            
+            if (!(User.Identity.Name.Equals(proposal.Owner) || User.IsInRole("admin")))
+                return new HttpStatusCodeResult(403, "Only the owner or admin users are able to cancel this proposal.");
+
+            return View(proposal);
         }
 
-        [Authorize]
         public ActionResult Edit(long id)
         {
-            return View(RepositoryLocator.Get<long, Proposal>().GetById(id));
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
+            if (proposal == null)
+            {
+                TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
+                return RedirectToAction("Index", "Prop");
+            }
+            
+            if (!proposal.Owner.Equals(User.Identity.Name))
+                return new HttpStatusCodeResult(403, "You are not the owner of this proposal.");
+
+            return View(proposal);
         }
 
         [HttpPost]
-        [Authorize]
         public ActionResult Edit(Proposal model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var prop = RepositoryLocator.Get<long, Proposal>().GetById(model.Key);
-            prop.Info = model.Info;
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
 
-            return RedirectToAction("Details", "Prop", new { Id = prop.Key });
+            Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(model.Key);
+            if (proposal == null)
+            {
+                TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
+                return RedirectToAction("Index", "Prop");
+            }
+            
+            if (!proposal.Owner.Equals(User.Identity.Name))
+                return new HttpStatusCodeResult(403, "You are not the owner of this proposal.");
+
+            proposal.Info = model.Info;
+
+            return RedirectToAction("Details", "Prop", new { Id = proposal.Key });
         }
 
         [HttpPost]
         [Authorize(Roles = "admin")]
         public ActionResult Accept(int id)
         {
-            return RedirectToAction("Index", "Prop");
+            Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
+            if (proposal == null)
+            {
+                TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
+                return RedirectToAction("Index", "Prop");
+            }
+            
+            proposal.UpdateStatus(AbstractEntity<long>.Status.Accepted);
+            if (RepositoryLocator.Get<string, CurricularUnit>().GetById(proposal.Info.Key) != null)
+                RepositoryLocator.Get<string, CurricularUnit>().Update(proposal.Info);
+            else
+                RepositoryLocator.Get<string, CurricularUnit>().Insert(proposal.Info);
+
+            return RedirectToAction("Details", "Fuc", new { Id = proposal.Info.Key });
         }
 
         [HttpPost]
-        [Authorize]
         public ActionResult Cancel(int id)
         {
-            //TODO
+            if (!Request.IsAuthenticated)
+                FormsAuthentication.RedirectToLoginPage();
+
+            Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
+            if (proposal == null)
+                TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
+            else
+            {
+                if (!(proposal.Owner.Equals(User.Identity.Name) || User.IsInRole("admin")))
+                    return new HttpStatusCodeResult(403, "Only the owner or admin users are able to cancel this proposal.");
+
+                proposal.UpdateStatus(AbstractEntity<long>.Status.Canceled);
+            }
+
             return RedirectToAction("Index", "Prop");
         }
     }
