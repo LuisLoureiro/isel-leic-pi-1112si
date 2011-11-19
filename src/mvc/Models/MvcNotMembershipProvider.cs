@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web.Security;
 
 namespace mvc.Models
 {
@@ -44,22 +45,28 @@ namespace mvc.Models
                            };
         }
 
-        public static void CreateUser(string number, string nome, string password, string email)
+        public static string CreateUser(string number, string nome, string password, string email)
         {
             if (Users.ContainsKey(number))
                 throw new ArgumentException("User already exists.");
 
             Users[number] = new InternalUser
                                 {
-                                    Number = number, Name = nome, Password = password, 
+                                    Number = number, Name = nome, Password = password.GetHashCode().ToString(), 
                                     ConfirmPassword = password, Email = email
                                 };
-            HashUser[GenerateMD5(number)] = number;
+            string hash = GenerateMD5(number);
+
+            HashUser[hash] = number;
+
+            Roles.AddUserToRole(number, "default");
+
+            return hash;
         }
 
-        public static void CreateUser(DefaultUser user)
+        public static string CreateUser(DefaultUser user)
         {
-            CreateUser(user.Number, user.Name, user.Password, user.Email);
+            return CreateUser(user.Number, user.Name, user.Password, user.Email);
         }
 
         public static void UpdateUser(AccountUser user)
@@ -82,7 +89,7 @@ namespace mvc.Models
             CheckUser(number);
             CheckActivation(number);
 
-            Users[number].ChangePassword(password);
+            Users[number].ChangePassword(password.GetHashCode().ToString());
         }
 
         public static void ActivateUser(string hash)
@@ -95,7 +102,7 @@ namespace mvc.Models
             CheckUser(number);
             CheckActivation(number);
 
-            return Users[number].Password == password;
+            return Users[number].Password == password.GetHashCode().ToString();
         }
 
         public static AccountUser GetUser(string number)
