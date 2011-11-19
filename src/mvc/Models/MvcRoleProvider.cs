@@ -20,7 +20,10 @@ namespace mvc.Models
                                                   }
                                      },
                                  {
-                                     "default", new List<string>()
+                                     "default", new List<string>
+                                                    {
+                                                        "2"
+                                                    }
                                      }
                              };
         }
