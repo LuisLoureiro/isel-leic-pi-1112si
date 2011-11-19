@@ -21,7 +21,7 @@ namespace mvc.Models
                                              Number = "1",
                                              Name = "Administrador",
                                              IsActivated = true,
-                                             Password = "2722632186"
+                                             Password = "2722632186".GetHashCode().ToString()
                                          }
                                 },
                             {
@@ -30,7 +30,7 @@ namespace mvc.Models
                                              Number = "2",
                                              Name = "Utilizador",
                                              IsActivated = true,
-                                             Password = "123456"
+                                             Password = "123456".GetHashCode().ToString()
                                          }
                                 }
                         };
