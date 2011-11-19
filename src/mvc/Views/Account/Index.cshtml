@@ -1,5 +1,4 @@
-﻿@using mvc.Models
-@model AccountUser
+﻿@model mvc.Models.AccountUser
 @{
     ViewBag.Title = "Index";
 }
@@ -14,38 +13,53 @@
         <input type="submit" value="Guardar" class="btn primary"/>
         @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger"})
     </div>
-    
 }
 
+@using (Html.BeginForm("Remove", "Account", new { id = Model.Number }, FormMethod.Post))
+{
+    <input type="submit" value="Remover Conta" class="btn danger" />
+}
 @{
-    if (Roles.GetRolesForUser(Model.Number.ToString()).Contains<string>("admin"))
+    if (Roles.GetRolesForUser(Model.Number).Contains("admin"))
     {
         <table title="Utilizadores">
             <thead>
-                <tr><td>Número</td><td>Ativado</td><td>Roles</td></tr>
+                <tr><th>Número</th><th>Roles</th><th colspan="2">Opções</th></tr>
             </thead>
             <tbody>
             @{
-                foreach (InternalUser user in MvcNotMembershipProvider.GetAllUsers()) {
-                    var userRoles = Roles.GetRolesForUser(user.Number.ToString());
+        foreach (mvc.Models.InternalUser user in mvc.Models.MvcNotMembershipProvider.GetAllUsers())
+        {
+            var userRoles = Roles.GetRolesForUser(user.Number);
                     <tr>
                         <td>@user.Number</td>
-                        <td>@Html.CheckBox("Activated user", user.IsActivated)</td>
-                        <td>@Html.ListBox("Roles", 
-                                Roles.GetAllRoles().Select<string, SelectListItem>(
-                                     role => {
-                                         var li = new SelectListItem(); li.Value = role; li.Text = role;
-                                         li.Selected = userRoles.Contains<string>(role); 
-                                         return li; }))</td>
+                        
+                        @using (Html.BeginForm("UpdateRole", "Account", new { id = user.Number}, FormMethod.Post))
+                            {
+                            <td>@Html.DropDownList("Roles",
+                                Roles.GetAllRoles().Select(
+                                     role => new SelectListItem
+                                     {
+                                         Value = role,
+                                         Text = role,
+                                         Selected = userRoles.Contains(role)
+                                     }))
+                            </td>
+                            <td>
+                                <input type="submit" value="Actualizar" class="btn" />
+                            </td>
+                            }
+                        
+                        <td>
+                            @using (Html.BeginForm("Remove", "Account", new { id = user.Number }, FormMethod.Post))
+                            {
+                                <input type="submit" value="Remover Conta" class="btn danger" />
+                            }
+                        </td>
                     </tr>
-                }
+        }
             }
             </tbody>
         </table>
     }
-}
-
-@using(Html.BeginForm("Remove", "Account", FormMethod.Post))
-{
-    <input type="submit" value="Remover Conta" class="btn danger" />
 }

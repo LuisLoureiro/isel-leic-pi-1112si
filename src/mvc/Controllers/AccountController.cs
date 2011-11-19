@@ -148,18 +148,36 @@ namespace mvc.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult Remove()
+        public ActionResult Remove(string id)
         {
             if (!Request.IsAuthenticated)
                 FormsAuthentication.RedirectToLoginPage();
 
-            string user = User.Identity.Name;
+            if (!User.Identity.Name.Equals(id) && !User.IsInRole("admin"))
+                return new HttpStatusCodeResult(403, "Impossivel remover uma conta que não seja a sua");
 
-            FormsAuthentication.SignOut();
-            MvcNotMembershipProvider.DeleteUser(user);
-            Roles.RemoveUserFromRoles(user, Roles.GetRolesForUser(user));
+            if (User.Identity.Name.Equals(id))
+                FormsAuthentication.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            MvcNotMembershipProvider.DeleteUser(id);
+            Roles.RemoveUserFromRoles(id, Roles.GetRolesForUser(id));
+
+            TempData["message"] = "Utilizador removido com sucesso!";
+
+            return User.Identity.Name.Equals(id) 
+                ? RedirectToAction("Index", "Home") 
+                : RedirectToAction("Index", "Account");
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public ActionResult UpdateRole(string id, string role)
+        {
+            throw new NotImplementedException();
+
+            //Roles.RemoveUserFromRoles(id, Roles.GetRolesForUser(id) );
+
+            //Roles.AddUserToRole(id, role);
         }
     }
 }
