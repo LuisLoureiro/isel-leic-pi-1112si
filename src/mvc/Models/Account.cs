@@ -47,7 +47,8 @@ namespace mvc.Models
 
         [Required(ErrorMessage = "O email é obrigatório.")]
         [Display(Name = "Endereço de correio electrónico")]
-        [RegularExpression(@"[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]", ErrorMessage = "O email indicado não é válido.")]
+        //[RegularExpression(@"[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]", ErrorMessage = "O email indicado não é válido.")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "O email indicado não é válido")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Tem que preencher a password.")]

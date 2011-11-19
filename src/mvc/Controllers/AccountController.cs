@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
 using mvc.Models;
@@ -89,26 +90,36 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult Register(RegisterUser model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View();
+
+            try
             {
-                try
-                {
-                    MvcNotMembershipProvider.CreateUser(model);
-                    // TODO enviar email
-                    TempData["message"] = "Registo criado com sucesso! Verifique a sua caixa de correio electrónico.";
+                string hash = MvcNotMembershipProvider.CreateUser(model);
 
-                    return RedirectToAction("Index", "Home");
-                }
-                catch (ArgumentException e)
-                {
-                    ModelState.AddModelError("", "Utilizador não foi registado. " + e.Message);
-                }
+                WebMail.SmtpServer = "smtp.gmail.com";
+                WebMail.SmtpPort = 587;
+                WebMail.EnableSsl = true;
+                WebMail.UserName = "ISEL.LEIC.PI.LI51NG08@gmail.com";
+                WebMail.Password = "iselleicpi";
+                WebMail.From = "ISEL.LEIC.PI.LI51NG08@gmail.com";
+                WebMail.Send(model.Email.Trim(), "Activação de Acesso", string.Format("Para activar o seu acesso siga o seguinte link: {0}/Account/Activate/?hash={1} ", Request.Url.ToString().Replace(Request.Path, ""), hash));
+
+                TempData["message"] = "Registo criado com sucesso! Verifique a sua caixa de correio electrónico.";
+
+                return RedirectToAction("Index", "Home");
             }
-
-            return View(model);
+            catch (ArgumentException e)
+            {
+                ModelState.AddModelError("", "Utilizador não foi registado. " + e.Message);
+                return View();
+            }catch (Exception e)
+            {
+                TempData["message"] = "Não foi possivel enviar o email\n" + e;
+                return View();
+            }
         }
 
-        [HttpPost]
         public ActionResult Activate(string hash)
         {
             try
