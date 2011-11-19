@@ -3,10 +3,11 @@
     <div class="clearfix"> @Html.LabelFor(m => m.Key, "Acrónimo") <div> @Html.EditorFor(m => m.Key) @Html.ValidationMessageFor(m => m.Key) </div> </div>
     <div class="clearfix"> @Html.LabelFor(m => m.Name) <div> @Html.EditorFor(m => m.Name) @Html.ValidationMessageFor(m => m.Name) </div> </div>
     <div class="clearfix"> 
-        @Html.LabelFor(m => m.Mandatory) <div>
-        @Html.RadioButton("Mandatory", true, Model != null ? Model.Mandatory : false) <text>Obrigatória</text>
-        @Html.RadioButton("Mandatory", false, Model != null ? !Model.Mandatory : false) <text>Opcional</text> 
-        @Html.ValidationMessageFor(m => m.Mandatory)
+        @Html.LabelFor(m => m.Mandatory) 
+        <div>
+            @Html.RadioButton("Mandatory", true, Model != null && Model.Mandatory) Obrigatória
+            @Html.RadioButton("Mandatory", false, Model != null && !Model.Mandatory) Opcional
+            @Html.ValidationMessageFor(m => m.Mandatory)
         </div>
     </div>
     <div class="clearfix"> @Html.LabelFor(m => m.Ects) <div> @Html.EditorFor(m => m.Ects) @Html.ValidationMessageFor(m => m.Ects) </div> </div>
@@ -17,13 +18,11 @@
                 var ul = new List<SelectListItem>();
                 for (int i = 0; i < mvc.Models.Entities.CurricularUnit.Maxsemesters; i++)
                 {
-                    var li = new SelectListItem(); li.Text = (i + 1).ToString();
-                    li.Value = (i + 1).ToString();
-                    if (Model != null) 
-                    {
-                        li.Selected = (Model.Semester[i] != 0) ? true : false;
-                    }
-                    ul.Add(li);
+                    ul.Add(new SelectListItem {
+                        Text = (i + 1).ToString(), 
+                        Value = (i + 1).ToString(), 
+                        Selected = (Model != null && Model.Semester.Contains(i + 1))
+                    });
                 }
               }
             @Html.ListBoxFor(mUc => mUc.Semester, ul)
@@ -34,17 +33,15 @@
     <div class="clearfix">
         @Html.LabelFor(m => m.Precedence)
         <div class="input">
-            @Html.ListBoxFor(mUC => mUC.Precedence,
+            @Html.ListBoxFor(mUc => mUc.Precedence,
                 mvc.Models.Repository.RepositoryLocator.Get<string, mvc.Models.Entities.CurricularUnit>().GetAll().Select(
-                    uc =>
-                    {
-                        var li = new SelectListItem(); li.Text = uc.Key; li.Value = uc.Key;
-                        if (Model != null)
+                    uc => new SelectListItem
                         {
-                            li.Selected = Model.Precedence.Contains(uc.Key);
+                            Text = uc.Key,
+                            Value = uc.Key,
+                            Selected = (Model != null && Model.Precedence.Contains(uc.Key))
                         }
-                        return li;
-                    }))
+                    ))
             @Html.ValidationMessageFor(m => m.Precedence)
         </div>
     </div>

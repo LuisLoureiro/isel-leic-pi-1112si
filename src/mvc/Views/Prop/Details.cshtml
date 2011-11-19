@@ -13,25 +13,38 @@
     @{ Html.RenderPartial("CurricularUnitView", Model.Info); }
     @if (User.Identity.IsAuthenticated)
     { 
-    <div>
-        @if (Model.Owner.Equals(User.Identity.Name))
-        {
-            @Html.ActionLink("Editar", "Edit", new { Id = Model.Key }, new { @class = "btn primary" })
-        }
-        @if (User.IsInRole("admin")) 
-        {
-            using (Html.BeginForm("Accept", "Prop", new { Id = Model.Key }, FormMethod.Post, null ))
-            {
-                <input type="submit" value="Aceitar" class="btn success" />
-            }
-        }
-        @if (Model.Owner.Equals(User.Identity.Name) || User.IsInRole("admin"))
-        {
-            using (Html.BeginForm("Cancel", "Prop", new { Id = Model.Key }, FormMethod.Post, null))
-            {
-                <input type="submit" value="Cancelar" class="btn danger" />
-            }
-        }
+    <div class="span8">
+        <table>
+            <tbody>
+            <tr>
+                @if (Model.Owner.Equals(User.Identity.Name))
+                {
+                    <td>
+                        @Html.ActionLink("Editar Proposta", "Edit", new { Id = Model.Key }, new { @class = "btn primary" })
+                    </td>
+                }
+                @if (User.IsInRole("admin")) 
+                {
+                    using (Html.BeginForm("Accept", "Prop", new { Id = Model.Key }, FormMethod.Post, null ))
+                    {
+                        <td>
+                            <input type="submit" value="Aceitar Proposta" class="btn success" />
+                        </td>
+                    }
+                }
+                @if (Model.Owner.Equals(User.Identity.Name) || User.IsInRole("admin"))
+                {
+                    using (Html.BeginForm("Cancel", "Prop", new { Id = Model.Key }, FormMethod.Post, null))
+                    {
+                        <td>
+                            <input type="submit" value="Cancelar Proposta" class="btn danger" />
+                        </td>
+                    
+                    }
+                }
+            </tr>
+            </tbody>
+        </table>
     </div>
     }
 </div>

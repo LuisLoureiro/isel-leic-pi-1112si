@@ -9,7 +9,7 @@
 <div>
 @using (Html.BeginForm("New", "Fuc", FormMethod.Post, new { @class = "form-stacked" }))
 {
-    @Html.EditorForModel
+    @Html.EditorForModel()
     
     <div class="well">
         <input type="submit" value="Guardar" class="btn primary"/>
