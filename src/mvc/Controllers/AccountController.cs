@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -171,13 +172,34 @@ namespace mvc.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult UpdateRole(string id, string role)
+        public ActionResult UpdateRole(string id, string roles)
         {
-            throw new NotImplementedException();
+            if (!Roles.RoleExists(roles))
+            {
+                return new HttpStatusCodeResult(500, "Something nonsense happened, the new role does not exist!");
+            }
+            // Se a actualização for para a mesma role, não se actualiza.
+            if (!Roles.IsUserInRole(id, roles))
+            {
+                try
+                {
+                    Roles.RemoveUserFromRoles(id, Roles.GetRolesForUser(id));
+                    Roles.AddUserToRole(id, roles);
+                }
+                catch (ArgumentException e)
+                {
+                    TempData["exception"] = e.Message;
+                }
+                
+                TempData["message"] = string.Format("Regra de acesso do utilizador {0} alterada para {1} com sucesso!",
+                                                    id, roles);
+            }
+            else
+            {
+                TempData["exception"] = "Não é possível alterar uma regra de acesso para a mesma regra!";
+            }
 
-            //Roles.RemoveUserFromRoles(id, Roles.GetRolesForUser(id) );
-
-            //Roles.AddUserToRole(id, role);
+            return RedirectToAction("Index");
         }
     }
 }
