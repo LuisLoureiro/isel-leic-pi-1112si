@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -28,17 +27,18 @@ namespace mvc.Controllers
         {
             if (!Request.IsAuthenticated)
                 FormsAuthentication.RedirectToLoginPage();
-
-            try
+            if (ModelState.IsValid)
             {
-                MvcNotMembershipProvider.UpdateUser(updatedUser);
-                TempData["message"] = "Alteração efectuada com sucesso!";
+                try
+                {
+                    MvcNotMembershipProvider.UpdateUser(updatedUser);
+                    TempData["message"] = "Alteração efectuada com sucesso!";
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", "Alteração não foi concretizada. " + e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                ModelState.AddModelError("", "Alteração não foi concretizada. "+e.Message);
-            }
-
             return View(updatedUser);
         }
         
@@ -92,7 +92,7 @@ namespace mvc.Controllers
         public ActionResult Register(RegisterUser model)
         {
             if (!ModelState.IsValid)
-                return View();
+                return View(model);
 
             try
             {
@@ -113,11 +113,11 @@ namespace mvc.Controllers
             catch (ArgumentException e)
             {
                 ModelState.AddModelError("", "Utilizador não foi registado. " + e.Message);
-                return View();
+                return View(model);
             }catch (Exception e)
             {
                 TempData["message"] = "Não foi possivel enviar o email\n" + e;
-                return View();
+                return View(model);
             }
         }
 
