@@ -16,106 +16,125 @@ OUTROS FORMS
 	+ data-val-range-min -> valor mínimo do campo;
 	
 */
-
-
-
 var utils = {
-    validateRegisterForm: function () {
+	validateForm: function (elem) {
         var ret = true;
+		// Se o nome contiver algum caracter especial, meta-character, é necessário
+		// efectuar o escape desse caracter, utilizando \\ antes do caracter.
+		var validateString = function(str) {
+			return str.replace(/\./g, "\\.").replace(/\*/g, "\\*");
+		};
+		var invalid = function (attr, elem) {
+			// Adiciona comentário ao lado do input
+			$("span[data-valmsg-for=" + validateString(elem.name) + "]").removeClass("field-validation-valid")
+			.addClass("field-validation-error").html($(elem).attr(attr));
+			// Dá ênfase ao input que tem o erro de validação
+			$(elem).addClass("input-validation-error");
+			ret = false;
+		};
+		var valid = function (elem) {
+			// Remove o eventual comentário que esteja ao lado do input
+			$("span[data-valmsg-for=" + validateString(elem.name) + "]").addClass("field-validation-valid")
+			.removeClass("field-validation-error");
+			// Retirar a eventual ênfase dada ao input
+			$(elem).removeClass("input-validation-error");
+		};
         // Para cada um dos anteriores, adiciona ao respectivo span o texto que está no atributo data-val-*
-        $("input[data-val=true]", document.registerForm).each(
+        $("[data-val=true]", elem).each(
             function () {
                 if ($(this).attr("data-val-required") != undefined)
                 {
-                    if ($(this).val() == "")
+					if (($(this).attr("type") == "radio"))
+					{
+						if ($("input:checked", this.parentNode).length == 0)
+						{
+							invalid("data-val-required", this);
+							// termina a verificação para este index do each
+							return;
+						}
+						
+						valid(this);
+					}
+					else if (this.tagName.toLowerCase() == "select")
+					{
+						if($("option:selected").length == 0)
+						{
+							invalid("data-val-required", this);
+							// termina a verificação para este index do each
+							return;
+						}
+						
+						valid(this);
+					}
+                    else if ($(this).val() == "")
                     {
-                        // Adiciona o comentário ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").removeClass("field-validation-valid")
-						.addClass("field-validation-error").html($(this).attr("data-val-required"));
-						// Dá ênfase ao input que tem o erro de validação
-						$(this).addClass("input-validation-error");
-						ret = false;
-						// termina a função para este index do each
+						
+                        invalid("data-val-required", this);
+						// termina a verificação para este index do each
 						return;
                     }
-					else 
-					{
-						// Remove o eventual comentário que esteja ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").addClass("field-validation-valid")
-						.removeClass("field-validation-error");
-						// Retirar a eventual ênfase dada ao input
-						$(this).removeClass("input-validation-error");
-					}
+					
+					valid(this);
                 }
 				if ($(this).attr("data-val-length") != undefined)
 				{
+					var max = $(this).attr("data-val-length-max");
+					var min = $(this).attr("data-val-length-min");
+					var length = this.value.length;
 					if (((max != undefined) && max < length) || 
 						((min != undefined && min > length)))
 					{
-						// Adiciona comentário ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").removeClass("field-validation-valid")
-						.addClass("field-validation-error").html($(this).attr("data-val-length"));
-						// Dá ênfase ao input que tem o erro de validação
-						$(this).addClass("input-validation-error");
-						ret = false;
-						// termina a função para este index do each
+						invalid("data-val-length", this);
+						// termina a verificação para este index do each
 						return;
 					}
-					else
-					{
-						// Remove o eventual comentário que esteja ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").addClass("field-validation-valid")
-						.removeClass("field-validation-error");
-						// Retirar a eventual ênfase dada ao input
-						$(this).removeClass("input-validation-error");
-					}
+					
+					valid(this);
 				}
 				if ($(this).attr("data-val-regex") != undefined)
 				{
 					if(this.value.match($(this).attr("data-val-regex-pattern")) == null)
 					{
-						// Adiciona comentário ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").removeClass("field-validation-valid")
-						.addClass("field-validation-error").html($(this).attr("data-val-regex"));
-						// Dá ênfase ao input que tem o erro de validação
-						$(this).addClass("input-validation-error");
-						ret = false;
-						// termina a função para este index do each
+						invalid("data-val-regex", this);
+						// termina a verificação para este index do each
 						return;
 					}
-					else
-					{
-						// Remove o eventual comentário que esteja ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").addClass("field-validation-valid")
-						.removeClass("field-validation-error");
-						// Retirar a eventual ênfase dada ao input
-						$(this).removeClass("input-validation-error");
-					}
+
+					valid(this);
 				}
 				if ($(this).attr("data-val-equalto") != undefined)
 				{
-					// O atributo data-val-equalto-other deveria ser usado
-					if ($(this).val() != $("input[id=Password]").val())
+					if ($(this).val() != $("input[id=" + 
+											validateString($(this).attr("data-val-equalto-other")) + 
+											"]").val())
 					{
-						alert("Id = " + this.id + ", equalto = false");
-						// Adiciona comentário ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").removeClass("field-validation-valid")
-						.addClass("field-validation-error").html($(this).attr("data-val-equalto"));
-						// Dá ênfase ao input que tem o erro de validação
-						$(this).addClass("input-validation-error");
-						ret = false;
-						// termina a função para este index do each
+						invalid("data-val-equalto", this);
+						// termina a verificação para este index do each
 						return;
 					}
-					else
+					
+					valid(this);
+				}
+				if ($(this).attr("data-val-number") != undefined)
+				{
+					if (isNaN(parseFloat($(this).val())))
 					{
-						alert("Id = " + this.id + ", equalto = true");
-						// Remove o eventual comentário que esteja ao lado do input
-						$("span[data-valmsg-for=" + this.id + "]").addClass("field-validation-valid")
-						.removeClass("field-validation-error");
-						// Retirar a eventual ênfase dada ao input
-						$(this).removeClass("input-validation-error");
+						invalid("data-val-number", this);
+						// termina a verificação para este index do each
+						return;
 					}
+					
+					var max = $(this).attr("data-val-range-max");
+					var min = $(this).attr("data-val-range-min");
+					var value = $(this).val();
+					if ((max != undefined && max < value) || 
+						(min != undefined && min > value))
+					{
+						invalid("data-val-range", this);
+						// termina a verificação para este index do each
+						return;
+					}
+					valid(this);
 				}
             });
         return ret;
