@@ -1,26 +1,8 @@
-/*
-TIPOS DE VALIDAÇÃO NO FORMULÁRIO DE REGISTO DE UTILIZADORES(e, se calhar, não só)
-    + data-val -> se tem algum tipo de validação;
-    + data-val-required -> se é campo de preenchimento obrigatório, com a respectiva mensagem;
-    + data-val-length -> mensagem a retornar quando o número de caracteres não corresponde aos valores mínimo e/ou máximo;
-    + data-val-length-max -> número máximo de caracteres;
-    + data-val-length-min -> número mínimo de caracteres;
-    + data-val-regex -> mensagem a retornar quando o valor introduzido não corresponde ao padrão definido;
-    + data-val-regex-pattern -> padrão de validação do valor introduzido no campo;
-    + data-val-equalto -> mensagem a retornar quando o valor do campo não corresponde ao valor de outro campo;
-    + data-val-equalto-other -> ??
-OUTROS FORMS
-	+ data-val-number -> mensagem a retornar quando o valor do campo não é numérico(incluíndo vírgula);
-	+ data-val-range -> mensagem a retornar quando o valor do campo está fora dos limites definidos;
-	+ data-val-range-max -> valor máximo do campo;
-	+ data-val-range-min -> valor mínimo do campo;
-	
-*/
 var utils = {
 	validateForm: function (elem) {
         var ret = true;
 		// Se o nome contiver algum caracter especial, meta-character, é necessário
-		// efectuar o escape desse caracter, utilizando \\ antes do caracter.
+		// efectuar o escape desse caracter, utilizando \ antes do caracter.
 		var validateString = function(str) {
 			return str.replace(/\./g, "\\.").replace(/\*/g, "\\*");
 		};
