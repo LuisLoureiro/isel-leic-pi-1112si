@@ -14,10 +14,6 @@ namespace mvc.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            if(!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
-            // Os cookies criados vão com o número do utilizador
             return View(MvcNotMembershipProvider.GetUser(User.Identity.Name));
         }
 
@@ -25,8 +21,6 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult Index(AccountUser updatedUser)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
             if (ModelState.IsValid)
             {
                 try
@@ -139,9 +133,6 @@ namespace mvc.Controllers
         [Authorize]
         public ActionResult LogOff()
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
@@ -151,9 +142,6 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult Remove(string id)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             if (!User.Identity.Name.Equals(id) && !User.IsInRole("admin"))
                 return new HttpStatusCodeResult(403, "Impossivel remover uma conta que não seja a sua");
 

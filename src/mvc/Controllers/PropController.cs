@@ -13,9 +13,6 @@ namespace mvc.Controllers
     {
         public ActionResult Index()
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             IEnumerable<Proposal> proposals = RepositoryLocator.Get<long, Proposal>().GetAll();
             return User.IsInRole("admin")
                        ? View(proposals.Where(prop => prop.State.Equals(AbstractEntity<long>.Status.Pending)))
@@ -24,9 +21,6 @@ namespace mvc.Controllers
 
         public ActionResult Details(long id)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
             if (proposal == null)
             {
@@ -42,9 +36,6 @@ namespace mvc.Controllers
 
         public ActionResult Edit(long id)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
             if (proposal == null)
             {
@@ -63,9 +54,6 @@ namespace mvc.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
 
             Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(model.Key);
             if (proposal == null)
@@ -105,9 +93,6 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult Cancel(int id)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             Proposal proposal = RepositoryLocator.Get<long, Proposal>().GetById(id);
             if (proposal == null)
                 TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";

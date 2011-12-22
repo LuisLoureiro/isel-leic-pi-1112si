@@ -26,9 +26,6 @@ namespace mvc.Controllers
         [Authorize]
         public ActionResult New()
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             return View();
         }
 
@@ -36,9 +33,6 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult New(CurricularUnit model)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -51,9 +45,6 @@ namespace mvc.Controllers
         [Authorize]
         public ActionResult Edit(string id)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             string owner = User.Identity.Name;
             IEnumerable<Proposal> proposta = RepositoryLocator.Get<long, Proposal>().GetAll().Where(
                 prop => prop.Info.Key.Equals(id) && prop.Owner.Equals(owner));
@@ -67,9 +58,6 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult Edit(CurricularUnit model)
         {
-            if (!Request.IsAuthenticated)
-                FormsAuthentication.RedirectToLoginPage();
-
             if (!ModelState.IsValid)
                 return View(model);
 
