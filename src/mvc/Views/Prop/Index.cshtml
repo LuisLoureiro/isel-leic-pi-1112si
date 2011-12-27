@@ -6,9 +6,4 @@
 
 <h2>Lista de propostas</h2>
 
-<ul>
-@foreach(var p in Model)
-{
-    <li> @Html.ActionLink(string.Format("{0} - {1}", p.Key, p.Info.Key), "Details", new { id = p.Key }) </li>
-}
-</ul>
+@{ Html.RenderPartial("ProposalsTable", Model);}

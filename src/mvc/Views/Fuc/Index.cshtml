@@ -1,21 +1,12 @@
-﻿@using mvc.Models.Entities
-@using mvc.Models.Repository
+﻿@model IEnumerable<mvc.Models.Entities.CurricularUnit>
+
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Lista das Unidades Curriculares</h2>
 
-<ul>
-@{ 
-    foreach( var uc in RepositoryLocator.Get<string, CurricularUnit>().GetAll() )
-    {
-        <li>
-            @Html.ActionLink(uc.Name, "Details", "Fuc", new { id = uc.Key}, null)
-        </li>
-    }
-}
-</ul>
+@{ Html.RenderPartial("CurricularUnitsTable", Model); }
 
 @if (User.Identity.IsAuthenticated) {
     <div class="well">
