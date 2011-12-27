@@ -1,0 +1,37 @@
+﻿@model IEnumerable<mvc.Models.Entities.CurricularUnit>
+
+<table class="zebra-striped">
+    <thead>
+            <tr>
+            <th></th>
+            <th>Acrónimo</th>
+            <th>Nome</th>
+            <th>Obrigatória</th>
+            <th>Ects</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ 
+            foreach( var uc in Model )
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink("Detalhes", "Details", "Fuc", new { id = uc.Key}, null)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => uc.Key)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => uc.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => uc.Mandatory)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => uc.Ects)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

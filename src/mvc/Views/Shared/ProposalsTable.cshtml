@@ -1,0 +1,48 @@
+﻿@model IEnumerable<mvc.Models.Entities.Proposal>
+
+<table class="zebra-striped">
+    <thead>
+            <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Acrónimo</th>
+            <th>Nome</th>
+            <th>Obrigatória</th>
+            <th>Ects</th>
+            <th>Criador</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var p in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("Detalhes", "Details", "Prop", new {id = p.Key}, null) | 
+                @Html.ActionLink("Editar", "Edit", "Prop", new {id = p.Key}, null)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.Key)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.Info.Key)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.Info.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.Info.Mandatory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.Info.Ects)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.Owner)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => p.State)
+            </td>
+        </tr>
+    }        
+    </tbody>
+</table>
