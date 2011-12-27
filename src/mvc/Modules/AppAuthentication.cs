@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Security;
@@ -25,12 +27,11 @@ namespace mvc.Modules
 
             // Esta acção apenas retira o cookie da colecção no lado do servidor!
             HttpContext.Current.Request.Cookies.Remove(cookieName);
-            // Para retirar no lado do cliente, altera-se a data de expiração para uma data anterior à actual.
-            // Esta acção faz com que o browser, ao verificar que o cookie já expirou, o elimine e não o volte a usar.
-            HttpContext.Current.Response.Cookies.Add(new HttpCookie(cookieName)
-                                                         {
-                                                             Expires = DateTime.Now.AddDays(-1d)
-                                                         });
+            // Para retirar no lado do cliente, adiciona-se um novo cookie à resposta, com nome igual ao que se quer remover e
+            //  com data de expiração anterior à data actual.
+            // Esta acção faz com que o browser actualize a informação que tinha sobre o referido cookie e,
+            //  ao verificar que o cookie já expirou, o elimine e não o volte a usar em futuros pedidos.
+            HttpContext.Current.Response.Cookies.Add(new HttpCookie(cookieName) { Expires = DateTime.Now.AddDays(-1d) });
         }
 
         public static void RedirectToLoginPage()
@@ -40,12 +41,23 @@ namespace mvc.Modules
                 throw new ApplicationException(string.Format(
                     "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", LOGINPAGE_KEY));
             
-            HttpContext.Current.Response.Redirect(loginPage);
+            HttpContext current = HttpContext.Current;
+            current.Response.Redirect(string.Format("{0}?returnUrl={1}", loginPage, 
+                current.Server.UrlEncode(current.Request.RawUrl)));
         }
 
         public static void SetAuthCookie(string username, bool persistentCookie)
         {
-            
+            string cookieName = ConfigurationManager.AppSettings[COOKIE_KEY];
+            if (cookieName == null)
+                throw new ApplicationException(string.Format(
+                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
+
+            HttpContext.Current.Response.Cookies.Add(
+                new HttpCookie(cookieName) { HttpOnly = true, Value = username });
+            // Não se afecta a propriedade Expires para que sejam non-persistent cookies,
+            //  têm tempo de duração igual à duração da sessão, quando o utilizador
+            //  fechar a janela do browser, o cookie expira.
         }
     }
 
@@ -57,7 +69,9 @@ namespace mvc.Modules
         public void Init(HttpApplication context)
         {
             context.AuthenticateRequest += new EventHandler(AuthenticateRequest);
-            context.PostAuthenticateRequest += new EventHandler(PostAuthenticateRequest);
+            // O atributo Authorize actua ao nível do MvcHandler, por isso adiciona-se
+            //  o module ao HttpApplication Event que é executado depois de executado o Handler.
+            context.PostRequestHandlerExecute += new EventHandler(PostRequestHandlerExecute);
         }
 
         private void AuthenticateRequest(object sender, EventArgs e)
@@ -73,15 +87,19 @@ namespace mvc.Modules
 
             HttpRequest request = app.Request;
 
-            // Se o pedido transportar cookies verificar se corresponde a alguma entrada registada
-            if (request.Cookies.Count > 0 && request.Cookies[cookieName] != null)
+            // Se o pedido transportar cookies verificar se algum corresponde a um
+            //  utilizador da aplicação.
+            string userCookie;
+            if (request.Cookies.Count > 0 && !string.IsNullOrEmpty(
+                    userCookie = request.Cookies.AllKeys
+                                    .Where(str => str.ToUpper().Equals(cookieName.ToUpper()))
+                                    .FirstOrDefault()))
             {
                 AccountUser user;
                 try
                 {
                     // O value tem que vir encriptado!!
-                    // Se calhar tem que ser verificada a propriedade Expires
-                    user = MvcNotMembershipProvider.GetUser(request.Cookies[cookieName].Value);
+                    user = MvcNotMembershipProvider.GetUser(request.Cookies[userCookie].Value);
                 }
                 catch (ArgumentException)
                 {
@@ -91,16 +109,15 @@ namespace mvc.Modules
                 if (user != null)
                 {
                     app.Context.User = new System.Security.Principal.GenericPrincipal(
-                        new System.Security.Principal.GenericIdentity(user.Number, "Forms"),
+                        new System.Security.Principal.GenericIdentity(user.Number, "AppForms"),
                         Roles.GetRolesForUser(user.Number));
                 }
             }
         }
 
-        private void PostAuthenticateRequest(object sender, EventArgs e)
+        private static void PostRequestHandlerExecute(object sender, EventArgs e)
         {
-            // Verificar o status code da response
-            // if 401 fazer redireção!
+            // Verificar o status code da response: se 401 fazer redireção!
             HttpApplication app = sender as HttpApplication;
             if (app == null)
                 throw new ApplicationException("Typeof Object must be HttpApplication");

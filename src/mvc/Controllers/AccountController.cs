@@ -3,6 +3,7 @@ using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
 using mvc.Models;
+using mvc.Modules;
 
 namespace mvc.Controllers
 {
@@ -50,7 +51,8 @@ namespace mvc.Controllers
                 {
                     if (MvcNotMembershipProvider.ValidateUser(model.Username, model.Password))
                     {
-                        FormsAuthentication.SetAuthCookie(model.Username, false);
+                        //FormsAuthentication.SetAuthCookie(model.Username, false);
+                        AppFormsAuthentication.SetAuthCookie(model.Username, false);
 
                         return returnUrl == null ? (ActionResult)RedirectToAction("Index", "Account") : Redirect(returnUrl);
                     }
@@ -98,7 +100,9 @@ namespace mvc.Controllers
                 WebMail.UserName = "ISEL.LEIC.PI.LI51NG08@gmail.com";
                 WebMail.Password = "iselleicpi";
                 WebMail.From = "ISEL.LEIC.PI.LI51NG08@gmail.com";
-                WebMail.Send(model.Email.Trim(), "Activação de Acesso", string.Format("Para activar o seu acesso siga o seguinte link: {0}/Account/Activate/?hash={1} ", Request.Url.ToString().Replace(Request.Path, ""), hash));
+                WebMail.Send(model.Email.Trim(), "Activação de Acesso", 
+                    string.Format("Para activar o seu acesso siga o seguinte link: {0}/Account/Activate/?hash={1} ", 
+                    Request.Url.ToString().Replace(Request.Path, ""), hash));
 
                 TempData["message"] = "Registo criado com sucesso! Verifique a sua caixa de correio electrónico.";
 
@@ -133,7 +137,8 @@ namespace mvc.Controllers
         [Authorize]
         public ActionResult LogOff()
         {
-            FormsAuthentication.SignOut();
+            //FormsAuthentication.SignOut();
+            AppFormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
@@ -146,7 +151,8 @@ namespace mvc.Controllers
                 return new HttpStatusCodeResult(403, "Impossivel remover uma conta que não seja a sua");
 
             if (User.Identity.Name.Equals(id))
-                FormsAuthentication.SignOut();
+                AppFormsAuthentication.SignOut();
+                //FormsAuthentication.SignOut();
 
             MvcNotMembershipProvider.DeleteUser(id);
             Roles.RemoveUserFromRoles(id, Roles.GetRolesForUser(id));

@@ -81,6 +81,7 @@
     <Compile Include="Models\Repository\IRepository.cs" />
     <Compile Include="Models\Repository\ProposalRepository.cs" />
     <Compile Include="Models\Repository\RepositoryLocator.cs" />
+    <Compile Include="Modules\AppAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
