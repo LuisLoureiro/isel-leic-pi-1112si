@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using System.Linq;
-using System.Web.Security;
+using System.Web.Mvc;
 using mvc.Models.Entities;
 using mvc.Models.Repository;
 
@@ -14,7 +13,7 @@ namespace mvc.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return View(RepositoryLocator.Get<string, CurricularUnit>().GetAll());
         }
 
         public ActionResult Details(string id)

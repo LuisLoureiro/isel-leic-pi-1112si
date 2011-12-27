@@ -30,7 +30,14 @@
       <div class="topbar-inner">
         <div class="container">
           <a class="brand" href="/">PI | S1112I | LI51N-G08</a>
+
+          
           <ul class="secondary-nav">
+            <li>
+                @using(Html.BeginForm("Search", "Home", FormMethod.Get)){
+                    <input class="span3" type="text" placeholder="Pesquisar" name="search" />
+                }
+            </li>
           @{
               if (User.Identity.IsAuthenticated)
               {

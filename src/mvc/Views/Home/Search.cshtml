@@ -1,0 +1,32 @@
+﻿@using System.Collections
+@model List<IEnumerable>
+
+@{
+    ViewBag.Title = "Pesquisa";
+}
+
+<h2>Resultados da pesquisa por '@ViewBag.SearchString'</h2>
+
+@if(Model != null)
+{
+    var fucs = Model[0] as IEnumerable<mvc.Models.Entities.CurricularUnit>;
+
+    if (fucs != null && fucs.Count() != 0)
+    {
+        <h4>Fichas de Unidades Curriculares:</h4>
+        Html.RenderPartial("CurricularUnitsTable", fucs);
+    }
+
+    if(Model.Count > 1)
+    {
+        var props = Model[1] as IEnumerable<mvc.Models.Entities.Proposal>;
+        if (props != null && props.Count() != 0)
+        {
+            <h4>Propostas de Unidades Curriculares:</h4>
+            Html.RenderPartial("ProposalsTable", props);
+        }
+    }
+}else
+{
+    <h3 class="alert-message warning">Não foram encontrados resultados para a sua pesquisa.</h3>
+}
