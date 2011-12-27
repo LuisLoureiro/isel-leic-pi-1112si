@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Security;
+using mvc.Crypto;
 using mvc.Models;
 
 namespace mvc.Modules
@@ -17,6 +18,13 @@ namespace mvc.Modules
     {
         private const string COOKIE_KEY = "AppAuthentication.Cookie";
         private const string LOGINPAGE_KEY = "AppAuthentication.LoginPage";
+
+        // Por questões de segurança, o valor do cookie é uma entrada numa tabela com os valores necessários
+        //  para a aplicação. Desta forma, evita-se que alguém, que consiga interceptar os cookies, consiga
+        //  aceder a informações internas e que só utilizadores registados tenham acesso.
+        // Para que o valor dos hashs seja sempre diferente e para que seja fácil manter um registo dos que 
+        //  já fizeram logoff ou que ainda estejam ligados!
+        private static readonly IDictionary<string, string> CookieValueToUsername = new Dictionary<string, string>();
         
         public static void SignOut()
         {
@@ -25,13 +33,15 @@ namespace mvc.Modules
                 throw new ApplicationException(string.Format(
                     "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
 
+            HttpContext current = HttpContext.Current;
+
             // Esta acção apenas retira o cookie da colecção no lado do servidor!
-            HttpContext.Current.Request.Cookies.Remove(cookieName);
+            CookieValueToUsername.Remove(current.Request.Cookies[cookieName].Value);
             // Para retirar no lado do cliente, adiciona-se um novo cookie à resposta, com nome igual ao que se quer remover e
             //  com data de expiração anterior à data actual.
             // Esta acção faz com que o browser actualize a informação que tinha sobre o referido cookie e,
             //  ao verificar que o cookie já expirou, o elimine e não o volte a usar em futuros pedidos.
-            HttpContext.Current.Response.Cookies.Add(new HttpCookie(cookieName) { Expires = DateTime.Now.AddDays(-1d) });
+            current.Response.Cookies.Add(new HttpCookie(cookieName) { Expires = DateTime.Now.AddDays(-1d) });
         }
 
         public static void RedirectToLoginPage()
@@ -53,11 +63,27 @@ namespace mvc.Modules
                 throw new ApplicationException(string.Format(
                     "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
 
+            string value = MD5Crypto.GenerateMD5(username);
+            CookieValueToUsername[value] = username;
+
             HttpContext.Current.Response.Cookies.Add(
-                new HttpCookie(cookieName) { HttpOnly = true, Value = username });
+                new HttpCookie(cookieName) { HttpOnly = true, Value = value });
             // Não se afecta a propriedade Expires para que sejam non-persistent cookies,
             //  têm tempo de duração igual à duração da sessão, quando o utilizador
             //  fechar a janela do browser, o cookie expira.
+        }
+
+        internal static DefaultUser GetUserFor(string value)
+        {
+            try
+            {
+                return MvcNotMembershipProvider.GetUser(CookieValueToUsername[value]);
+            }
+            catch (ArgumentException)
+            {
+                // Utilizador inexistente
+                return null;
+            }
         }
     }
 
@@ -95,17 +121,8 @@ namespace mvc.Modules
                                     .Where(str => str.ToUpper().Equals(cookieName.ToUpper()))
                                     .FirstOrDefault()))
             {
-                AccountUser user;
-                try
-                {
-                    // O value tem que vir encriptado!!
-                    user = MvcNotMembershipProvider.GetUser(request.Cookies[userCookie].Value);
-                }
-                catch (ArgumentException)
-                {
-                    // Utilizador inexistente
-                    return;
-                }
+                DefaultUser user = AppFormsAuthentication.GetUserFor(request.Cookies[userCookie].Value);
+                
                 if (user != null)
                 {
                     app.Context.User = new System.Security.Principal.GenericPrincipal(

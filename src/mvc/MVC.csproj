@@ -63,6 +63,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\FucController.cs" />
     <Compile Include="Controllers\PropController.cs" />
+    <Compile Include="Crypto\MD5Crypto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
