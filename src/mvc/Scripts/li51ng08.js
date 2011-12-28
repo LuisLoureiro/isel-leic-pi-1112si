@@ -99,18 +99,18 @@ var utils = {
 				}
 				if ($(this).attr("data-val-number") != undefined)
 				{
-					if (isNaN(parseFloat($(this).val())))
+					var value = parseFloat($(this).val());
+					if (isNaN(value))
 					{
 						invalid("data-val-number", this);
 						// termina a verificação para este index do each
 						return;
 					}
 					
-					var max = $(this).attr("data-val-range-max");
-					var min = $(this).attr("data-val-range-min");
-					var value = $(this).val();
-					if ((max != undefined && max < value) || 
-						(min != undefined && min > value))
+					var max = parseFloat($(this).attr("data-val-range-max"));
+					var min = parseFloat($(this).attr("data-val-range-min"));
+					if ((!isNaN(max) && max < value) || 
+						(!isNaN(min) && min > value))
 					{
 						invalid("data-val-range", this);
 						// termina a verificação para este index do each
