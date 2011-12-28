@@ -68,6 +68,8 @@ namespace mvc.Modules
 
             HttpContext.Current.Response.Cookies.Add(
                 new HttpCookie(cookieName) { HttpOnly = true, Value = value });
+            // Ao não se afectar o valor da propriedade Domain, indica-se que o cookie é para
+            //  ser associado ao domínio corrente.
             // Não se afecta a propriedade Expires para que sejam non-persistent cookies,
             //  têm tempo de duração igual à duração da sessão, quando o utilizador
             //  fechar a janela do browser, o cookie expira.
