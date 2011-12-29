@@ -22,16 +22,12 @@ namespace mvc.Modules
         // Por questões de segurança, o valor do cookie é uma entrada numa tabela com os valores necessários
         //  para a aplicação. Desta forma, evita-se que alguém, que consiga interceptar os cookies, consiga
         //  aceder a informações internas e que só utilizadores registados tenham acesso.
-        // Para que o valor dos hashs seja sempre diferente e para que seja fácil manter um registo dos que 
-        //  já fizeram logoff ou que ainda estejam ligados!
+        // Para que seja fácil manter um registo dos que já fizeram logoff ou que ainda estejam ligados!
         private static readonly IDictionary<string, string> CookieValueToUsername = new Dictionary<string, string>();
         
         public static void SignOut()
         {
-            string cookieName = ConfigurationManager.AppSettings[COOKIE_KEY];
-            if (cookieName == null)
-                throw new ApplicationException(string.Format(
-                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
+            string cookieName = ValidateCookieConfiguration();
 
             HttpContext current = HttpContext.Current;
 
@@ -46,10 +42,7 @@ namespace mvc.Modules
 
         public static void RedirectToLoginPage()
         {
-            string loginPage = ConfigurationManager.AppSettings[LOGINPAGE_KEY];
-            if (loginPage == null)
-                throw new ApplicationException(string.Format(
-                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", LOGINPAGE_KEY));
+            string loginPage = ValidateLoginConfiguration();
             
             HttpContext current = HttpContext.Current;
             current.Response.Redirect(string.Format("{0}?returnUrl={1}", loginPage, 
@@ -58,11 +51,10 @@ namespace mvc.Modules
 
         public static void SetAuthCookie(string username, bool persistentCookie)
         {
-            string cookieName = ConfigurationManager.AppSettings[COOKIE_KEY];
-            if (cookieName == null)
-                throw new ApplicationException(string.Format(
-                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
+            string cookieName = ValidateCookieConfiguration();
 
+            // A forma como o valor do cookie está a ser gerado faz com que para o mesmo utilizador
+            //  seja sempre gerado o mesmo valor de cookie!!
             string value = MD5Crypto.GenerateMD5(username);
             CookieValueToUsername[value] = username;
 
@@ -87,13 +79,37 @@ namespace mvc.Modules
                 return null;
             }
         }
+
+        internal static void ValidateApplication(HttpApplication app, out string cookieName, out string loginPage)
+        {
+            if (app == null)
+                throw new ApplicationException("Typeof Object must be HttpApplication");
+
+            cookieName = ValidateCookieConfiguration();
+            loginPage = ValidateLoginConfiguration();
+        }
+
+        private static string ValidateCookieConfiguration()
+        {
+            string cookieName = ConfigurationManager.AppSettings[COOKIE_KEY];
+            if (cookieName == null)
+                throw new ApplicationException(string.Format(
+                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
+            return cookieName;
+        }
+
+        private static string ValidateLoginConfiguration()
+        {
+            string loginPage = ConfigurationManager.AppSettings[LOGINPAGE_KEY];
+            if (loginPage == null)
+                throw new ApplicationException(string.Format(
+                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", LOGINPAGE_KEY));
+            return loginPage;
+        }
     }
 
     public class AppAuthentication : IHttpModule
     {
-        private const string COOKIE_KEY = "AppAuthentication.Cookie";
-        private const string LOGINPAGE_KEY = "AppAuthentication.LoginPage";
-
         public void Init(HttpApplication context)
         {
             context.AuthenticateRequest += new EventHandler(AuthenticateRequest);
@@ -102,16 +118,11 @@ namespace mvc.Modules
             context.PostRequestHandlerExecute += new EventHandler(PostRequestHandlerExecute);
         }
 
-        private void AuthenticateRequest(object sender, EventArgs e)
+        private static void AuthenticateRequest(object sender, EventArgs e)
         {
             HttpApplication app = sender as HttpApplication;
-            if (app == null)
-                throw new ApplicationException("Typeof Object must be HttpApplication");
-
-            string cookieName = ConfigurationManager.AppSettings[COOKIE_KEY];
-            if (cookieName == null)
-                throw new ApplicationException(string.Format(
-                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", COOKIE_KEY));
+            string cookieName, loginPage;
+            AppFormsAuthentication.ValidateApplication(app, out cookieName, out loginPage);
 
             HttpRequest request = app.Request;
 
@@ -138,13 +149,8 @@ namespace mvc.Modules
         {
             // Verificar o status code da response: se 401 fazer redireção!
             HttpApplication app = sender as HttpApplication;
-            if (app == null)
-                throw new ApplicationException("Typeof Object must be HttpApplication");
-
-            string loginPage = ConfigurationManager.AppSettings[LOGINPAGE_KEY];
-            if (loginPage == null)
-                throw new ApplicationException(string.Format(
-                    "To use this module it's necessary to have the key '{0}' in appSettings section of Web.config.", LOGINPAGE_KEY));
+            string cookieName, loginPage;
+            AppFormsAuthentication.ValidateApplication(app, out cookieName, out loginPage);
 
             if (app.Context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
