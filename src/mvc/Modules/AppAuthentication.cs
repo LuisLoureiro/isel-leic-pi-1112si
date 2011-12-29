@@ -73,9 +73,9 @@ namespace mvc.Modules
             {
                 return MvcNotMembershipProvider.GetUser(CookieValueToUsername[value]);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                // Utilizador inexistente
+                // Utilizador ou cookie inexistente
                 return null;
             }
         }
