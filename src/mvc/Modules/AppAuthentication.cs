@@ -80,13 +80,16 @@ namespace mvc.Modules
             }
         }
 
-        internal static void ValidateApplication(HttpApplication app, out string cookieName, out string loginPage)
+        internal static HttpApplication ValidateApplication(object app, out string cookieName, out string loginPage)
         {
+            var application = app as HttpApplication;
             if (app == null)
                 throw new ApplicationException("Typeof Object must be HttpApplication");
 
             cookieName = ValidateCookieConfiguration();
             loginPage = ValidateLoginConfiguration();
+
+            return application;
         }
 
         private static string ValidateCookieConfiguration()
@@ -120,9 +123,8 @@ namespace mvc.Modules
 
         private static void AuthenticateRequest(object sender, EventArgs e)
         {
-            HttpApplication app = sender as HttpApplication;
             string cookieName, loginPage;
-            AppFormsAuthentication.ValidateApplication(app, out cookieName, out loginPage);
+            HttpApplication app = AppFormsAuthentication.ValidateApplication(sender, out cookieName, out loginPage);
 
             HttpRequest request = app.Request;
 
@@ -148,9 +150,8 @@ namespace mvc.Modules
         private static void PostRequestHandlerExecute(object sender, EventArgs e)
         {
             // Verificar o status code da response: se 401 fazer redireção!
-            HttpApplication app = sender as HttpApplication;
             string cookieName, loginPage;
-            AppFormsAuthentication.ValidateApplication(app, out cookieName, out loginPage);
+            HttpApplication app = AppFormsAuthentication.ValidateApplication(sender, out cookieName, out loginPage);
 
             if (app.Context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
