@@ -37,7 +37,7 @@ namespace mvc.Models
         [Required(ErrorMessage = "O número de docente é obrigatório.")]
         [Display(Name = "Número Docente")]
         [StringLength(5, ErrorMessage = "O número de docente tem no máximo cinco algarismos.", MinimumLength = 1)]
-        [RegularExpression("[1-9]*[0-9]", ErrorMessage = "Só pode introduzir algarismos.")]
+        [RegularExpression("[1-9][0-9]*", ErrorMessage = "Só pode introduzir algarismos.")]
         public virtual string Number { get; set; }
 
         [Required(ErrorMessage = "O nome é obrigatório.")]
@@ -61,7 +61,7 @@ namespace mvc.Models
     {
         [Required(ErrorMessage = "Tem que preencher o nome de utilizador")]
         [Display(Name = "Utilizador")]
-        [RegularExpression("[1-9]*[0-9]", ErrorMessage = "O username corresponde ao número de docente.")]
+        [RegularExpression("[1-9][0-9]*", ErrorMessage = "O username corresponde ao número de docente.")]
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Tem que introduzir a password")]
