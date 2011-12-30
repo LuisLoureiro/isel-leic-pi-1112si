@@ -82,9 +82,15 @@ namespace mvc.Modules
 
         internal static HttpApplication ValidateApplication(object app, out string cookieName, out string loginPage)
         {
-            var application = app as HttpApplication;
             if (app == null)
-                throw new ApplicationException("Typeof Object must be HttpApplication");
+                throw new ArgumentNullException("app");
+
+            var application = app as HttpApplication;
+            if (application == null)
+                throw new ApplicationException("Typeof Object must be HttpApplication.");
+
+            if (!application.Request.Browser.Cookies)
+                throw new ApplicationException("This application does not support cookieless requests.");
 
             cookieName = ValidateCookieConfiguration();
             loginPage = ValidateLoginConfiguration();
