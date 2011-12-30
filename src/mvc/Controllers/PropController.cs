@@ -66,6 +66,7 @@ namespace mvc.Controllers
                 return new HttpStatusCodeResult(403, "You are not the owner of this proposal.");
 
             proposal.Info = model.Info;
+            TempData["message"] = "Proposta editada com sucesso.";
 
             return RedirectToAction("Details", "Prop", new { Id = proposal.Key });
         }
@@ -86,6 +87,8 @@ namespace mvc.Controllers
                 RepositoryLocator.Get<string, CurricularUnit>().Update(proposal.Info);
             else
                 RepositoryLocator.Get<string, CurricularUnit>().Insert(proposal.Info);
+            
+            TempData["message"] = "Ficha de unidade curricular criada com sucesso.";
 
             return RedirectToAction("Details", "Fuc", new { Id = proposal.Info.Key });
         }
@@ -103,6 +106,7 @@ namespace mvc.Controllers
 
                 proposal.UpdateStatus(AbstractEntity<long>.Status.Canceled);
             }
+            TempData["message"] = "Proposta cancelada com sucesso.";
 
             return RedirectToAction("Index", "Prop");
         }
