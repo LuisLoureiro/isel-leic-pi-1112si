@@ -1,4 +1,4 @@
-﻿@model IEnumerable<mvc.Models.Entities.Proposal>
+﻿@model mvc.Models.TableViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -6,4 +6,6 @@
 
 <h2>Lista de propostas</h2>
 
-@{ Html.RenderPartial("ProposalsTable", Model);}
+@{ Html.RenderPartial("ProposalsTable", Model.Items); }
+
+@Html.PageLinks(Model.PagingInfo, i => Url.Action("Index", new {page = i}));
