@@ -1,5 +1,5 @@
 ﻿@using System.Linq
-@model mvc.Models.Entities.CurricularUnit
+@model CurricularUnit
 
 <div class="container">
     <div class="clearfix"> <p><span class="label">Acrónimo:</span>        @Model.Key </p> </div>
@@ -9,11 +9,10 @@
     @*<div class="clearfix"> <p><span class="label">Semestre(s) Curricular(es):</span> @Math.Log(Model.Semester<<1, 2) </p></div>*@
     <div class="clearfix"> <p><span class="label">Semestre(s) Curricular(es):</span> 
         @{
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            foreach (int sem in Model.Semester) {
-                if (sem != 0) {
-                    sb.Append(sem + "º ");
-                }
+            var sb = new System.Text.StringBuilder();
+            foreach (int sem in Model.Semester.Where(sem => sem != 0))
+            {
+                sb.Append(sem + "º ");
             }
         } @sb.ToString()
     </p></div>
