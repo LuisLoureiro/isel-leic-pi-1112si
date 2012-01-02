@@ -15,16 +15,12 @@
     </div>
 }
 
-@using (Html.BeginForm("Remove", "Account", new { id = Model.Number }, FormMethod.Post))
-{
-    <input type="submit" value="Remover Conta" class="btn danger" />
-}
 @{
     if (Roles.GetRolesForUser(Model.Number).Contains("admin"))
     {
         <table title="Utilizadores">
             <thead>
-                <tr><th>Número</th><th>Roles</th><th colspan="2">Opções</th></tr>
+                <tr><th>Número</th><th>Roles</th><th>Opções</th></tr>
             </thead>
             <tbody>
             @{
@@ -33,23 +29,19 @@
             var userRoles = Roles.GetRolesForUser(user.Number);
                     <tr>
                         <td>@user.Number</td>
-                        
-                        @using (Html.BeginForm("UpdateRole", "Account", new { id = user.Number}, FormMethod.Post))
+                        <td>@using (Html.BeginForm("UpdateRole", "Account", new { id = user.Number}, FormMethod.Post))
                             {
-                            <td>@Html.DropDownList("Roles",
-                                Roles.GetAllRoles().Select(
-                                     role => new SelectListItem
-                                     {
-                                         Value = role,
-                                         Text = role,
-                                         Selected = userRoles.Contains(role)
-                                     }))
-                            </td>
-                            <td>
+                                @Html.DropDownList("Roles",
+                                    Roles.GetAllRoles().Select(
+                                         role => new SelectListItem
+                                         {
+                                             Value = role,
+                                             Text = role,
+                                             Selected = userRoles.Contains(role)
+                                         }))
                                 <input type="submit" value="Actualizar" class="btn" />
-                            </td>
                             }
-                        
+                        </td>
                         <td>
                             @using (Html.BeginForm("Remove", "Account", new { id = user.Number }, FormMethod.Post))
                             {
@@ -61,5 +53,11 @@
             }
             </tbody>
         </table>
+    }
+    else {
+        using (Html.BeginForm("Remove", "Account", new { id = Model.Number }, FormMethod.Post))
+        {
+            <input type="submit" value="Remover Conta" class="btn danger" />
+        }
     }
 }
