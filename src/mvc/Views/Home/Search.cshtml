@@ -9,7 +9,7 @@
 
 @if(Model != null)
 {
-    var fucs = Model[0] as IEnumerable<mvc.Models.Entities.CurricularUnit>;
+    var fucs = Model[0] as IEnumerable<CurricularUnit>;
 
     if (fucs != null && fucs.Count() != 0)
     {
@@ -19,7 +19,7 @@
 
     if(Model.Count > 1)
     {
-        var props = Model[1] as IEnumerable<mvc.Models.Entities.Proposal>;
+        var props = Model[1] as IEnumerable<Proposal>;
         if (props != null && props.Count() != 0)
         {
             <h4>Propostas de Unidades Curriculares:</h4>
