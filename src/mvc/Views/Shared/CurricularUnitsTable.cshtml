@@ -1,4 +1,4 @@
-﻿@model IEnumerable<mvc.Models.Entities.CurricularUnit>
+﻿@model IEnumerable<CurricularUnit>
 
 <table class="zebra-striped">
     <thead>
@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         @{ 
-            foreach( var uc in Model )
+            foreach( var uc in Model)
             {
                 <tr>
                     <td>

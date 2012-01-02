@@ -1,4 +1,4 @@
-﻿@model IEnumerable<mvc.Models.Entities.Proposal>
+﻿@model IEnumerable<Proposal>
 
 <table class="zebra-striped">
     <thead>
@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-    @foreach(var p in Model)
+    @foreach (var p in Model)
     {
         <tr>
             <td>
