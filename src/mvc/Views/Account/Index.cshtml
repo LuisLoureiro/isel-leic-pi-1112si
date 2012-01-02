@@ -24,7 +24,7 @@
             </thead>
             <tbody>
             @{
-        foreach (mvc.Models.InternalUser user in mvc.Models.MvcNotMembershipProvider.GetAllUsers())
+        foreach (InternalUser user in MvcNotMembershipProvider.GetAllUsers())
         {
             var userRoles = Roles.GetRolesForUser(user.Number);
                     <tr>
