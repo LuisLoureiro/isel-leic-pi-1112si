@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using mvc.Models;
 using mvc.Models.Entities;
 using mvc.Models.Repository;
 
@@ -8,12 +9,25 @@ namespace mvc.Controllers
 {
     public class FucController : Controller
     {
-        //
-        // GET: /Fuc/
+        public int PageSize = 3; //Para alterar
 
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            return View(RepositoryLocator.Get<string, CurricularUnit>().GetAll());
+            var viewModel = new TableViewModel
+                                           {
+                                               Items = RepositoryLocator.Get<string, CurricularUnit>().GetAll()
+                                                   .OrderBy(f => f.Key)
+                                                   .Skip((page - 1)*PageSize)   //Salta os elementos iniciais que não interessam
+                                                   .Take(PageSize),             //Retorna apenas o numero de elementos que pretendemos
+                                               PagingInfo = new PagingInfo
+                                                                {
+                                                                    CurrentPage = page,
+                                                                    ItemsPerPage = PageSize,
+                                                                    TotalItems = RepositoryLocator.Get<string, CurricularUnit>().GetAll().Count()
+                                                                }
+                                           };
+
+            return View(viewModel);
         }
 
         public ActionResult Details(string id)

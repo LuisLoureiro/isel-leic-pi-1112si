@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Security;
+using mvc.Models;
 using mvc.Models.Entities;
 using mvc.Models.Repository;
 
@@ -11,12 +9,31 @@ namespace mvc.Controllers
     [Authorize]
     public class PropController : Controller
     {
-        public ActionResult Index()
+        public int PageSize = 3; //Alterar
+
+        public ActionResult Index(int page = 1)
         {
-            IEnumerable<Proposal> proposals = RepositoryLocator.Get<long, Proposal>().GetAll();
-            return User.IsInRole("admin")
-                       ? View(proposals.Where(prop => prop.State.Equals(AbstractEntity<long>.Status.Pending)))
-                       : View(proposals.Where(prop => prop.Owner.Equals(User.Identity.Name)));
+            var viewModel = new TableViewModel
+                                {
+                                    Items = RepositoryLocator.Get<long, Proposal>().GetAll()
+                                        .Where(p => User.IsInRole("Admin")
+                                                        ? p.State.Equals(AbstractEntity<long>.Status.Pending)
+                                                        : p.Owner.Equals(User.Identity.Name))
+                                        .OrderBy(f => f.Key)
+                                        .Skip((page - 1)*PageSize) //Salta os elementos iniciais que não interessam
+                                        .Take(PageSize),
+                                    //Retorna apenas o numero de elementos que pretendemos
+                                    PagingInfo = new PagingInfo
+                                                     {
+                                                         CurrentPage = page,
+                                                         ItemsPerPage = PageSize,
+                                                         TotalItems =
+                                                             RepositoryLocator.Get<string, CurricularUnit>().GetAll().
+                                                             Count()
+                                                     }
+                                };
+
+            return View(viewModel);
         }
 
         public ActionResult Details(long id)
