@@ -1,16 +1,16 @@
 var utils = {
 	disableAndOnChangeEnableSubmit: function() {
 		$(":submit").each( function() { if(this.value != "Remover Conta") { this.disabled = true; } });
-		// Tirando partido do bubbling, ao ser despoletado um evento onChange em qualquer
-		//  elemento filho do formulário, este é capturado pelo formulário.
+		// Tirando partido do modelo de eventos Javascript, ao ser despoletado um evento 
+		//  onChange em qualquer elemento filho do formulário, este é capturado pelo formulário.
 		$("form").change( function() {
 			$(":submit", this)[0].disabled = false;
 		});
 	},
-	setFocus: function(elem) {
+	setFocus: function() {
 		// Selector de multiplos atributos;
 		// Verifica todos os elementos que respeitam o conjunto de atributos;
-		$("[name!=search]", elem).filter(":input:visible:enabled:first").focus();
+		$("form [name!=search]").filter(":input:visible:enabled:first").focus();
 	},
 	validateForm: function (elem) {
         var ret = true;
