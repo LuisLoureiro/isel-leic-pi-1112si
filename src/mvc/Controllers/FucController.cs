@@ -9,25 +9,30 @@ namespace mvc.Controllers
 {
     public class FucController : Controller
     {
-        public int PageSize = 3; //Para alterar
+        public int PageSize = 2; //Para alterar
 
         public ActionResult Index(int page = 1)
         {
             var viewModel = new TableViewModel
-                                           {
-                                               Items = RepositoryLocator.Get<string, CurricularUnit>().GetAll()
-                                                   .OrderBy(f => f.Key)
-                                                   .Skip((page - 1)*PageSize)   //Salta os elementos iniciais que não interessam
-                                                   .Take(PageSize),             //Retorna apenas o numero de elementos que pretendemos
-                                               PagingInfo = new PagingInfo
-                                                                {
-                                                                    CurrentPage = page,
-                                                                    ItemsPerPage = PageSize,
-                                                                    TotalItems = RepositoryLocator.Get<string, CurricularUnit>().GetAll().Count()
-                                                                }
-                                           };
+                                {
+                                    Items = RepositoryLocator.Get<string, CurricularUnit>().GetAll()
+                                        .OrderBy(f => f.Key)
+                                        .Skip((page - 1)*PageSize) //Salta os elementos iniciais que não interessam
+                                        .Take(PageSize),     //Retorna apenas o numero de elementos que pretendemos
+                                    PagingInfo = new PagingInfo
+                                                     {
+                                                         CurrentPage = page,
+                                                         ItemsPerPage = PageSize,
+                                                         TotalItems =
+                                                             RepositoryLocator.Get<string, CurricularUnit>().GetAll().
+                                                             Count()
+                                                     }
+                                };
+            var req = Request.Headers["X-Requested-With"];
 
-            return View(viewModel);
+            return req != null && req.Equals("XMLHttpRequest")
+                       ? (ActionResult) PartialView("CurricularUnitsTable", viewModel.Items as IEnumerable<CurricularUnit>)
+                       : View(viewModel);
         }
 
         public ActionResult Details(string id)

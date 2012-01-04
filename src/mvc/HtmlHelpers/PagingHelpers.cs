@@ -40,7 +40,7 @@ namespace mvc.HtmlHelpers
             }
 
             li = new TagBuilder("li");
-            li.AddCssClass("prev");
+            li.AddCssClass("next");
 
             a = new TagBuilder("a"){ InnerHtml = "Próximo" };
 
