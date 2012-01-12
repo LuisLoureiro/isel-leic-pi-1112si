@@ -29,14 +29,17 @@
     <div class="clearfix">
         @Html.LabelFor(m => m.Precedence)
         @Html.ListBoxFor(mUc => mUc.Precedence,
-            mvc.Models.Repository.RepositoryLocator.Get<string, CurricularUnit>().GetAll().Select(
-                uc => new SelectListItem
-                    {
-                        Text = uc.Key,
-                        Value = uc.Key,
-                        Selected = (Model != null && Model.Precedence.Contains(uc.Key))
-                    }
-                ))
+            mvc.Models.Repository.RepositoryLocator.Get<string, CurricularUnit>().GetAll()
+                // falta impedir que UCs com semestre curricular superior apareçam.
+                .Where(uc => (Model == null || !uc.Key.Equals(Model.Key)))
+                .Select(
+                    uc => new SelectListItem
+                        {
+                            Text = uc.Key,
+                            Value = uc.Key,
+                            Selected = (Model != null && Model.Precedence.Contains(uc.Key))
+                        }
+                    ))
     </div>
 
     <div class="clearfix span12"> 
