@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using mvc.Models;
 using mvc.Models.Entities;
@@ -22,8 +23,7 @@ namespace mvc.Controllers
                                                         : p.Owner.Equals(User.Identity.Name))
                                         .OrderBy(f => f.Key)
                                         .Skip((page - 1)*PageSize) //Salta os elementos iniciais que não interessam
-                                        .Take(PageSize),
-                                    //Retorna apenas o numero de elementos que pretendemos
+                                        .Take(PageSize),     //Retorna apenas o numero de elementos que pretendemos
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,
@@ -34,7 +34,11 @@ namespace mvc.Controllers
                                                      }
                                 };
 
-            return View(viewModel);
+            var req = Request.Headers["X-Requested-With"];
+
+            return req != null && req.Equals("XMLHttpRequest")
+                       ? (ActionResult)PartialView("ProposalsTable", viewModel.Items as IEnumerable<Proposal>)
+                       : View(viewModel);
         }
 
         public ActionResult Details(long id)

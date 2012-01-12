@@ -1,4 +1,4 @@
-﻿@model mvc.Models.TableViewModel
+﻿@model TableViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -6,10 +6,9 @@
 
 <h2>Lista das Unidades Curriculares</h2>
 
-@{ Html.RenderPartial("CurricularUnitsTable", Model.Items); }
+@{ Html.RenderPartial("CurricularUnitsTable", Model.Items as IEnumerable<CurricularUnit>); }
     
-@Html.PageLinks(Model.PagingInfo, i => Url.Action("Index", new {page = i}));
-
+@Html.PageLinks(Model.PagingInfo, i => Url.Action("Index", new { page = i}))
 
 @if (User.Identity.IsAuthenticated) {
     <div class="well">

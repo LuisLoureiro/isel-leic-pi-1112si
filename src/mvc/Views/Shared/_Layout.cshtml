@@ -23,7 +23,8 @@
             $("form").bind("submit", function () { return utils.validateForm(this); });
             utils.setFocus();
             utils.disableAndOnChangeEnableSubmit();
-            utils.ajaxSearch($("[name=search]"));
+            utils.ajaxSearch($("[type=search]"));
+            utils.enhacePagination();
         });
     </script>
     <style type="text/css">
