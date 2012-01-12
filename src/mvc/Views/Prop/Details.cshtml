@@ -11,7 +11,7 @@
 
 <div class="container">
     @{ Html.RenderPartial("CurricularUnitView", Model.Info); }
-    @if (User.Identity.IsAuthenticated)
+    @if (User.Identity.IsAuthenticated && Model.State == AbstractEntity<long>.Status.Pending)
     { 
     <div class="span8">
         <table>
