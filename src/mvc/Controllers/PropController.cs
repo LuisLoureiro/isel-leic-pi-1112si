@@ -16,6 +16,7 @@ namespace mvc.Controllers
             var viewModel = new TableViewModel
                                 {
                                     Items = RepositoryLocator.Get<long, Proposal>().GetAll()
+                                        // rever a operação ternária
                                         .Where(p => User.IsInRole("Admin")
                                                         ? p.State.Equals(AbstractEntity<long>.Status.Pending)
                                                         : p.Owner.Equals(User.Identity.Name))
@@ -46,7 +47,7 @@ namespace mvc.Controllers
             }
             
             if (!(User.Identity.Name.Equals(proposal.Owner) || User.IsInRole("admin")))
-                return new HttpStatusCodeResult(403, "Only the owner or admin users are able to cancel this proposal.");
+                return new HttpStatusCodeResult(403, "Only the owner or admin users are able to view this proposal.");
 
             return View(proposal);
         }
@@ -59,6 +60,9 @@ namespace mvc.Controllers
                 TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
                 return RedirectToAction("Index", "Prop");
             }
+
+            if (!proposal.State.Equals(AbstractEntity<long>.Status.Pending))
+                return new HttpStatusCodeResult(403, "It's not possible to edit a proposal that's already accepted or canceled.");
             
             if (!proposal.Owner.Equals(User.Identity.Name))
                 return new HttpStatusCodeResult(403, "You are not the owner of this proposal.");
@@ -78,6 +82,9 @@ namespace mvc.Controllers
                 TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
                 return RedirectToAction("Index", "Prop");
             }
+
+            if (!proposal.State.Equals(AbstractEntity<long>.Status.Pending))
+                return new HttpStatusCodeResult(403, "It's not possible to edit a proposal that's already accepted or canceled.");
             
             if (!proposal.Owner.Equals(User.Identity.Name))
                 return new HttpStatusCodeResult(403, "You are not the owner of this proposal.");
@@ -98,6 +105,9 @@ namespace mvc.Controllers
                 TempData["exception"] = "Não existe nenhuma proposta com o identificador indicado.";
                 return RedirectToAction("Index", "Prop");
             }
+
+            if (!proposal.State.Equals(AbstractEntity<long>.Status.Pending))
+                return new HttpStatusCodeResult(403, "It's not possible to accept a proposal that's already accepted or canceled.");
             
             proposal.UpdateStatus(AbstractEntity<long>.Status.Accepted);
             if (RepositoryLocator.Get<string, CurricularUnit>().GetById(proposal.Info.Key) != null)
@@ -120,6 +130,9 @@ namespace mvc.Controllers
             {
                 if (!(proposal.Owner.Equals(User.Identity.Name) || User.IsInRole("admin")))
                     return new HttpStatusCodeResult(403, "Only the owner or admin users are able to cancel this proposal.");
+
+                if (!proposal.State.Equals(AbstractEntity<long>.Status.Pending))
+                    return new HttpStatusCodeResult(403, "It's not possible to cancel a proposal that's already accepted or canceled.");
 
                 proposal.UpdateStatus(AbstractEntity<long>.Status.Canceled);
             }
