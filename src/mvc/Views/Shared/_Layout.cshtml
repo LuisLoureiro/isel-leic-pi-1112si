@@ -23,8 +23,24 @@
             $("form").bind("submit", function () { return utils.validateForm(this); });
             utils.setFocus();
             utils.disableAndOnChangeEnableSubmit();
+            utils.ajaxSearch($("[name=search]"));
         });
     </script>
+    <style type="text/css">
+        #suggestions 
+        {
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+        	border-radius: 5px;
+            width: 170px;
+            background-color: #999;
+            position: fixed;
+            display:none;
+        }
+        #suggestions table { margin-bottom: 0px; }
+        #suggestions table td { border-top: 0px; padding: 0px; }
+        #suggestions table td a { padding-bottom: 10px; line-height:13px; }
+    </style>
 </head>
 
 <body>
@@ -37,7 +53,12 @@
           <ul class="secondary-nav">
             <li>
                 @using(Html.BeginForm("Search", "Home", FormMethod.Get)){
-                    <input class="span3" type="text" placeholder="Pesquisar" name="search" />
+                    <input class="span3" type="search" placeholder="Pesquisar" name="search" />
+                    <div id="suggestions">
+                        <table><tbody>
+                        @*<span class="searchsuggestions"></span>*@
+                        </tbody></table>
+                    </div>
                 }
             </li>
           @{
