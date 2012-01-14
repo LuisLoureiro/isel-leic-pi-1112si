@@ -1,5 +1,5 @@
 var utils = {
-	enhacePagination: function () {
+    ajaxPagination: function () {
         $('.pagination a').click(function (event) {
             var eventTarget = this;
             var uri = $(eventTarget).attr('href');
@@ -8,105 +8,116 @@ var utils = {
                 $.ajax({
                     type: "GET",
                     url: uri,
+                    begin: function () {
+                        $('#loading-info').html("A obter informação");
+                    },
                     success: function (html) {
                         $('#paginated-table').replaceWith(html);
-                        $('.pagination li[class*="active"]').removeClass("active");
 
-                        $(eventTarget).parent().addClass("active");
+                        var currPage = $('.pagination li[class*="active"]').removeClass("active");
+                        var nextButton = $('.pagination li[class*="next"]');
+                        var prevButton = $('.pagination li[class*="prev"]');
 
-                        //Falta Actualizar as opções "Seguinte" e "Anterior"
 
-                        //                        $('.pagination li[class*="prev"]').each(function () {
-                        //                            if ($('.pagination li[class*="prev"]').next().hasClass("active")) {
-                        //                                $(this).addClass("disabled");
-                        //                                $(this).find(':first-child').removeAttr('href');
-                        //                            } else {
-                        //                                $(this).removeClass("disabled");
-                        //                                var prevPage = parseInt(uri.substr(uri.indexOf('page=') + 5)) - 1;
+                        if ($(eventTarget).parents("li").hasClass("next")) {
+                            currPage = currPage.next().addClass("active");
+                        } else if ($(eventTarget).parents("li").hasClass("prev")) {
+                            currPage = currPage.prev().addClass("active");
+                        } else {
+                            //Adicionar classe 'active' ao clicado
+                            currPage = $(eventTarget).parents("li").addClass("active");
+                        }
 
-                        //                                console.log(prevPage);
+                        if (currPage.next().hasClass("next")) {
+                            nextButton.addClass("disabled");
+                            nextButton.children('a').removeAttr('href');
+                        } else {
+                            nextButton.removeClass("disabled");
+                            nextButton.children('a').attr('href', currPage.next().children('a').attr('href'));
+                        }
 
-                        //                                $(this).find(':first-child').attr('href', uri.replace('\d*', prevPage));
-                        //                            }
-                        //                        });
+                        if (currPage.prev().hasClass("prev")) {
+                            prevButton.addClass("disabled");
+                            prevButton.children('a').removeAttr('href');
+                        } else {
+                            prevButton.removeClass("disabled");
+                            prevButton.children('a').attr('href', currPage.prev().children('a').attr('href'));
+                        }
 
-                        //                        $(".pagination li").find('not(.next):last').each(function () {
-                        //                            if ($(this).hasClass("active")) {
-                        //                                $(this).next().addClass("disabled");
-                        //                            } else {
-                        //                                $(this).next().removeClass("disabled");
-                        //                            }
-                        //                        });
+                        //Colocar URI actual no user-agent
                         history.pushState(null, document.title, uri);
+
+                        $('#loading-info').html("");
                     }
                 });
             }
 
             event.preventDefault();
         });
-    },	
-	ajaxSearch: function(searchElem) {
-		var func;
-		$(searchElem).keyup( function() {
-			console.log("At keyup -> "+this.value);
-			if ($.trim(this.value) != "") {
-				if (func == undefined) {
-					func = new XMLHttpRequest();
-					func.onreadystatechange = function() {
-						if((func.readyState == 4) && (func.status == 200)) {
-							if ($.trim(func.responseText) != "") {
-								console.log(func.responseText);
-								// auxfunc(func.responseText);
-								console.log("before fadein -> "+ $(searchElem).val());
-								$("#suggestions").css('display', 'block').hide().fadeIn(1000);
-								console.log("after fadein -> "+ $(searchElem).val());
-								$("#suggestions > table > tbody").html(func.responseText);
-							} else {
-								console.log("before fadeout");
-								$("#suggestions").fadeOut(1000);
-								console.log("after fadeout");
-							}
-						}
-					};
-				}
-				func.open("GET", "/home/ajaxsearch?search="+this.value, true);
-				func.send(null);
-			}  else {
-				console.log("before fadeout at keyup");
-				$("#suggestions").fadeOut(1000);
-				console.log("after fadeout at keyup");
-			}
-		});
-		$(searchElem).blur( function() {
-			console.log("before fadeout at blur");
-			$("#suggestions").fadeOut(1000);
-			console.log("after fadeout at blur");
-		});
-		$(searchElem).focus( function() {
-			console.log("At focus -> "+this.value);
-			if ($.trim(this.value) != "") {
-				$(this).keyup();
-			}
-		});
-	},
-	disableAndOnChangeEnableSubmit: function() {
-		$("form").filter( function() {
-				return $(this).find(":input:not(:submit)").length > 0;
-			}).find(":submit").each( function() { this.disabled = true; } );
-		// Tirando partido do modelo de eventos Javascript, ao ser despoletado um evento 
-		//  onChange em qualquer elemento filho do formulário, este é capturado pelo formulário.
-		$("form").filter( function() {
-				return $(this).find(":input:not(:submit)").length > 0;
-			}).change( function() {
-				$(":submit", this).each( function() { this.disabled = false; } );
-		});
-	},
-	setFocus: function() {
-		// Selector de multiplos atributos;
-		// Verifica todos os elementos que respeitam o conjunto de atributos;
-		$("form [name!=search]").filter(":input:not(:submit):visible:enabled:first").focus();
-	},
-	validateForm: function (elem) {
+    },
+
+    ajaxSearch: function (searchElem) {
+        var func;
+        $(searchElem).keyup(function () {
+            console.log("At keyup -> " + this.value);
+            if ($.trim(this.value) != "") {
+                if (func == undefined) {
+                    func = new XMLHttpRequest();
+                    func.onreadystatechange = function () {
+                        if ((func.readyState == 4) && (func.status == 200)) {
+                            if ($.trim(func.responseText) != "") {
+                                console.log(func.responseText);
+                                // auxfunc(func.responseText);
+                                console.log("before fadein -> " + $(searchElem).val());
+                                $("#suggestions").css('display', 'block').hide().fadeIn(1000);
+                                console.log("after fadein -> " + $(searchElem).val());
+                                $("#suggestions > table > tbody").html(func.responseText);
+                            } else {
+                                console.log("before fadeout");
+                                $("#suggestions").fadeOut(1000);
+                                console.log("after fadeout");
+                            }
+                        }
+                    };
+                }
+                func.open("GET", "/home/ajaxsearch?search=" + this.value, true);
+                func.send(null);
+            } else {
+                console.log("before fadeout at keyup");
+                $("#suggestions").fadeOut(1000);
+                console.log("after fadeout at keyup");
+            }
+        });
+        $(searchElem).blur(function () {
+            console.log("before fadeout at blur");
+            $("#suggestions").fadeOut(1000);
+            console.log("after fadeout at blur");
+        });
+        $(searchElem).focus(function () {
+            console.log("At focus -> " + this.value);
+            if ($.trim(this.value) != "") {
+                $(this).keyup();
+            }
+        });
+    },
+    disableAndOnChangeEnableSubmit: function () {
+        $("form").filter(function () {
+            return $(this).find(":input:not(:submit)").length > 0;
+        }).find(":submit").each(function () { this.disabled = true; });
+        // Tirando partido do modelo de eventos Javascript, ao ser despoletado um evento 
+        //  onChange em qualquer elemento filho do formulário, este é capturado pelo formulário.
+        $("form").filter(function () {
+            return $(this).find(":input:not(:submit)").length > 0;
+        }).change(function () {
+            $(":submit", this).each(function () { this.disabled = false; });
+        });
+    },
+    setFocus: function () {
+        // Selector de multiplos atributos;
+        // Verifica todos os elementos que respeitam o conjunto de atributos;
+        $("form [name!=search]").filter(":input:not(:submit):visible:enabled:first").focus();
+    },
+    validateForm: function (elem) {
         var ret = true;
         // Se o nome contiver algum caracter especial, meta-character, é necessário
         // efectuar o escape desse caracter, utilizando \ antes do caracter.
@@ -134,25 +145,24 @@ var utils = {
         $("[data-val=true]", elem).each(
             function () {
                 if ($(this).attr("data-val-required") != undefined) {
-					if (($(this).attr("type") == "radio")) {
-						if ($("input:checked", this.parentNode).length == 0)
-						{
-							invalid("data-val-required", this);
-							// termina a verificação para este index do each
-							return;
-						}
-						valid(this);
-					}
-					else if (this.tagName.toLowerCase() == "select") {
-						if($("option:selected").length == 0) {
-							invalid("data-val-required", this);
-							// termina a verificação para este index do each
-							return;
-						}
-						valid(this);
-					}
+                    if (($(this).attr("type") == "radio")) {
+                        if ($("input:checked", this.parentNode).length == 0) {
+                            invalid("data-val-required", this);
+                            // termina a verificação para este index do each
+                            return;
+                        }
+                        valid(this);
+                    }
+                    else if (this.tagName.toLowerCase() == "select") {
+                        if ($("option:selected").length == 0) {
+                            invalid("data-val-required", this);
+                            // termina a verificação para este index do each
+                            return;
+                        }
+                        valid(this);
+                    }
                     else if ($.trim(this.value) == "") {
-						invalid("data-val-required", this);
+                        invalid("data-val-required", this);
                         // termina a verificação para este index do each
                         return;
                     }
