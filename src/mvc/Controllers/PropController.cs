@@ -10,8 +10,19 @@ namespace mvc.Controllers
     [Authorize]
     public class PropController : Controller
     {
-        public ActionResult Index(int page = 1, int pageSize = 2, bool partial = false)
+        public ActionResult Index(int page = 0, int pageSize = 0, bool partial = false)
         {
+            bool redirect;
+
+            if (redirect = (page <= 0))
+                page = 1;
+
+            if ((pageSize <= 0))
+            {
+                pageSize = 2;
+                redirect = true;
+            }
+
             var viewModel = new TableViewModel
                                 {
                                     Items = RepositoryLocator.Get<long, Proposal>().GetAll()
@@ -32,9 +43,15 @@ namespace mvc.Controllers
                                                      }
                                 };
 
-            return Request.IsAjaxRequest()
-                       ? (ActionResult)PartialView("ProposalsTableContent", viewModel.Items as IEnumerable<Proposal>)
-                       : View(viewModel);
+            int total = viewModel.PagingInfo.TotalPages;
+            if (redirect = (page > total))
+                page = total;
+
+            if (redirect)
+                return RedirectToAction("Index", new { page, pageSize });
+
+            return partial ? (ActionResult)PartialView("ProposalsTableContent", viewModel.Items as IEnumerable<Proposal>)
+                           : View(viewModel);
         }
 
         public ActionResult Details(long id)
