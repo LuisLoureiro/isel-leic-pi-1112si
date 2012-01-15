@@ -9,27 +9,45 @@ namespace mvc.Controllers
 {
     public class FucController : Controller
     {
-        public ActionResult Index(int page = 1, int pageSize = 2, bool partial = false)
+        public ActionResult Index(int page = 0, int pageSize = 0, bool partial = false)
         {
+            bool redirect;
+
+            if (redirect = (page <= 0))
+                page = 1;
+
+            if ((pageSize <= 0))
+            {
+                pageSize = 2;
+                redirect = true;
+            }
+
+            var elems = RepositoryLocator.Get<string, CurricularUnit>().GetAll();
             var viewModel = new TableViewModel
                                 {
-                                    Items = RepositoryLocator.Get<string, CurricularUnit>().GetAll()
-                                        .OrderBy(f => f.Key)
+                                    Items = elems.OrderBy(f => f.Key)
                                         .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
-                                        .Take(pageSize),     //Retorna apenas o numero de elementos que pretendemos
+                                        .Take(pageSize), //Retorna apenas o numero de elementos que pretendemos
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,
                                                          ItemsPerPage = pageSize,
-                                                         TotalItems =
-                                                             RepositoryLocator.Get<string, CurricularUnit>().GetAll().
-                                                             Count()
+                                                         TotalItems = elems.Count()
                                                      }
                                 };
-            
-            return Request.IsAjaxRequest()
-                       ? (ActionResult) PartialView("CurricularUnitsTableContent", viewModel.Items as IEnumerable<CurricularUnit>)
-                       : View(viewModel);
+
+            int total = viewModel.PagingInfo.TotalPages;
+            if (page > total)
+            {
+                page = total;
+                redirect = true;
+            }
+
+            if (redirect)
+                return RedirectToAction("Index", new {page, pageSize});
+
+            return partial ? (ActionResult) PartialView("CurricularUnitsTableContent", viewModel.Items as IEnumerable<CurricularUnit>)
+                           : View(viewModel);
         }
 
         public ActionResult Details(string id)
@@ -64,7 +82,7 @@ namespace mvc.Controllers
             IEnumerable<Proposal> proposta = RepositoryLocator.Get<long, Proposal>().GetAll().Where(
                 prop => prop.Info.Key.Equals(id) && prop.Owner.Equals(owner));
 
-            return proposta.Count() == 0
+            return !proposta.Any()
                        ? (ActionResult) View(RepositoryLocator.Get<string, CurricularUnit>().GetById(id))
                        : RedirectToAction("Details", "Prop", new {Id = proposta.First().Key});
         }

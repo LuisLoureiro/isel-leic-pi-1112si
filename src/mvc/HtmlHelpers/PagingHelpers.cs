@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Web.Mvc;
 using mvc.Models;
@@ -7,7 +8,7 @@ namespace mvc.HtmlHelpers
 {
     public static class PagingHelpers
     {
-        public static MvcHtmlString PageLinks(this HtmlHelper html, PagingInfo pagingInfo, Func<int, string> pageUrl)
+        public static MvcHtmlString PageLinks(this HtmlHelper html, PagingInfo pagingInfo, Func<int, int, string> pageUrl)
         {
             var ulInnerHtml = new StringBuilder();
             var li = new TagBuilder("li");
@@ -18,17 +19,18 @@ namespace mvc.HtmlHelpers
             if (pagingInfo.CurrentPage == 1)
                 li.AddCssClass("disabled");
             else
-                a.MergeAttribute("href", pageUrl(pagingInfo.CurrentPage - 1));
+                a.MergeAttribute("href", pageUrl(pagingInfo.CurrentPage - 1, pagingInfo.ItemsPerPage));
 
             li.InnerHtml = a.ToString();
 
             ulInnerHtml.Append(li.ToString());
 
-            for (var i = 1; i <= pagingInfo.TotalPages; i++)
+            int totalPages = pagingInfo.TotalPages;
+            for (int i = 1; i <= totalPages; i++)
             {
-                a = new TagBuilder("a"){ InnerHtml = i.ToString() };
+                a = new TagBuilder("a"){ InnerHtml = i.ToString(CultureInfo.InvariantCulture) };
 
-                a.MergeAttribute("href", pageUrl(i));
+                a.MergeAttribute("href", pageUrl(i, pagingInfo.ItemsPerPage));
                 
 
                 li = new TagBuilder("li"){ InnerHtml = a.ToString() };
@@ -47,7 +49,7 @@ namespace mvc.HtmlHelpers
             if (pagingInfo.CurrentPage == pagingInfo.TotalPages)
                 li.AddCssClass("disabled");
             else
-                a.MergeAttribute("href", pageUrl(pagingInfo.CurrentPage + 1));
+                a.MergeAttribute("href", pageUrl(pagingInfo.CurrentPage + 1, pagingInfo.ItemsPerPage));
 
             li.InnerHtml = a.ToString();
 

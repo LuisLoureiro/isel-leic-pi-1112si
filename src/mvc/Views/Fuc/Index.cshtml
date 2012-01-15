@@ -21,8 +21,7 @@
     </tbody>
 </table>
 <h4 id="loading-info"></h4>
-
-@Html.PageLinks(Model.PagingInfo, i => Url.Action("Index", new { page = i}))
+@Html.PageLinks(Model.PagingInfo, (i, j) => Url.Action("Index", new { page = i, pageSize = j}))
 
 @if (User.Identity.IsAuthenticated) {
     <div class="well">
