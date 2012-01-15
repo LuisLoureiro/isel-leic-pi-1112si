@@ -1,13 +1,13 @@
 var utils = {
     ajaxPagination: function () {
-        $('.pagination a').click(function (event) {
+        $('.pagination a').click(function () {
             var eventTarget = this;
             var uri = $(eventTarget).attr('href');
 
             if (uri != undefined) {
                 $.ajax({
                     type: "GET",
-                    url: uri,
+                    url: uri + '&partial=true',     //acrescenta ao URI o parametro partial, para obter apenas o conteúdo da tabela
                     begin: function () {
                         $('#loading-info').html("A obter informação");
                     },
@@ -45,7 +45,7 @@ var utils = {
                         }
 
                         //Colocar URI actual no user-agent
-                        history.pushState(null, document.title, uri);
+                        history.pushState(document.html, document.title, uri);
 
                         $('#loading-info').html("");
                     }
