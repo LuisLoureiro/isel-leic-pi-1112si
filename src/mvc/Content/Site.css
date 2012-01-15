@@ -73,3 +73,19 @@ textarea
 {
     display: none;
 }
+
+/* Styles for search suggestions
+-------------------------------------------------------------*/
+#suggestions 
+{
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    width: 170px;
+    background-color: #999;
+    position: fixed;
+    display:none;
+}
+#suggestions table { margin-bottom: 0px; }
+#suggestions table td { border-top: 0px; padding: 0px; }
+#suggestions table td a { padding-bottom: 10px; line-height:13px; }

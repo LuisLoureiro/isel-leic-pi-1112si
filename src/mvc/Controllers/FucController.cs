@@ -9,28 +9,25 @@ namespace mvc.Controllers
 {
     public class FucController : Controller
     {
-        public int PageSize = 2; //Para alterar
-
-        public ActionResult Index(int page = 1)
+        public ActionResult Index(int page = 1, int pageSize = 2, bool partial = false)
         {
             var viewModel = new TableViewModel
                                 {
                                     Items = RepositoryLocator.Get<string, CurricularUnit>().GetAll()
                                         .OrderBy(f => f.Key)
-                                        .Skip((page - 1)*PageSize) //Salta os elementos iniciais que não interessam
-                                        .Take(PageSize),     //Retorna apenas o numero de elementos que pretendemos
+                                        .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
+                                        .Take(pageSize),     //Retorna apenas o numero de elementos que pretendemos
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,
-                                                         ItemsPerPage = PageSize,
+                                                         ItemsPerPage = pageSize,
                                                          TotalItems =
                                                              RepositoryLocator.Get<string, CurricularUnit>().GetAll().
                                                              Count()
                                                      }
                                 };
-            var req = Request.Headers["X-Requested-With"];
-
-            return req != null && req.Equals("XMLHttpRequest")
+            
+            return Request.IsAjaxRequest()
                        ? (ActionResult) PartialView("CurricularUnitsTable", viewModel.Items as IEnumerable<CurricularUnit>)
                        : View(viewModel);
         }
