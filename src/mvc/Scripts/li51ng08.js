@@ -4,22 +4,16 @@ var utils = {
             var eventTarget = this;
             var uri = $(eventTarget).attr('href');
 
-            //Porque não funciona???
             $('#loading-info').ajaxStart(function() {
-                $(this).text("A obter informação");
+                $(this).text("A obter informacao...");
             });
             
-//            $('#loading-info').ajaxStop(function () {
-//                $(this).text("");
-//            });
+            $('#loading-info').ajaxStop(function () {
+                $(this).text("");
+            });
 
             if (uri != undefined) {
-                //$.ajax({
-                //    type: "GET",
-                //    url: uri + '&partial=true',     //acrescenta ao URI o parametro partial, para obter apenas o conteúdo da tabela
-                $('#paginated-content').get(uri + '&partial=true',  function () {
-                //        $('#paginated-content').html(html);
-
+                $('#paginated-content').load(uri + '&partial=true',  function () {
                         var currPage = $('.pagination li[class*="active"]').removeClass("active");
                         var nextButton = $('.pagination li[class*="next"]');
                         var prevButton = $('.pagination li[class*="prev"]');
