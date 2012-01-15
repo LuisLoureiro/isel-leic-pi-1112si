@@ -24,24 +24,9 @@
             utils.setFocus();
             utils.disableAndOnChangeEnableSubmit();
             utils.ajaxSearch($("[type=search]"));
-            utils.enhacePagination();
+            utils.ajaxPagination();
         });
     </script>
-    <style type="text/css">
-        #suggestions 
-        {
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
-        	border-radius: 5px;
-            width: 170px;
-            background-color: #999;
-            position: fixed;
-            display:none;
-        }
-        #suggestions table { margin-bottom: 0px; }
-        #suggestions table td { border-top: 0px; padding: 0px; }
-        #suggestions table td a { padding-bottom: 10px; line-height:13px; }
-    </style>
 </head>
 
 <body>
@@ -56,9 +41,10 @@
                 @using(Html.BeginForm("Search", "Home", FormMethod.Get)){
                     <input class="span3" type="search" placeholder="Pesquisar" name="search" />
                     <div id="suggestions">
-                        <table><tbody>
-                        @*<span class="searchsuggestions"></span>*@
-                        </tbody></table>
+                        <table>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 }
             </li>
@@ -95,8 +81,8 @@
     </div>
 
     <footer class="footer">
-        <div class="container" align="center">
-            Desenvolvido e desenhado por <a href="mailto:randrade@alunos.isel.ipl.pt">Ricardo Andrade (27226)</a> e <a href="mailto:32186@alunos.isel.pt">Luís Loureiro (32186)</a>
+        <div class="container">
+            Desenvolvido e desenhado por <strong>Ricardo Andrade (27226)</strong> e <strong>Luís Loureiro (32186)</strong>
         </div>
     </footer>
 </body>

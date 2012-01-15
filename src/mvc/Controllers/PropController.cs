@@ -10,9 +10,7 @@ namespace mvc.Controllers
     [Authorize]
     public class PropController : Controller
     {
-        public int PageSize = 3; //Alterar
-
-        public ActionResult Index(int page = 1)
+        public ActionResult Index(int page = 1, int pageSize = 2, bool partial = false)
         {
             var viewModel = new TableViewModel
                                 {
@@ -22,21 +20,19 @@ namespace mvc.Controllers
                                                         ? p.State.Equals(AbstractEntity<long>.Status.Pending)
                                                         : p.Owner.Equals(User.Identity.Name))
                                         .OrderBy(f => f.Key)
-                                        .Skip((page - 1)*PageSize) //Salta os elementos iniciais que não interessam
-                                        .Take(PageSize),     //Retorna apenas o numero de elementos que pretendemos
+                                        .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
+                                        .Take(pageSize),//Retorna apenas o numero de elementos que pretendemos
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,
-                                                         ItemsPerPage = PageSize,
+                                                         ItemsPerPage = pageSize,
                                                          TotalItems =
                                                              RepositoryLocator.Get<string, CurricularUnit>().GetAll().
                                                              Count()
                                                      }
                                 };
 
-            var req = Request.Headers["X-Requested-With"];
-
-            return req != null && req.Equals("XMLHttpRequest")
+            return Request.IsAjaxRequest()
                        ? (ActionResult)PartialView("ProposalsTable", viewModel.Items as IEnumerable<Proposal>)
                        : View(viewModel);
         }
