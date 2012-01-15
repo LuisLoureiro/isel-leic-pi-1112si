@@ -6,8 +6,22 @@
 
 <h2>Lista das Unidades Curriculares</h2>
 
-@{ Html.RenderPartial("CurricularUnitsTable", Model.Items as IEnumerable<CurricularUnit>); }
-    
+<table class="zebra-striped">
+    <thead>
+            <tr>
+            <th></th>
+            <th>Acrónimo</th>
+            <th>Nome</th>
+            <th>Obrigatória</th>
+            <th>Ects</th>
+        </tr>
+    </thead>
+    <tbody id="paginated-content">
+        @{ Html.RenderPartial("CurricularUnitsTableContent", Model.Items as IEnumerable<CurricularUnit>); }
+    </tbody>
+</table>
+<h4 id="loading-info"></h4>
+
 @Html.PageLinks(Model.PagingInfo, i => Url.Action("Index", new { page = i}))
 
 @if (User.Identity.IsAuthenticated) {

@@ -33,7 +33,7 @@ namespace mvc.Controllers
                                 };
 
             return Request.IsAjaxRequest()
-                       ? (ActionResult)PartialView("ProposalsTable", viewModel.Items as IEnumerable<Proposal>)
+                       ? (ActionResult)PartialView("ProposalsTableContent", viewModel.Items as IEnumerable<Proposal>)
                        : View(viewModel);
         }
 

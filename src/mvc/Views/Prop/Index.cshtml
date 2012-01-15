@@ -6,6 +6,22 @@
 
 <h2>Lista de propostas</h2>
 
-@{ Html.RenderPartial("ProposalsTable", Model.Items as IEnumerable<Proposal>); }
-
+<table class="zebra-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Acrónimo</th>
+            <th>Nome</th>
+            <th>Obrigatória</th>
+            <th>Ects</th>
+            <th>Criador</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody id="paginated-content">
+        @{ Html.RenderPartial("ProposalsTableContent", Model.Items as IEnumerable<Proposal>); }
+    </tbody>
+</table>
+<h4 id="loading-info"></h4>
 @Html.PageLinks(Model.PagingInfo, i => Url.Action("Index", new { page = i}))

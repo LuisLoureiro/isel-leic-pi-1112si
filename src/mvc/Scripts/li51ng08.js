@@ -1,5 +1,5 @@
 var utils = {
-	enhacePagination: function () {
+   ajaxPagination: function () {
         $('.pagination a').click(function (event) {
             var eventTarget = this;
             var uri = $(eventTarget).attr('href');
@@ -8,43 +8,53 @@ var utils = {
                 $.ajax({
                     type: "GET",
                     url: uri,
+                    begin: function () {
+                        $('#loading-info').html("A obter informação");
+                    },
                     success: function (html) {
-                        $('#paginated-table').replaceWith(html);
-                        $('.pagination li[class*="active"]').removeClass("active");
+                        $('#paginated-content').html(html);
 
-                        $(eventTarget).parent().addClass("active");
+                        var currPage = $('.pagination li[class*="active"]').removeClass("active");
+                        var nextButton = $('.pagination li[class*="next"]');
+                        var prevButton = $('.pagination li[class*="prev"]');
 
-                        //Falta Actualizar as opções "Seguinte" e "Anterior"
 
-                        //                        $('.pagination li[class*="prev"]').each(function () {
-                        //                            if ($('.pagination li[class*="prev"]').next().hasClass("active")) {
-                        //                                $(this).addClass("disabled");
-                        //                                $(this).find(':first-child').removeAttr('href');
-                        //                            } else {
-                        //                                $(this).removeClass("disabled");
-                        //                                var prevPage = parseInt(uri.substr(uri.indexOf('page=') + 5)) - 1;
+                        if ($(eventTarget).parents("li").hasClass("next")) {
+                            currPage = currPage.next().addClass("active");
+                        } else if ($(eventTarget).parents("li").hasClass("prev")) {
+                            currPage = currPage.prev().addClass("active");
+                        } else {
+                            //Adicionar classe 'active' ao clicado
+                            currPage = $(eventTarget).parents("li").addClass("active");
+                        }
 
-                        //                                console.log(prevPage);
+                        if (currPage.next().hasClass("next")) {
+                            nextButton.addClass("disabled");
+                            nextButton.children('a').removeAttr('href');
+                        } else {
+                            nextButton.removeClass("disabled");
+                            nextButton.children('a').attr('href', currPage.next().children('a').attr('href'));
+                        }
 
-                        //                                $(this).find(':first-child').attr('href', uri.replace('\d*', prevPage));
-                        //                            }
-                        //                        });
+                        if (currPage.prev().hasClass("prev")) {
+                            prevButton.addClass("disabled");
+                            prevButton.children('a').removeAttr('href');
+                        } else {
+                            prevButton.removeClass("disabled");
+                            prevButton.children('a').attr('href', currPage.prev().children('a').attr('href'));
+                        }
 
-                        //                        $(".pagination li").find('not(.next):last').each(function () {
-                        //                            if ($(this).hasClass("active")) {
-                        //                                $(this).next().addClass("disabled");
-                        //                            } else {
-                        //                                $(this).next().removeClass("disabled");
-                        //                            }
-                        //                        });
+                        //Colocar URI actual no user-agent
                         history.pushState(null, document.title, uri);
+
+                        $('#loading-info').html("");
                     }
                 });
             }
 
             event.preventDefault();
         });
-    },	
+    },
 	ajaxSearch: function(searchElem) {
 		var fadeInOutTime = 1000;
 		var func;
@@ -71,7 +81,7 @@ var utils = {
 						}
 					};
 				}
-				func.open("GET", "/home/ajaxsearch?search="+this.value, true);
+				func.open("GET", "/home/ajaxsearch?search=" + this.value, true);
 				func.send(null);
 			}  else {
 				console.log("before fadeout at keyup");
