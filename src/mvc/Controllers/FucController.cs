@@ -28,7 +28,7 @@ namespace mvc.Controllers
                                 };
             
             return Request.IsAjaxRequest()
-                       ? (ActionResult) PartialView("CurricularUnitsTable", viewModel.Items as IEnumerable<CurricularUnit>)
+                       ? (ActionResult) PartialView("CurricularUnitsTableContent", viewModel.Items as IEnumerable<CurricularUnit>)
                        : View(viewModel);
         }
 

@@ -12,7 +12,7 @@ var utils = {
                         $('#loading-info').html("A obter informação");
                     },
                     success: function (html) {
-                        $('#paginated-table').replaceWith(html);
+                        $('#paginated-content').html(html);
 
                         var currPage = $('.pagination li[class*="active"]').removeClass("active");
                         var nextButton = $('.pagination li[class*="next"]');
