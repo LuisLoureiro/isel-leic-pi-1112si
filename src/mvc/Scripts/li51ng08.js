@@ -46,6 +46,7 @@ var utils = {
         });
     },	
 	ajaxSearch: function(searchElem) {
+		var fadeInOutTime = 1000;
 		var func;
 		$(searchElem).keyup( function() {
 			console.log("At keyup -> "+this.value);
@@ -54,16 +55,17 @@ var utils = {
 					func = new XMLHttpRequest();
 					func.onreadystatechange = function() {
 						if((func.readyState == 4) && (func.status == 200)) {
+							console.log($("#suggestions").queue().length);
 							if ($.trim(func.responseText) != "") {
 								console.log(func.responseText);
 								// auxfunc(func.responseText);
 								console.log("before fadein -> "+ $(searchElem).val());
-								$("#suggestions").css('display', 'block').hide().fadeIn(1000);
+								$("#suggestions").css('display', 'block').hide().fadeIn(fadeInOutTime);
 								console.log("after fadein -> "+ $(searchElem).val());
 								$("#suggestions > table > tbody").html(func.responseText);
 							} else {
 								console.log("before fadeout");
-								$("#suggestions").fadeOut(1000);
+								$("#suggestions").fadeOut(fadeInOutTime);
 								console.log("after fadeout");
 							}
 						}
@@ -73,13 +75,13 @@ var utils = {
 				func.send(null);
 			}  else {
 				console.log("before fadeout at keyup");
-				$("#suggestions").fadeOut(1000);
+				$("#suggestions").fadeOut(fadeInOutTime);
 				console.log("after fadeout at keyup");
 			}
 		});
 		$(searchElem).blur( function() {
 			console.log("before fadeout at blur");
-			$("#suggestions").fadeOut(1000);
+			$("#suggestions").fadeOut(fadeInOutTime);
 			console.log("after fadeout at blur");
 		});
 		$(searchElem).focus( function() {
@@ -87,6 +89,12 @@ var utils = {
 			if ($.trim(this.value) != "") {
 				$(this).keyup();
 			}
+		});
+	},
+	bindConfirmationMessageOnSubmit: function() {
+		$("form").submit( function() {
+			var value = $("[type=submit]", this).filter(".danger, .success").first().attr("value");
+			return value != undefined ? confirm("Tem a certeza que quer " + value + "?") : true;
 		});
 	},
 	disableAndOnChangeEnableSubmit: function() {
