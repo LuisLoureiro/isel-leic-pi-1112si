@@ -40,8 +40,11 @@ namespace mvc.Controllers
                                 };
 
             int total = viewModel.PagingInfo.TotalPages;
-            if(redirect = (page > total))
+            if (page > total)
+            {
                 page = total;
+                redirect = true;
+            }
 
             if (redirect)
                 return RedirectToAction("Index", new {page, pageSize});
