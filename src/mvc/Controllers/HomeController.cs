@@ -44,14 +44,22 @@ namespace mvc.Controllers
             if(!String.IsNullOrEmpty(search))
             {
                 search = Server.HtmlEncode(search);
-                res.Add(RepositoryLocator.Get<string, CurricularUnit>().GetAll()
-                                    .Where(SearchUc(search))
-                                    .Select(f => new KeyValuePair<string, string>("/fuc/details/"+f.Key, f.Name)));
+                var fucs = new LinkedList<KeyValuePair<string, string>>(
+                                    RepositoryLocator.Get<string, CurricularUnit>().GetAll()
+                                        .Where(SearchUc(search))
+                                        .Select(f => new KeyValuePair<string, string>("/fuc/details/" + f.Key, f.Name)));
+                fucs.AddFirst(new KeyValuePair<string, string>("Fichas de Unidades Curriculares", null));
+                res.Add(fucs);
 
                 if (Request.IsAuthenticated)
-                    res.Add(RepositoryLocator.Get<long, Proposal>().GetAll()
-                                .Where(SearchProp(search, User.Identity.Name))
-                                .Select(p => new KeyValuePair<string, string>("/prop/details/"+p.Key, p.Key.ToString())));
+                {
+                    var props = new LinkedList<KeyValuePair<string, string>>(
+                                        RepositoryLocator.Get<long, Proposal>().GetAll()
+                                            .Where(SearchProp(search, User.Identity.Name))
+                                            .Select(p => new KeyValuePair<string, string>("/prop/details/" + p.Key, p.Key.ToString())));
+                    props.AddFirst(new KeyValuePair<string, string>("Propostas", null));
+                    res.Add(props);
+                }
             }
             return PartialView(res);
         }

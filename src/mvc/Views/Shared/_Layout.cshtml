@@ -22,6 +22,7 @@
         $(document).ready(function () {
             $("form").bind("submit", function () { return utils.validateForm(this); });
             utils.setFocus();
+            utils.bindConfirmationMessageOnSubmit();
             utils.disableAndOnChangeEnableSubmit();
             utils.ajaxSearch($("[type=search]"));
             utils.ajaxPagination();
@@ -39,7 +40,7 @@
           <ul class="secondary-nav">
             <li>
                 @using(Html.BeginForm("Search", "Home", FormMethod.Get)){
-                    <input class="span3" type="search" placeholder="Pesquisar" name="search" />
+                    <input class="span3" type="search" autocomplete="false" placeholder="Pesquisar" name="search" />
                     <div id="suggestions">
                         <table>
                             <tbody>
