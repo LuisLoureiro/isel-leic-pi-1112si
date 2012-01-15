@@ -25,22 +25,21 @@
                 }
                 @if (User.IsInRole("admin")) 
                 {
-                    using (Html.BeginForm("Accept", "Prop", new { Id = Model.Key }, FormMethod.Post, null ))
+                    <td>
+                    @using (Html.BeginForm("Accept", "Prop", new { Id = Model.Key }, FormMethod.Post, null ))
                     {
-                        <td>
                             <input type="submit" value="Aceitar Proposta" class="btn success" />
-                        </td>
                     }
+                    </td>
                 }
                 @if (Model.Owner.Equals(User.Identity.Name) || User.IsInRole("admin"))
                 {
-                    using (Html.BeginForm("Cancel", "Prop", new { Id = Model.Key }, FormMethod.Post, null))
+                    <td>
+                    @using (Html.BeginForm("Cancel", "Prop", new { Id = Model.Key }, FormMethod.Post, null))
                     {
-                        <td>
                             <input type="submit" value="Cancelar Proposta" class="btn danger" />
-                        </td>
-                    
                     }
+                    </td>
                 }
             </tr>
             </tbody>

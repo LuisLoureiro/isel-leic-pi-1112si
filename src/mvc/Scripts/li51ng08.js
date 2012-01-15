@@ -59,69 +59,76 @@ var utils = {
             event.preventDefault();
         });
     },
-
-    ajaxSearch: function (searchElem) {
-        var func;
-        $(searchElem).keyup(function () {
-            console.log("At keyup -> " + this.value);
-            if ($.trim(this.value) != "") {
-                if (func == undefined) {
-                    func = new XMLHttpRequest();
-                    func.onreadystatechange = function () {
-                        if ((func.readyState == 4) && (func.status == 200)) {
-                            if ($.trim(func.responseText) != "") {
-                                console.log(func.responseText);
-                                // auxfunc(func.responseText);
-                                console.log("before fadein -> " + $(searchElem).val());
-                                $("#suggestions").css('display', 'block').hide().fadeIn(1000);
-                                console.log("after fadein -> " + $(searchElem).val());
-                                $("#suggestions > table > tbody").html(func.responseText);
-                            } else {
-                                console.log("before fadeout");
-                                $("#suggestions").fadeOut(1000);
-                                console.log("after fadeout");
-                            }
-                        }
-                    };
-                }
-                func.open("GET", "/home/ajaxsearch?search=" + this.value, true);
-                func.send(null);
-            } else {
-                console.log("before fadeout at keyup");
-                $("#suggestions").fadeOut(1000);
-                console.log("after fadeout at keyup");
-            }
-        });
-        $(searchElem).blur(function () {
-            console.log("before fadeout at blur");
-            $("#suggestions").fadeOut(1000);
-            console.log("after fadeout at blur");
-        });
-        $(searchElem).focus(function () {
-            console.log("At focus -> " + this.value);
-            if ($.trim(this.value) != "") {
-                $(this).keyup();
-            }
-        });
-    },
-    disableAndOnChangeEnableSubmit: function () {
-        $("form").filter(function () {
-            return $(this).find(":input:not(:submit)").length > 0;
-        }).find(":submit").each(function () { this.disabled = true; });
-        // Tirando partido do modelo de eventos Javascript, ao ser despoletado um evento 
-        //  onChange em qualquer elemento filho do formulário, este é capturado pelo formulário.
-        $("form").filter(function () {
-            return $(this).find(":input:not(:submit)").length > 0;
-        }).change(function () {
-            $(":submit", this).each(function () { this.disabled = false; });
-        });
-    },
-    setFocus: function () {
-        // Selector de multiplos atributos;
-        // Verifica todos os elementos que respeitam o conjunto de atributos;
-        $("form [name!=search]").filter(":input:not(:submit):visible:enabled:first").focus();
-    },
-    validateForm: function (elem) {
+	ajaxSearch: function(searchElem) {
+		var fadeInOutTime = 1000;
+		var func;
+		$(searchElem).keyup( function() {
+			console.log("At keyup -> "+this.value);
+			if ($.trim(this.value) != "") {
+				if (func == undefined) {
+					func = new XMLHttpRequest();
+					func.onreadystatechange = function() {
+						if((func.readyState == 4) && (func.status == 200)) {
+							console.log($("#suggestions").queue().length);
+							if ($.trim(func.responseText) != "") {
+								console.log(func.responseText);
+								// auxfunc(func.responseText);
+								console.log("before fadein -> "+ $(searchElem).val());
+								$("#suggestions").css('display', 'block').hide().fadeIn(fadeInOutTime);
+								console.log("after fadein -> "+ $(searchElem).val());
+								$("#suggestions > table > tbody").html(func.responseText);
+							} else {
+								console.log("before fadeout");
+								$("#suggestions").fadeOut(fadeInOutTime);
+								console.log("after fadeout");
+							}
+						}
+					};
+				}
+				func.open("GET", "/home/ajaxsearch?search=" + this.value, true);
+				func.send(null);
+			}  else {
+				console.log("before fadeout at keyup");
+				$("#suggestions").fadeOut(fadeInOutTime);
+				console.log("after fadeout at keyup");
+			}
+		});
+		$(searchElem).blur( function() {
+			console.log("before fadeout at blur");
+			$("#suggestions").fadeOut(fadeInOutTime);
+			console.log("after fadeout at blur");
+		});
+		$(searchElem).focus( function() {
+			console.log("At focus -> "+this.value);
+			if ($.trim(this.value) != "") {
+				$(this).keyup();
+			}
+		});
+	},
+	bindConfirmationMessageOnSubmit: function() {
+		$("form").submit( function() {
+			var value = $("[type=submit]", this).filter(".danger, .success").first().attr("value");
+			return value != undefined ? confirm("Tem a certeza que quer " + value + "?") : true;
+		});
+	},
+	disableAndOnChangeEnableSubmit: function() {
+		$("form").filter( function() {
+				return $(this).find(":input:not(:submit)").length > 0;
+			}).find(":submit").each( function() { this.disabled = true; } );
+		// Tirando partido do modelo de eventos Javascript, ao ser despoletado um evento 
+		//  onChange em qualquer elemento filho do formulário, este é capturado pelo formulário.
+		$("form").filter( function() {
+				return $(this).find(":input:not(:submit)").length > 0;
+			}).change( function() {
+				$(":submit", this).each( function() { this.disabled = false; } );
+		});
+	},
+	setFocus: function() {
+		// Selector de multiplos atributos;
+		// Verifica todos os elementos que respeitam o conjunto de atributos;
+		$("form [name!=search]").filter(":input:not(:submit):visible:enabled:first").focus();
+	},
+	validateForm: function (elem) {
         var ret = true;
         // Se o nome contiver algum caracter especial, meta-character, é necessário
         // efectuar o escape desse caracter, utilizando \ antes do caracter.
@@ -149,24 +156,25 @@ var utils = {
         $("[data-val=true]", elem).each(
             function () {
                 if ($(this).attr("data-val-required") != undefined) {
-                    if (($(this).attr("type") == "radio")) {
-                        if ($("input:checked", this.parentNode).length == 0) {
-                            invalid("data-val-required", this);
-                            // termina a verificação para este index do each
-                            return;
-                        }
-                        valid(this);
-                    }
-                    else if (this.tagName.toLowerCase() == "select") {
-                        if ($("option:selected").length == 0) {
-                            invalid("data-val-required", this);
-                            // termina a verificação para este index do each
-                            return;
-                        }
-                        valid(this);
-                    }
+					if (($(this).attr("type") == "radio")) {
+						if ($("input:checked", this.parentNode).length == 0)
+						{
+							invalid("data-val-required", this);
+							// termina a verificação para este index do each
+							return;
+						}
+						valid(this);
+					}
+					else if (this.tagName.toLowerCase() == "select") {
+						if($("option:selected").length == 0) {
+							invalid("data-val-required", this);
+							// termina a verificação para este index do each
+							return;
+						}
+						valid(this);
+					}
                     else if ($.trim(this.value) == "") {
-                        invalid("data-val-required", this);
+						invalid("data-val-required", this);
                         // termina a verificação para este index do each
                         return;
                     }
