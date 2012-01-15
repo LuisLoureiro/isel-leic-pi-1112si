@@ -23,23 +23,20 @@ namespace mvc.Controllers
                 redirect = true;
             }
 
+            var elems = RepositoryLocator.Get<long, Proposal>().GetAll();
             var viewModel = new TableViewModel
                                 {
-                                    Items = RepositoryLocator.Get<long, Proposal>().GetAll()
-                                        // rever a operação ternária
-                                        .Where(p => User.IsInRole("Admin")
-                                                        ? p.State.Equals(AbstractEntity<long>.Status.Pending)
-                                                        : p.Owner.Equals(User.Identity.Name))
+                                    Items = elems.Where(p => User.IsInRole("Admin")
+                                                                 ? p.State.Equals(AbstractEntity<long>.Status.Pending)
+                                                                 : p.Owner.Equals(User.Identity.Name))
                                         .OrderBy(f => f.Key)
                                         .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
-                                        .Take(pageSize),//Retorna apenas o numero de elementos que pretendemos
+                                        .Take(pageSize), //Retorna apenas o numero de elementos que pretendemos
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,
                                                          ItemsPerPage = pageSize,
-                                                         TotalItems =
-                                                             RepositoryLocator.Get<string, CurricularUnit>().GetAll().
-                                                             Count()
+                                                         TotalItems = elems.Count()
                                                      }
                                 };
 

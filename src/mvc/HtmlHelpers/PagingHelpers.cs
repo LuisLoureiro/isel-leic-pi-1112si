@@ -25,7 +25,8 @@ namespace mvc.HtmlHelpers
 
             ulInnerHtml.Append(li.ToString());
 
-            for (var i = 1; i <= pagingInfo.TotalPages; i++)
+            int totalPages = pagingInfo.TotalPages;
+            for (int i = 1; i <= totalPages; i++)
             {
                 a = new TagBuilder("a"){ InnerHtml = i.ToString(CultureInfo.InvariantCulture) };
 
