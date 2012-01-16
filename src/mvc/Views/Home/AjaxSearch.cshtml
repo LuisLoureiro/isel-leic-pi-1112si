@@ -1,0 +1,15 @@
+@model List<IEnumerable<KeyValuePair<string, string>>>
+@foreach (var idxList in Model) {
+    foreach (KeyValuePair<string, string> kvp in idxList) 
+    {
+        <tr>
+            @if (kvp.Value == null)
+            {
+                <td class="suggestionsHeadings"><span>@kvp.Key</span></td>
+            } 
+            else {
+                <td><a href='@kvp.Key'>@kvp.Value</a></td>
+            }
+        </tr>
+    }
+}

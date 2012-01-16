@@ -132,7 +132,7 @@
     <Content Include="Scripts\li51ng08.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
-    <None Include="Views\Shared\AjaxSearch.cshtml" />
+    <None Include="Views\Home\AjaxSearch.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
