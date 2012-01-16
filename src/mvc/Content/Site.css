@@ -86,18 +86,24 @@ textarea
 }
 #suggestions table { margin-bottom: 0px; }
 #suggestions table td { padding: 0px; border-top: 0px; }
-#suggestions table td a { padding: 4px; }
-#suggestions table td a:hover { border-radius: 5px; background-color:#b7b7b7; }
-#suggestions table td.suggestionsHeadings 
+#suggestions table td#suggestionsData a { padding: 4px; }
+#suggestions table td#suggestionsData a:hover { border-radius: 5px; background-color:#b7b7b7; }
+#suggestions table td#suggestionsHeadings 
 {
 	padding: 2px;
 	border-radius: 5px;
 	background-color: Black;
-	font-weight: bold;
 	color: White;
 }
-#searchSubmit
+#suggestions table td#showAllSuggestions
 {
-    background: url(/Content/search.gif) no-repeat center;
-    border: none;
+	border-radius: 5px;
+	background-color: Blue;
+}
+#suggestions table td#showAllSuggestions a
+{
+	padding: 0px;
+	color: White;
+	font-size: xx-small;
+	text-align: center;
 }

@@ -1,14 +1,20 @@
-@model List<IEnumerable<KeyValuePair<string, string>>>
-@foreach (var idxList in Model) {
-    foreach (KeyValuePair<string, string> kvp in idxList) 
+@model LinkedList<LinkedList<KeyValuePair<string, string>>>
+@foreach (var idxList in Model)
+{
+    foreach (var kvp in idxList)
     {
         <tr>
             @if (kvp.Value == null)
             {
-                <td class="suggestionsHeadings"><span>@kvp.Key</span></td>
-            } 
-            else {
-                <td><a href='@kvp.Key'>@kvp.Value</a></td>
+                <td id="suggestionsHeadings"><strong>@kvp.Key</strong></td>
+            }
+            else if ((Model.Last.Value == idxList) && (ViewBag.LastTR))
+            {
+                <td id="showAllSuggestions"><a href='@kvp.Key'><em>@kvp.Value</em></a></td>
+            }
+            else
+            {
+                <td id="suggestionsData"><a href='@kvp.Key'>@kvp.Value</a></td>
             }
         </tr>
     }

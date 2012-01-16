@@ -45,7 +45,7 @@ namespace mvc.Controllers
             // Se existirem, pelo menos 4 resultados em alguma das categorias,
             //  adiciona-se nova linha à tabela para mostrar todos os resultados.
             bool lastTR = false;
-            var res = new List<IEnumerable<KeyValuePair<string, string>>>();
+            LinkedList<LinkedList<KeyValuePair<string, string>>> res = new LinkedList<LinkedList<KeyValuePair<string, string>>>();
             if(!String.IsNullOrEmpty(search))
             {
                 search = Server.HtmlEncode(search);
@@ -59,7 +59,7 @@ namespace mvc.Controllers
                 {
                     lastTR |= (fucs.Count == numResults);
                     fucs.AddFirst(new KeyValuePair<string, string>("Fichas de Unidades Curriculares", null));
-                    res.Add(fucs);
+                    res.AddLast(fucs);
                 }
                 
                 if (Request.IsAuthenticated)
@@ -74,17 +74,17 @@ namespace mvc.Controllers
                     {
                         lastTR |= (props.Count == numResults);
                         props.AddFirst(new KeyValuePair<string, string>("Propostas", null));
-                        res.Add(props);
+                        res.AddLast(props);
                     }
                 }
 
                 if (lastTR)
                 {
-                    res.Add(new List<KeyValuePair<string, string>>
-                                   {
-                                       new KeyValuePair<string, string>(Url.Action("Search", new {search}),
-                                                                        "Mostrar todos os resultados da pesquisa.")
-                                   });
+                    var temp = new LinkedList<KeyValuePair<string, string>>();
+                    temp.AddFirst(new KeyValuePair<string, string>(
+                                      Url.Action("Search", new {search}),
+                                      "Mostrar todos os resultados da pesquisa."));
+                    res.AddLast(temp);
                 }
                 ViewBag.LastTR = lastTR;
             }
