@@ -14,19 +14,49 @@
     if (fucs != null && fucs.Count() != 0)
     {
         <h4>Fichas de Unidades Curriculares:</h4>
-        Html.RenderPartial("CurricularUnitsTable", fucs);
+        <table class="zebra-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Acrónimo</th>
+                    <th>Nome</th>
+                    <th>Obrigatória</th>
+                    <th>Ects</th>
+                </tr>
+            </thead>
+            <tbody id="paginated-content">
+                @{Html.RenderPartial("CurricularUnitsTableContent", fucs);}
+            </tbody>
+        </table>
     }
 
-    if(Model.Count > 1)
+    if (Model.Count > 1)
     {
         var props = Model[1] as IEnumerable<Proposal>;
         if (props != null && props.Count() != 0)
         {
             <h4>Propostas de Unidades Curriculares:</h4>
-            Html.RenderPartial("ProposalsTable", props);
+            <table class="zebra-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Id</th>
+                        <th>Acrónimo</th>
+                        <th>Nome</th>
+                        <th>Obrigatória</th>
+                        <th>Ects</th>
+                        <th>Criador</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="paginated-content">
+                    @{Html.RenderPartial("ProposalsTableContent", props);}
+                </tbody>
+            </table>
         }
     }
-}else
+}
+else
 {
     <h3 class="alert-message warning">Não foram encontrados resultados para a sua pesquisa.</h3>
 }
