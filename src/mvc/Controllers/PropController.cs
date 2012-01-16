@@ -10,28 +10,35 @@ namespace mvc.Controllers
     [Authorize]
     public class PropController : Controller
     {
-        public ActionResult Index(int page = 0, int pageSize = 0, bool partial = false)
+        public ActionResult Index(int page = 0, int pageSize = -1, bool partial = false)
         {
             bool redirect;
 
             if (redirect = (page <= 0))
                 page = 1;
 
-            if ((pageSize <= 0))
+            if ((pageSize < 0))
             {
-                pageSize = 2;
+                pageSize = 3;
                 redirect = true;
             }
 
             var elems = RepositoryLocator.Get<long, Proposal>().GetAll();
             var viewModel = new TableViewModel
                                 {
-                                    Items = elems.Where(p => User.IsInRole("Admin")
-                                                                 ? p.State.Equals(AbstractEntity<long>.Status.Pending)
-                                                                 : p.Owner.Equals(User.Identity.Name))
-                                        .OrderBy(f => f.Key)
-                                        .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
-                                        .Take(pageSize), //Retorna apenas o numero de elementos que pretendemos
+                                    Items = pageSize > 0
+                                                ? elems.Where(p => User.IsInRole("Admin")
+                                                                       ? p.State.Equals(
+                                                                           AbstractEntity<long>.Status.Pending)
+                                                                       : p.Owner.Equals(User.Identity.Name))
+                                                      .OrderBy(f => f.Key)
+                                                      .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
+                                                      .Take(pageSize)           //Retorna apenas o numero de elementos que pretendemos
+                                                : elems.Where(p => User.IsInRole("Admin")
+                                                                       ? p.State.Equals(
+                                                                           AbstractEntity<long>.Status.Pending)
+                                                                       : p.Owner.Equals(User.Identity.Name))
+                                                      .OrderBy(f => f.Key),
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,
@@ -48,7 +55,7 @@ namespace mvc.Controllers
             }
 
             if (redirect)
-                return RedirectToAction("Index", new { page, pageSize });
+                return RedirectToAction("Index", new {page, pageSize});
 
             return partial ? (ActionResult)PartialView("ProposalsTableContent", viewModel.Items as IEnumerable<Proposal>)
                            : View(viewModel);
