@@ -40,6 +40,11 @@ namespace mvc.Controllers
 
         public PartialViewResult AjaxSearch(string search)
         {
+            // Limitar as sugestões ao máximo de 4 resultados por categoria.
+            const int numResults = 4;
+            // Se existirem, pelo menos 4 resultados em alguma das categorias,
+            //  adiciona-se nova linha à tabela para mostrar todos os resultados.
+            bool lastTR = false;
             var res = new List<IEnumerable<KeyValuePair<string, string>>>();
             if(!String.IsNullOrEmpty(search))
             {
@@ -47,19 +52,41 @@ namespace mvc.Controllers
                 var fucs = new LinkedList<KeyValuePair<string, string>>(
                                     RepositoryLocator.Get<string, CurricularUnit>().GetAll()
                                         .Where(SearchUc(search))
-                                        .Select(f => new KeyValuePair<string, string>("/fuc/details/" + f.Key, f.Name)));
-                fucs.AddFirst(new KeyValuePair<string, string>("Fichas de Unidades Curriculares", null));
-                res.Add(fucs);
-
+                                        .Take(numResults)
+                                        .Select(f => new KeyValuePair<string, string>(
+                                            Url.Action("Details", "Fuc", new {Id = f.Key}), f.Name)));
+                if (fucs.Count > 0)
+                {
+                    lastTR |= (fucs.Count == numResults);
+                    fucs.AddFirst(new KeyValuePair<string, string>("Fichas de Unidades Curriculares", null));
+                    res.Add(fucs);
+                }
+                
                 if (Request.IsAuthenticated)
                 {
                     var props = new LinkedList<KeyValuePair<string, string>>(
                                         RepositoryLocator.Get<long, Proposal>().GetAll()
                                             .Where(SearchProp(search, User.Identity.Name))
-                                            .Select(p => new KeyValuePair<string, string>("/prop/details/" + p.Key, p.Key.ToString())));
-                    props.AddFirst(new KeyValuePair<string, string>("Propostas", null));
-                    res.Add(props);
+                                            .Take(numResults)
+                                            .Select(p => new KeyValuePair<string, string>(
+                                                Url.Action("Details", "Prop", new {Id = p.Key}), p.Key.ToString())));
+                    if (props.Count > 0)
+                    {
+                        lastTR |= (props.Count == numResults);
+                        props.AddFirst(new KeyValuePair<string, string>("Propostas", null));
+                        res.Add(props);
+                    }
                 }
+
+                if (lastTR)
+                {
+                    res.Add(new List<KeyValuePair<string, string>>
+                                   {
+                                       new KeyValuePair<string, string>(Url.Action("Search", new {search}),
+                                                                        "Mostrar todos os resultados da pesquisa.")
+                                   });
+                }
+                ViewBag.LastTR = lastTR;
             }
             return PartialView(res);
         }
