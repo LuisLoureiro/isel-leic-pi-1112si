@@ -40,7 +40,10 @@
           <ul class="secondary-nav">
             <li>
                 @using(Html.BeginForm("Search", "Home", FormMethod.Get)){
-                    <input class="span3" type="search" autocomplete="false" placeholder="Pesquisar" name="search" />
+                    <div class="input-prepend">
+                        <span class="add-on"><img src="/Content/search.gif" alt=""/></span>
+                        <input class="medium" type="search" size="16" autocomplete="off" placeholder="Pesquisar" name="search" />
+                    </div>
                     <div id="suggestions">
                         <table>
                             <tbody>
