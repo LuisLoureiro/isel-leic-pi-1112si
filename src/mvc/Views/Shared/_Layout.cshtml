@@ -41,7 +41,7 @@
             <li>
                 @using(Html.BeginForm("Search", "Home", FormMethod.Get)){
                     <div class="input-prepend">
-                        <span class="add-on"><img src="/Content/search.gif" alt=""/></span>
+                        <span class="add-on"><input type="image" src="@Url.Content("~/Content/search.gif")" alt=""/></span>
                         <input class="medium" type="search" size="16" autocomplete="off" placeholder="Pesquisar" name="search" />
                     </div>
                     <div id="suggestions">
