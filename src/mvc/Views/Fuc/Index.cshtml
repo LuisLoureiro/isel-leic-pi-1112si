@@ -7,15 +7,19 @@
 <h2>Lista das Unidades Curriculares</h2>
 
 <label for="nitems">Mostrar:</label>
-<div class="input">
-    <select name="nitems" id="nitems">
-        <option value="0">Todos</option>
-        <option value="3">3</option>
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="20">20</option>
-    </select>
-</div>
+
+@using (Html.BeginForm("Index", "Fuc", FormMethod.Get))
+{
+    <div class="input">
+        <select name="pageSize" id="pageSize">
+            <option value="0">Todos</option>
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+        </select>
+    </div>
+}
 
 <table class="zebra-striped">
     <thead>

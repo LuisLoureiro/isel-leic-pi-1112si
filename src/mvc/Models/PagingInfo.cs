@@ -10,7 +10,7 @@ namespace mvc.Models
 
         public int TotalPages
         {
-            get { return (int) Math.Ceiling( (float)TotalItems / ItemsPerPage); }
+            get { return ItemsPerPage == 0 ? 1 : (int)Math.Ceiling( (float)TotalItems / ItemsPerPage); }
         }
     }
 }
