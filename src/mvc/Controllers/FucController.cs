@@ -9,7 +9,7 @@ namespace mvc.Controllers
 {
     public class FucController : Controller
     {
-        public ActionResult Index(int page = 0, int pageSize = -1, bool partial = false)
+        public ActionResult Index(int page = 0, int pageSize = -1, bool partial = false, string orderBy = null)
         {
             bool redirect;
 
@@ -22,14 +22,42 @@ namespace mvc.Controllers
                 redirect = true;
             }
 
+            ViewBag.AcrSort = string.IsNullOrEmpty(orderBy) ? "Acr desc" : "";
+            ViewBag.NameSort = "Name desc".Equals(orderBy) ? "Name" : "Name desc";
+            ViewBag.EctsSort = "Ects desc".Equals(orderBy) ? "Ects" : "Ects desc";
+            ViewBag.PageSize = pageSize;
+            ViewBag.OrderBy = orderBy;
+
             var elems = RepositoryLocator.Get<string, CurricularUnit>().GetAll();
+
+            switch (orderBy)
+            {
+                case "Acr desc":
+                    elems = elems.OrderByDescending(f => f.Key);
+                    break;
+                case "Name":
+                    elems = elems.OrderBy(f => f.Name);
+                    break;
+                case "Name desc":
+                    elems = elems.OrderByDescending(f => f.Name);
+                    break;
+                case "Ects":
+                    elems = elems.OrderBy(f => f.Ects);
+                    break;
+                case "Ects desc":
+                    elems = elems.OrderByDescending(f => f.Ects);
+                    break;
+                default:
+                    elems = elems.OrderBy(f => f.Key);
+                    break;
+            }
+
             var viewModel = new TableViewModel
                                 {
                                     Items = pageSize > 0
-                                                ? elems.OrderBy(f => f.Key)
-                                                      .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
-                                                      .Take(pageSize)           //Retorna apenas o numero de elementos que pretendemos
-                                                : elems.OrderBy(f => f.Key),
+                                                ? elems.Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
+                                                       .Take(pageSize)           //Retorna apenas o numero de elementos que pretendemos
+                                                : elems,
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,

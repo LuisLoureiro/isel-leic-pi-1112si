@@ -10,7 +10,7 @@ namespace mvc.Controllers
     [Authorize]
     public class PropController : Controller
     {
-        public ActionResult Index(int page = 0, int pageSize = -1, bool partial = false)
+        public ActionResult Index(int page = 0, int pageSize = -1, bool partial = false, string orderBy = null)
         {
             bool redirect;
 
@@ -23,22 +23,61 @@ namespace mvc.Controllers
                 redirect = true;
             }
 
-            var elems = RepositoryLocator.Get<long, Proposal>().GetAll();
+            ViewBag.IdSort = string.IsNullOrEmpty(orderBy) ? "Id desc" : "";
+            ViewBag.AcrSort = "Acr desc".Equals(orderBy) ? "Acr" : "Acr desc";
+            ViewBag.NameSort = "Name desc".Equals(orderBy) ? "Name" : "Name desc";
+            ViewBag.EctsSort = "Ects desc".Equals(orderBy) ? "Ects" : "Ects desc";
+            ViewBag.OwnerSort = "Owner desc".Equals(orderBy) ? "Owner" : "Owner desc";
+            ViewBag.PageSize = pageSize;
+            ViewBag.OrderBy = orderBy;
+
+            var elems = RepositoryLocator.Get<long, Proposal>()
+                .GetAll()
+                .Where(p => User.IsInRole("Admin")
+                                ? p.State.Equals(AbstractEntity<long>.Status.Pending)
+                                : p.Owner.Equals(User.Identity.Name));
+
+            switch(orderBy)
+            {
+                case "Id desc":
+                    elems = elems.OrderByDescending(f => f.Key);
+                    break;
+                case "Acr":
+                    elems = elems.OrderBy(f => f.Info.Key);
+                    break;
+                case "Acr desc":
+                    elems = elems.OrderByDescending(f => f.Info.Key);
+                    break;
+                case "Name":
+                    elems = elems.OrderBy(f => f.Info.Name);
+                    break;
+                case "Name desc":
+                    elems = elems.OrderByDescending(f => f.Info.Name);
+                    break;
+                case "Ects":
+                    elems = elems.OrderBy(f => f.Info.Ects);
+                    break;
+                case "Ects desc":
+                    elems = elems.OrderByDescending(f => f.Info.Ects);
+                    break;
+                case "Owner":
+                    elems = elems.OrderBy(f => f.Owner);
+                    break;
+                case "Owner desc":
+                    elems = elems.OrderByDescending(f => f.Owner);
+                    break;
+                default:
+                    elems = elems.OrderBy(f => f.Key);
+                    break;
+            }
+
+
             var viewModel = new TableViewModel
                                 {
                                     Items = pageSize > 0
-                                                ? elems.Where(p => User.IsInRole("Admin")
-                                                                       ? p.State.Equals(
-                                                                           AbstractEntity<long>.Status.Pending)
-                                                                       : p.Owner.Equals(User.Identity.Name))
-                                                      .OrderBy(f => f.Key)
-                                                      .Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
-                                                      .Take(pageSize)           //Retorna apenas o numero de elementos que pretendemos
-                                                : elems.Where(p => User.IsInRole("Admin")
-                                                                       ? p.State.Equals(
-                                                                           AbstractEntity<long>.Status.Pending)
-                                                                       : p.Owner.Equals(User.Identity.Name))
-                                                      .OrderBy(f => f.Key),
+                                                ? elems.Skip((page - 1)*pageSize) //Salta os elementos iniciais que não interessam
+                                                       .Take(pageSize)           //Retorna apenas o numero de elementos que pretendemos
+                                                : elems,
                                     PagingInfo = new PagingInfo
                                                      {
                                                          CurrentPage = page,

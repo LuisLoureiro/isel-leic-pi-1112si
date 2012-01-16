@@ -15,6 +15,8 @@
             <div class="input">
                 <select class="input-mini" name="pageSize" id="pageSize">
                     <option value="0">Tudo</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -28,12 +30,12 @@
     <thead>
         <tr>
             <th></th>
-            <th>Id</th>
-            <th>Acrónimo</th>
-            <th>Nome</th>
+            <th>@Html.ActionLink("Id","Index", new {page = 1, pageSize = ViewBag.PageSize, orderBy = ViewBag.IdSort})</th>
+            <th>@Html.ActionLink("Acrónimo", "Index", new { page = 1, pageSize = ViewBag.PageSize, orderBy = ViewBag.AcrSort })</th>
+            <th>@Html.ActionLink("Nome", "Index", new { page = 1, pageSize = ViewBag.PageSize, orderBy = ViewBag.NameSort })</th>
             <th>Obrigatória</th>
-            <th>Ects</th>
-            <th>Criador</th>
+            <th>@Html.ActionLink("Ects", "Index", new { page = 1, pageSize = ViewBag.PageSize, orderBy = ViewBag.EctsSort })</th>
+            <th>@Html.ActionLink("Criador", "Index", new { page = 1, pageSize = ViewBag.PageSize, orderBy = ViewBag.OwnerSort })</th>
             <th>Estado</th>
         </tr>
     </thead>
@@ -42,4 +44,4 @@
     </tbody>
 </table>
 <h4 id="loading-info"></h4>
-@Html.PageLinks(Model.PagingInfo, (i, j) => Url.Action("Index", new { page = i, pageSize = j}))
+@Html.PageLinks(Model.PagingInfo, (i, j) => Url.Action("Index", new { page = i, pageSize = j, orderBy = ViewBag.OrderBy}))
