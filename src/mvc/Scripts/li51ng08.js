@@ -64,24 +64,16 @@ var utils = {
         var fadeInOutTime = 1000;
         var func;
         $(searchElem).keyup(function () {
-            console.log("At keyup -> " + this.value);
             if ($.trim(this.value) != "") {
                 if (func == undefined) {
                     func = new XMLHttpRequest();
                     func.onreadystatechange = function () {
                         if ((func.readyState == 4) && (func.status == 200)) {
-                            console.log($("#suggestions").queue().length);
                             if ($.trim(func.responseText) != "") {
-                                console.log(func.responseText);
-                                // auxfunc(func.responseText);
-                                console.log("before fadein -> " + $(searchElem).val());
                                 $("#suggestions").css('display', 'block').hide().fadeIn(fadeInOutTime);
-                                console.log("after fadein -> " + $(searchElem).val());
                                 $("#suggestions > table > tbody").html(func.responseText);
                             } else {
-                                console.log("before fadeout");
                                 $("#suggestions").fadeOut(fadeInOutTime);
-                                console.log("after fadeout");
                             }
                         }
                     };
@@ -89,18 +81,13 @@ var utils = {
                 func.open("GET", "/home/ajaxsearch?search=" + this.value, true);
                 func.send(null);
             } else {
-                console.log("before fadeout at keyup");
                 $("#suggestions").fadeOut(fadeInOutTime);
-                console.log("after fadeout at keyup");
             }
         });
         $(searchElem).blur(function () {
-            console.log("before fadeout at blur");
             $("#suggestions").fadeOut(fadeInOutTime);
-            console.log("after fadeout at blur");
         });
         $(searchElem).focus(function () {
-            console.log("At focus -> " + this.value);
             if ($.trim(this.value) != "") {
                 $(this).keyup();
             }
@@ -127,7 +114,7 @@ var utils = {
     setFocus: function () {
         // Selector de multiplos atributos;
         // Verifica todos os elementos que respeitam o conjunto de atributos;
-        $("form [name!=search]").filter(":input:not(:submit):visible:enabled:first").focus();
+        $("form [type!=search]").filter(":input:not(:submit,:image):visible:enabled:first").focus();
     },
     validateForm: function (elem) {
         var ret = true;
