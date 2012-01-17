@@ -65,7 +65,7 @@ namespace mvc
 
         private static IEnumerable<CurricularUnit> GetUCs()
         {
-            CurricularUnit[] listUCs = new CurricularUnit[7];
+            CurricularUnit[] listUCs = new CurricularUnit[6];
 
             listUCs[0] = new CurricularUnit("Ambientes Virtuais de Execução", "AVE", true, (0x01 << 3), 6)
                              {
@@ -185,23 +185,9 @@ namespace mvc
                     "Conceitos básicos de sinal e sistema. Espectro, largura de banda e resposta em frequência. Digitalização de sinal: amostragem e quantização. Ritmo de transmissão e capacidade de canal. Teorema da codificação de canal. Modulações digitais em banda base e banda canal. Modulações binárias e M-árias. Análise do seu funcionamento na presença de ruído. Uso de modelos probabilísticos para caracterização de canal. Probabilidade de erro e qualidade de serviço. Codificação de canal. Códigos detectores e correctores de erros. Códigos lineares de bloco. Códigos de Hamming. Códigos cíclicos e CRC (Cyclic Redundancy Check)."
             };
 
-            listUCs[5] = new CurricularUnit("Redes de Computadores", "RCp", true, (0x01 << 3), 6)
-                             {
-                                 Objectives =
-                                     "A disciplina tem como objectivo dotar os alunos com os conhecimentos base na área de redes de computadores. Pretende-se que os alunos compreendam as tecnologias, arquitecturas e aplicações de redes de computadores, com especial ênfase em redes locais e na família de protocolos TCP/IP.",
-                                 Results =
-                                     "Os estudantes que terminam com sucesso esta unidade curricular serão capazes de:\n" +
-                                     "1. Compreender os princípios base de redes de computadores, i.e. conceitos fundamentais como a organização em camadas, aspectos de comunicação de dados e protocolos teóricos.\n" +
-                                     "2. Utilizar redes locais, com realce para a Ethernet, compreendendo os pormenores do seu funcionamento.\n" +
-                                     "3. Explicar e utilizar a família de protocolos TCP/IP, com especial ênfase no protocolo de rede IP e nos protocolos de transporte TCP e UDP, endereçamento, sistema de nomes de domínios, atribuição dinâmica de endereços, protocolos de transferência de ficheiros, correio electrónico.\n",
-                                 Assessment =
-                                     "Os resultados de aprendizagem são avaliados individualmente através de testes escritos e de fichas realizadas durante o semestre. Durante o acompanhamento dos trabalhos de grupo realizados nas aulas práticas são avaliados os resultados de aprendizagem.",
-                                 Program =
-                                     "Comunicações digitais. Modelo OSI. Comunicação ponto a ponto e multiponto. Redes de comunicação de dados: canais de transmissão, transmissão série e paralela, sincronismo, erros de transmissão e topologias de rede. Protocolos teóricos de recuperação de erros e controlo de fluxo.Introdução às redes locais, ênfase na rede Ethernet, normas 802.x, controlo de acesso ao meio, encapsulamento. Conceitos sobre interligação de redes, especialmente sobre repetidores e comutadores.Família de protocolos TCP/IP. Modelo TCP/IP (vs. OSI). Protocolo IP, formato dos datagramas, fragmentação, encaminhamento, máscaras de rede, protocolo controlo de erros ICMP. Protocolo UDP e TCP, conceito de ligação, controlo de fluxo e de congestão. Nível de aplicação: resolução de nomes, transferência e acesso a ficheiros, correio electrónico, atribuição dinâmica de endereços."
-                             };
-            listUCs[5].AddPrecedence(listUCs[4]);
+            listUCs[1].AddPrecedence(listUCs[4]);
 
-            listUCs[6] = new CurricularUnit("Segurança Informática", "SI", false, (0x01 << 4), 6)
+            listUCs[5] = new CurricularUnit("Segurança Informática", "SI", false, (0x01 << 4), 6)
             {
                 Objectives =
                     "Realizar uma introdução à teoria e prática da segurança informática, apresentando os principais tipos de ameaças à segurança de sistemas informáticos e descrevendo as técnicas existentes para a sua minimização. Fornecer a base conceptual e prática necessária ao estudo dos aspectos de segurança em contextos específicos, nomeadamente: sistemas distribuídos; sistemas de informação e redes de comunicação de dados.",
