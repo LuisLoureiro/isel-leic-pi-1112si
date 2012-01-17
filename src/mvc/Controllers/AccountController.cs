@@ -102,9 +102,9 @@ namespace mvc.Controllers
                 WebMail.Password = "iselleicpi";
                 WebMail.From = "ISEL.LEIC.PI.LI51NG08@gmail.com";
                 WebMail.Send(model.Email.Trim(), "Activação de Acesso", 
-                    string.Format("Para activar o seu acesso siga o seguinte link: {0}/Account/Activate/?hash={1} ", 
-                    Request.Url.ToString().Replace(Request.Path, ""), hash));
-
+                    string.Format("Para activar o seu acesso siga o seguinte link: http://{0}/Account/Activate/?hash={1} ", 
+                    Request.Url.Host, hash));
+                
                 TempData["message"] = "Registo criado com sucesso! Verifique a sua caixa de correio electrónico.";
 
                 return RedirectToAction("Index", "Home");
