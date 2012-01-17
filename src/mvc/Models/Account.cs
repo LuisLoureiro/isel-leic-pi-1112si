@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
 
 namespace mvc.Models
 {
@@ -12,8 +11,10 @@ namespace mvc.Models
 
     public class AccountUser : RegisterUser
     {
-        [Display(Name = "Fotografia")]
-        public Image Foto { get; set; }
+        public byte[] Foto { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public string FotoMimeType { get; set; }
 
         [HiddenInput(DisplayValue = true)]
         public override string Number { get; set; }
