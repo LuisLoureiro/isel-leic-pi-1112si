@@ -10,8 +10,7 @@ namespace mvc.Controllers
 {
     public class AccountController : Controller
     {
-        //
-        // GET: /Account/
+        private const int _MAX_CONTENT_SIZE = 1024*500;
 
         [Authorize]
         public ActionResult Index()
@@ -27,8 +26,13 @@ namespace mvc.Controllers
             {
                 try
                 {
-                    MvcNotMembershipProvider.UpdateUser(updatedUser, foto);
-                    TempData["message"] = "Alteração efectuada com sucesso!";
+                    if (foto.ContentLength <= _MAX_CONTENT_SIZE)
+                    {
+                        MvcNotMembershipProvider.UpdateUser(updatedUser, foto);
+                        TempData["message"] = "Alteração efectuada com sucesso!";
+                    }
+                    else
+                        TempData["exception"] = "Alteração não efectuada! O tamanho da imagem não pode ser superior a 500Kb.";
                 }
                 catch (Exception e)
                 {
