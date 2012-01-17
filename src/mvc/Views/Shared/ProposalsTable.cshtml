@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Proposal>
+<table class="zebra-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Acrónimo</th>
+            <th>Nome</th>
+            <th>Obrigatória</th>
+            <th>Ects</th>
+            <th>Criador</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody id="paginated-content">
+        @{Html.RenderPartial("ProposalsTableContent", Model);}
+    </tbody>
+</table>

@@ -14,20 +14,7 @@
     if (fucs != null && fucs.Count() != 0)
     {
         <h4>Fichas de Unidades Curriculares:</h4>
-        <table class="zebra-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Acrónimo</th>
-                    <th>Nome</th>
-                    <th>Obrigatória</th>
-                    <th>Ects</th>
-                </tr>
-            </thead>
-            <tbody id="paginated-content">
-                @{Html.RenderPartial("CurricularUnitsTableContent", fucs);}
-            </tbody>
-        </table>
+        Html.RenderPartial("CurricularUnitsTable", fucs);
     }
 
     if (Model.Count > 1)
@@ -36,23 +23,7 @@
         if (props != null && props.Count() != 0)
         {
             <h4>Propostas de Unidades Curriculares:</h4>
-            <table class="zebra-striped">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Id</th>
-                        <th>Acrónimo</th>
-                        <th>Nome</th>
-                        <th>Obrigatória</th>
-                        <th>Ects</th>
-                        <th>Criador</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="paginated-content">
-                    @{Html.RenderPartial("ProposalsTableContent", props);}
-                </tbody>
-            </table>
+            Html.RenderPartial("ProposalsTable", props);
         }
     }
 }

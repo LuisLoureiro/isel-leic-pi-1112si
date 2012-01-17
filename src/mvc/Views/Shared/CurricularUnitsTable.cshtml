@@ -1,0 +1,15 @@
+﻿@model IEnumerable<CurricularUnit>
+<table class="zebra-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Acrónimo</th>
+            <th>Nome</th>
+            <th>Obrigatória</th>
+            <th>Ects</th>
+        </tr>
+    </thead>
+    <tbody id="paginated-content">
+        @{Html.RenderPartial("CurricularUnitsTableContent", Model);}
+    </tbody>
+</table>
