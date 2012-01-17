@@ -156,6 +156,9 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\CurricularUnitsTable.cshtml" />
+    <Content Include="Views\Shared\ProposalsTable.cshtml" />
+    <Content Include="Views\Shared\NumberPageResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

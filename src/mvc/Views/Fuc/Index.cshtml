@@ -8,23 +8,9 @@
     <div class="span16">
         <h2>Lista das Unidades Curriculares</h2>
     </div>
-    <div class="span4">
-        <label for="pageSize">Mostrar:</label>
-        @using (Html.BeginForm("Index", "Fuc", FormMethod.Get))
-        {
-            <div class="input">
-                <select class="input-mini" name="pageSize" id="pageSize">
-                    <option value="0">Tudo</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                </select>
-            </div>
-        }
-    </div>
+    @{
+        ViewBag.Action = "Index"; ViewBag.Controller = "Fuc"; ViewBag.Method = FormMethod.Get;
+        Html.RenderPartial("NumberPageResults");}
 </div>
 <table class="zebra-striped">
     <thead>
