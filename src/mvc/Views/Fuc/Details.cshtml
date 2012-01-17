@@ -7,8 +7,9 @@
 
 @{ Html.RenderPartial("CurricularUnitView", Model); }
 
-@if (User.Identity.IsAuthenticated) { 
-    <div>@Html.ActionLink("Proposta de alteração", "Edit", new { @Id = Model.Key })</div>
-}
-<div>@Html.ActionLink("Voltar à lista", "Index")</div>
-
+<div class="container span6">
+    @if (User.Identity.IsAuthenticated) {
+        @Html.ActionLink("Proposta de alteração", "Edit", new { @Id = Model.Key }, new { @class = "btn primary" });
+    }
+    @Html.ActionLink("Voltar à lista", "Index", null, new { @class = "btn primary" })
+</div>
