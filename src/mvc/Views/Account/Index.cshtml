@@ -7,7 +7,7 @@
 <div>
     @if (Model.FotoData != null)
     {
-        <img src="@Url.Action("GetFoto", "Account", new { id = Model.Number })" alt="Fotografia"/>
+        <img class="span6" src="@Url.Action("GetFoto", "Account", new { id = Model.Number })" alt="Fotografia"/>
     }
     else
     {
