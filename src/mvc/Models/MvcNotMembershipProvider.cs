@@ -21,8 +21,10 @@ namespace mvc.Models
                                          {
                                              Number = "1",
                                              Name = "Administrador",
+                                             Email = "isel.leic.pi.li51ng08@gmail.com",
                                              IsActivated = true,
-                                             Password = "2722632186".GetHashCode().ToString()
+                                             Password = "2722632186".GetHashCode().ToString(),
+                                             ConfirmPassword = "2722632186".GetHashCode().ToString()
                                          }
                                 },
                             {
@@ -30,8 +32,10 @@ namespace mvc.Models
                                          {
                                              Number = "2",
                                              Name = "Utilizador",
+                                             Email = "Utilizador@email.com",
                                              IsActivated = true,
-                                             Password = "123456".GetHashCode().ToString()
+                                             Password = "123456".GetHashCode().ToString(),
+                                             ConfirmPassword = "123456".GetHashCode().ToString()
                                          }
                                 }
                         };
