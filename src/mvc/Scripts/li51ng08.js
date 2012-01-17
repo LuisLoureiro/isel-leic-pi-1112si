@@ -7,7 +7,7 @@ var utils = {
         });
     },
     ajaxPagination: function () {
-        $('.pagination a').click(function () {
+        $('.pagination a').click(function (event) {
             var eventTarget = this;
             var uri = $(eventTarget).attr('href');
 
