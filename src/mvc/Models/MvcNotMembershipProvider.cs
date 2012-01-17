@@ -87,7 +87,7 @@ namespace mvc.Models
                 foto.InputStream.Read(Users[user.Number].FotoData, 0, foto.ContentLength);
             }
 
-            if (!string.IsNullOrEmpty(user.Password))
+            if (!string.IsNullOrEmpty(user.Password) && !Users[user.Number].Password.Equals(user.Password) )
                 ChangePassword(user.Number, user.Password);
         }
 
