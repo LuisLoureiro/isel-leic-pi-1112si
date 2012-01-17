@@ -64,7 +64,7 @@
                   <li>@Html.ActionLink(MvcNotMembershipProvider.GetUser(User.Identity.Name).Name, "Index", "Account")</li>
                   <li>@Html.ActionLink("Sair", "LogOff", "Account")</li>
               }
-              else if (!(Request.Path.Equals("/") || Request.Path.ToLower().Equals("/home/index") || Request.Path.ToLower().Equals("/account/logon")))
+              else if (!(Request.Path.Equals("/") || Request.Path.ToLower().Equals(Url.Action("Index", "Home"))))
               {
                   <li>@Html.ActionLink("Efectuar Login", "LogOn", "Account", new { returnUrl = Request.RawUrl }, null)</li>
               }
