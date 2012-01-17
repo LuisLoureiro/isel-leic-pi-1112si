@@ -5,9 +5,9 @@
 
 <h2>Informações de @Model.Name</h2>
 <div>
-    @if (Model.Foto != null)
+    @if (Model.FotoData != null)
     {
-        <img src="@Url.Action("GetFoto", "Account", new { Model.Number })" alt="Fotografia"/>
+        <img src="@Url.Action("GetFoto", "Account", new { id = Model.Number })" alt="Fotografia"/>
     }
     else
     {
@@ -25,7 +25,7 @@
         <input type="file" name="foto" id="foto_up"/>
     </div>
     
-    <div class="well span4" align="center">
+    <div class="well span4">
         <input type="submit" value="Guardar" class="btn primary"/>
         @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger" })
     </div>

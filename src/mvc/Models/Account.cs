@@ -11,7 +11,7 @@ namespace mvc.Models
 
     public class AccountUser : RegisterUser
     {
-        public byte[] Foto { get; set; }
+        public byte[] FotoData { get; set; }
 
         [HiddenInput(DisplayValue = false)]
         public string FotoMimeType { get; set; }

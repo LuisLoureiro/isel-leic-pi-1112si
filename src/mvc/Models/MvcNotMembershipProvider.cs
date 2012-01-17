@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Web;
 using System.Web.Security;
 using mvc.Crypto;
 
@@ -73,12 +74,21 @@ namespace mvc.Models
             return CreateUser(user.Number, user.Name, user.Password, user.Email);
         }
 
-        public static void UpdateUser(AccountUser user)
+        public static void UpdateUser(AccountUser user, HttpPostedFileBase foto)
         {
             Users[user.Number].Name = user.Name;
             Users[user.Number].Email = user.Email;
             Users[user.Number].Name = user.Name;
-            ChangePassword(user.Number, user.Password);
+
+            if (foto != null)
+            {
+                Users[user.Number].FotoMimeType = foto.ContentType;
+                Users[user.Number].FotoData = new byte[foto.ContentLength];
+                foto.InputStream.Read(Users[user.Number].FotoData, 0, foto.ContentLength);
+            }
+
+            if (!string.IsNullOrEmpty(user.Password))
+                ChangePassword(user.Number, user.Password);
         }
 
         public static bool DeleteUser(string number)

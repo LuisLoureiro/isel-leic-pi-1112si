@@ -27,15 +27,7 @@ namespace mvc.Controllers
             {
                 try
                 {
-                    if(foto != null)
-                    {
-                        updatedUser.FotoMimeType = foto.ContentType;
-                        updatedUser.Foto = new byte[foto.ContentLength];
-                        foto.InputStream.Read(updatedUser.Foto, 0, foto.ContentLength);
-                    }
-
-
-                    MvcNotMembershipProvider.UpdateUser(updatedUser);
+                    MvcNotMembershipProvider.UpdateUser(updatedUser, foto);
                     TempData["message"] = "Alteração efectuada com sucesso!";
                 }
                 catch (Exception e)
@@ -216,7 +208,7 @@ namespace mvc.Controllers
                 return null;
             }
 
-            return File(user.Foto, user.FotoMimeType);
+            return File(user.FotoData, user.FotoMimeType);
         }
     }
 }
