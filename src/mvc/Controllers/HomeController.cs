@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using mvc.Models.Entities;
@@ -44,7 +45,7 @@ namespace mvc.Controllers
             const int numResults = 4;
             // Se existirem, pelo menos 4 resultados em alguma das categorias,
             //  adiciona-se nova linha à tabela para mostrar todos os resultados.
-            bool lastTR = false;
+            bool lastTr = false;
             LinkedList<LinkedList<KeyValuePair<string, string>>> res = new LinkedList<LinkedList<KeyValuePair<string, string>>>();
             if(!String.IsNullOrEmpty(search))
             {
@@ -57,7 +58,7 @@ namespace mvc.Controllers
                                             Url.Action("Details", "Fuc", new {Id = f.Key}), f.Name)));
                 if (fucs.Count > 0)
                 {
-                    lastTR |= (fucs.Count == numResults);
+                    lastTr |= (fucs.Count == numResults);
                     fucs.AddFirst(new KeyValuePair<string, string>("Fichas de Unidades Curriculares", null));
                     res.AddLast(fucs);
                 }
@@ -69,16 +70,16 @@ namespace mvc.Controllers
                                             .Where(SearchProp(search, User.Identity.Name))
                                             .Take(numResults)
                                             .Select(p => new KeyValuePair<string, string>(
-                                                Url.Action("Details", "Prop", new {Id = p.Key}), p.Key.ToString())));
+                                                Url.Action("Details", "Prop", new {Id = p.Key}), p.Key.ToString(CultureInfo.InvariantCulture))));
                     if (props.Count > 0)
                     {
-                        lastTR |= (props.Count == numResults);
+                        lastTr |= (props.Count == numResults);
                         props.AddFirst(new KeyValuePair<string, string>("Propostas", null));
                         res.AddLast(props);
                     }
                 }
 
-                if (lastTR)
+                if (lastTr)
                 {
                     var temp = new LinkedList<KeyValuePair<string, string>>();
                     temp.AddFirst(new KeyValuePair<string, string>(
@@ -86,7 +87,7 @@ namespace mvc.Controllers
                                       "Mostrar todos os resultados da pesquisa."));
                     res.AddLast(temp);
                 }
-                ViewBag.LastTR = lastTR;
+                ViewBag.LastTR = lastTr;
             }
             return PartialView(res);
         }

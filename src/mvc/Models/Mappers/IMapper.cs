@@ -3,7 +3,7 @@ using mvc.Models.Entities;
 
 namespace mvc.Models.Mappers
 {
-    public interface IMapper<K, V> where V : AbstractEntity<K>
+    public interface IMapper<in K, V> where V : AbstractEntity<K>
     {
         IEnumerable<V> GetAll();
         V GetById(K key);

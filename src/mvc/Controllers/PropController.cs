@@ -12,10 +12,13 @@ namespace mvc.Controllers
     {
         public ActionResult Index(int page = 0, int pageSize = -1, bool partial = false, string orderBy = null)
         {
-            bool redirect;
+            bool redirect = false;
 
-            if (redirect = (page <= 0))
+            if (page <= 0)
+            {
                 page = 1;
+                redirect = true;
+            }
 
             if ((pageSize < 0))
             {

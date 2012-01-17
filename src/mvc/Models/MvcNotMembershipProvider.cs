@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
+using System.Globalization;
 using System.Web.Security;
 using mvc.Crypto;
 
@@ -22,7 +21,7 @@ namespace mvc.Models
                                              Number = "1",
                                              Name = "Administrador",
                                              IsActivated = true,
-                                             Password = "2722632186".GetHashCode().ToString()
+                                             Password = "2722632186".GetHashCode().ToString(CultureInfo.InvariantCulture)
                                          }
                                 },
                             {
@@ -31,7 +30,7 @@ namespace mvc.Models
                                              Number = "2",
                                              Name = "Utilizador",
                                              IsActivated = true,
-                                             Password = "123456".GetHashCode().ToString()
+                                             Password = "123456".GetHashCode().ToString(CultureInfo.InvariantCulture)
                                          }
                                 }
                         };
@@ -53,7 +52,7 @@ namespace mvc.Models
 
             Users[number] = new InternalUser
                                 {
-                                    Number = number, Name = nome, Password = password.GetHashCode().ToString(), 
+                                    Number = number, Name = nome, Password = password.GetHashCode().ToString(CultureInfo.InvariantCulture), 
                                     ConfirmPassword = password, Email = email
                                 };
             string hash = MD5Crypto.GenerateMD5(number);
@@ -90,7 +89,7 @@ namespace mvc.Models
             CheckUser(number);
             CheckActivation(number);
 
-            Users[number].ChangePassword(password.GetHashCode().ToString());
+            Users[number].ChangePassword(password.GetHashCode().ToString(CultureInfo.InvariantCulture));
         }
 
         public static void ActivateUser(string hash)
@@ -103,7 +102,7 @@ namespace mvc.Models
             CheckUser(number);
             CheckActivation(number);
 
-            return Users[number].Password == password.GetHashCode().ToString();
+            return Users[number].Password == password.GetHashCode().ToString(CultureInfo.InvariantCulture);
         }
 
         public static AccountUser GetUser(string number)

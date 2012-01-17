@@ -8,7 +8,7 @@
     <div class="span12">
     @using (@Html.BeginForm("LogOn", "Account", new { returnUrl = Server.UrlDecode(Request.QueryString.Get("ReturnUrl")) }, FormMethod.Post, new { @class = "form-stacked" }))
     {
-        @Html.ValidationSummary(true, "Por favor verifique os erros", new { @class = "span6 alert-message danger" });
+        @Html.ValidationSummary(true, "Por favor verifique os erros", new { @class = "span6 alert-message danger" })
     
         @Html.EditorForModel()
     
