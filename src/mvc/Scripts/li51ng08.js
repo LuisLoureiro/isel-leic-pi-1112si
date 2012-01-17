@@ -193,9 +193,16 @@ var utils = {
                     valid(this);
                 }
                 if ($(this).attr("data-val-equalto") != undefined) {
-                    if ($(this).val() != $("input[id=" +
-											validateString($(this).attr("data-val-equalto-other")) +
-											"]").val()) {
+					// Como a pesquisa está a ser feita pelo valor exacto de validateString($(this).attr("data-val-equalto-other")),
+					//  não é encontrado nenhum valor, pois o elemento correspondente tem id=Password.
+					// Se a pesquisa estivesse a procurar por uma substring, input[id*=...] ou input[id$=...], também não era
+					//  retornado nenhum valor, porque o elemento tem id=Password.
+					var toCompareElementId = validateString($(this).attr("data-val-equalto-other"));
+                    if ($(this).val() != $("input[id$=" + 
+											// A soma de 2 é necessária porque o valor do from para a função substring
+											//  é exclusivo e porque a seguir ao último '\' ainda se encontra o '.'
+											toCompareElementId.substring(toCompareElementId.lastIndexOf("\\")+2)
+											 + "]").val()) {
                         invalid("data-val-equalto", this);
                         // termina a verificação para este index do each
                         return;
