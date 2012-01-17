@@ -4,57 +4,80 @@
 }
 
 <h2>Informações de @Model.Name</h2>
-
-@using (@Html.BeginForm("Index", "Account", FormMethod.Post, new { @class = "form-stacked"}))
+<div>
+    @if (Model.Foto != null)
+    {
+        <img src="@Url.Action("GetFoto", "Account", new { Model.Number })" alt="Fotografia"/>
+    }
+    else
+    {
+        <h6>Sem fotografia</h6>
+    }
+</div>
+@using (@Html.BeginForm("Index", "Account", FormMethod.Post, new { @class = "form-stacked", enctype = "multipart/formdata" }))
 {
     @Html.EditorForModel()
     
-    <div class="well">
+    <div class="editor-label">
+        <label for="foto_up">Carregar fotografia:</label>
+    </div>
+    <div class="editor-field">
+        <input type="file" name="foto" id="foto_up"/>
+    </div>
+    
+    <div class="well span4" align="center">
         <input type="submit" value="Guardar" class="btn primary"/>
-        @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger"})
+        @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn danger" })
     </div>
 }
 
 @{
     if (Roles.GetRolesForUser(Model.Number).Contains("admin"))
     {
-        <table title="Utilizadores">
-            <thead>
-                <tr><th>Número</th><th>Roles</th><th>Opções</th></tr>
-            </thead>
-            <tbody>
-            @{
-        foreach (InternalUser user in MvcNotMembershipProvider.GetAllUsers())
-        {
-            var userRoles = Roles.GetRolesForUser(user.Number);
+        <div class="container">
+            <table title="Utilizadores">
+                <thead>
                     <tr>
-                        <td>@user.Number</td>
-                        <td>@using (Html.BeginForm("UpdateRole", "Account", new { id = user.Number}, FormMethod.Post))
-                            {
-                                @Html.DropDownList("Roles",
-                                    Roles.GetAllRoles().Select(
-                                         role => new SelectListItem
-                                         {
-                                             Value = role,
-                                             Text = role,
-                                             Selected = userRoles.Contains(role)
-                                         }))
-                                <input type="submit" value="Actualizar" class="btn" />
-                            }
-                        </td>
-                        <td>
-                            @using (Html.BeginForm("Remove", "Account", new { id = user.Number }, FormMethod.Post))
-                            {
-                                <input type="submit" value="Remover Conta" class="btn danger" />
-                            }
-                        </td>
+                        <th>Número</th>
+                        <th>Roles</th>
+                        <th>Opções</th>
                     </tr>
-        }
-            }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (InternalUser user in MvcNotMembershipProvider.GetAllUsers())
+                        {
+                            var userRoles = Roles.GetRolesForUser(user.Number);
+                            <tr>
+                                <td>@user.Number</td>
+                                <td>@using (Html.BeginForm("UpdateRole", "Account", new {id = user.Number}, FormMethod.Post))
+                                    {
+                                        @Html.DropDownList("Roles",
+                                                                 Roles.GetAllRoles().Select(
+                                                                     role => new SelectListItem
+                                                                                 {
+                                                                                     Value = role,
+                                                                                     Text = role,
+                                                                                     Selected = userRoles.Contains(role)
+                                                                                 }))
+                                        <input type="submit" value="Actualizar" class="btn" />
+                                    }
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("Remove", "Account", new {id = user.Number}, FormMethod.Post))
+                                    {
+                                        <input type="submit" value="Remover Conta" class="btn danger" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
     }
-    else {
+    else
+    {
         using (Html.BeginForm("Remove", "Account", new { id = Model.Number }, FormMethod.Post))
         {
             <input type="submit" value="Remover Conta" class="btn danger" />

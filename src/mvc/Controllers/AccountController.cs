@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -20,12 +21,20 @@ namespace mvc.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult Index(AccountUser updatedUser)
+        public ActionResult Index(AccountUser updatedUser, HttpPostedFileBase foto)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if(foto != null)
+                    {
+                        updatedUser.FotoMimeType = foto.ContentType;
+                        updatedUser.Foto = new byte[foto.ContentLength];
+                        foto.InputStream.Read(updatedUser.Foto, 0, foto.ContentLength);
+                    }
+
+
                     MvcNotMembershipProvider.UpdateUser(updatedUser);
                     TempData["message"] = "Alteração efectuada com sucesso!";
                 }
@@ -194,6 +203,20 @@ namespace mvc.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult GetFoto(string id)
+        {
+            AccountUser user;
+            try
+            {
+                user = MvcNotMembershipProvider.GetUser(id);
+            }catch(Exception)
+            {
+                return null;
+            }
+
+            return File(user.Foto, user.FotoMimeType);
         }
     }
 }
