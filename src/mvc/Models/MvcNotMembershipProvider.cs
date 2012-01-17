@@ -57,8 +57,8 @@ namespace mvc.Models
 
             Users[number] = new InternalUser
                                 {
-                                    Number = number, Name = nome, Password = password.GetHashCode().ToString(CultureInfo.InvariantCulture), 
-                                    ConfirmPassword = password, Email = email
+                                    Number = number, Name = nome, Password = password.GetHashCode().ToString(CultureInfo.InvariantCulture),
+                                    ConfirmPassword = password.GetHashCode().ToString(CultureInfo.InvariantCulture), Email = email
                                 };
             string hash = MD5Crypto.GenerateMD5(number);
 
