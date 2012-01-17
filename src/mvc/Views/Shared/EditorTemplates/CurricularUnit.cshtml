@@ -1,4 +1,5 @@
-﻿@model CurricularUnit
+﻿@using System.Globalization
+@model CurricularUnit
 
     <div class="clearfix"> @Html.LabelFor(m => m.Key, "Acrónimo") @Html.EditorFor(m => m.Key) @Html.ValidationMessageFor(m => m.Key) </div>
     <div class="clearfix"> @Html.LabelFor(m => m.Name) @Html.EditorFor(m => m.Name) @Html.ValidationMessageFor(m => m.Name) </div>
@@ -16,8 +17,8 @@
             for (int i = 0; i < CurricularUnit.Maxsemesters; i++)
             {
                 ul.Add(new SelectListItem {
-                    Text = (i + 1).ToString(), 
-                    Value = (i + 1).ToString(), 
+                    Text = (i + 1).ToString(CultureInfo.InvariantCulture), 
+                    Value = (i + 1).ToString(CultureInfo.InvariantCulture), 
                     Selected = (Model != null && Model.Semester.Contains(i + 1))
                 });
             }

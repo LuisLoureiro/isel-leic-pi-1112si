@@ -82,7 +82,7 @@ namespace mvc.Models
             {
                 if (RoleExists(roleName))
                 {
-                    RolesUsers[roleName].RemoveAll(user => usernames.Contains(user));
+                    RolesUsers[roleName].RemoveAll(usernames.Contains);
                 }
             }
         }

@@ -138,9 +138,7 @@ namespace mvc.Modules
             //  utilizador da aplicação.
             string userCookie;
             if (request.Cookies.Count > 0 && !string.IsNullOrEmpty(
-                    userCookie = request.Cookies.AllKeys
-                                    .Where(str => str.ToUpper().Equals(cookieName.ToUpper()))
-                                    .FirstOrDefault()))
+                    userCookie = request.Cookies.AllKeys.FirstOrDefault(str => str.ToUpper().Equals(cookieName.ToUpper()))))
             {
                 DefaultUser user = AppFormsAuthentication.GetUserFor(request.Cookies[userCookie].Value);
                 
