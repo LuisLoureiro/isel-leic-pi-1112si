@@ -20,5 +20,5 @@
 	</tr>
 <table>
 
-<a href="http://iselground.apphb.com">Plataforma AppHarbor</a>
+<a target="_blank" href="http://iselground.apphb.com">Plataforma AppHarbor</a>
 
