@@ -20,5 +20,9 @@
 	</tr>
 <table>
 
+<a target="_blank" href="./wiki">Documentação</a>
+
+<a target="_blank" href="./zipball/0.3.1">Solução Visual Studio</a>, projecto "MVC".
+
 <a target="_blank" href="http://iselground.apphb.com">Plataforma AppHarbor</a>
 
