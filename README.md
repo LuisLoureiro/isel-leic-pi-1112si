@@ -22,7 +22,7 @@
 
 <a target="_blank" href="./LI51N-G08/wiki">Documentação</a>
 
-<a target="_blank" href="./LI51N-G08/zipball/0.3.1">Solução Visual Studio</a>, projecto "MVC".
+<a href="./LI51N-G08/zipball/0.3.1">Solução Visual Studio</a>, projecto "MVC".
 
 <a target="_blank" href="http://iselground.apphb.com">Plataforma AppHarbor</a>
 
