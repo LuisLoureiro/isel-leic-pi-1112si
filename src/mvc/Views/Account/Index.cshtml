@@ -14,7 +14,7 @@
         <h6>Sem fotografia</h6>
     }
 </div>
-@using (@Html.BeginForm("Index", "Account", FormMethod.Post, new { @class = "form-stacked", enctype = "multipart/formdata" }))
+@using (@Html.BeginForm("Index", "Account", FormMethod.Post, new { @class = "form-stacked", enctype = "multipart/form-data" }))
 {
     @Html.EditorForModel()
     
